@@ -24,4 +24,5 @@
     git clone ssh://kangnwh@vs-ssh.visualstudio.com:22/_ssh/DistributedSystem
 ```
 
-5. 
+5. Open this folder in your IDE and you can use your IDE to sync code of your PC with remote code.
+

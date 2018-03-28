@@ -32,6 +32,8 @@ public class Server {
 		log.info("reading command line options");
 		
 		Options options = new Options();
+		//TODO option for command type
+
 		options.addOption("lp",true,"local port number");
 		options.addOption("rp",true,"remote port number");
 		options.addOption("rh",true,"remote hostname");
@@ -49,6 +51,8 @@ public class Server {
 		} catch (ParseException e1) {
 			help(options);
 		}
+
+		// TODO what if arguments are not suitable, for example no remote infomation provided when register?
 		
 		if(cmd.hasOption("lp")){
 			try{

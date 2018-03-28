@@ -40,8 +40,20 @@ public class ClientSkeleton extends Thread {
 	
 	
 	// TODO estimate connection
-	protected Socket connectToServer(String host, int port, String user, String secret){
+	private Socket connectToServer(String host, int port, String user, String secret){
+		//TODO what if receive a Re-direction command ?
 		return new Socket();
+	}
+
+
+	private boolean register(String username, String secret, Socket socket){
+		// TODO use existing socket to register
+		return false;
+	}
+
+	private boolean authorise(String username, String secret, Socket socket){
+		// TODO use existing socket to register
+		return false;
 	}
 	
 	

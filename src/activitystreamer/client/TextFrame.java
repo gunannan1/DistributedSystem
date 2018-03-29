@@ -81,7 +81,7 @@ public class TextFrame extends JFrame implements ActionListener {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 
-		this.beginReceive();
+//		this.beginReceive();
 	}
 
 	// TODO maybe we can move this message handler into receive thread
@@ -93,15 +93,10 @@ public class TextFrame extends JFrame implements ActionListener {
 		outputText.setText(prettyJsonString);
 		outputText.revalidate();
 		outputText.repaint();
+		outputText.append("Test step ");
 	}
 
-	//TODO how to handel message from server
-	private void beginReceive(){
-		// TODO what if disconnect ?
-		// TODO what if lost connection ?
-		ReceiveThread receiveThread = new ReceiveThread(this.socket,this.outputText);
-		receiveThread.run();
-	}
+
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {

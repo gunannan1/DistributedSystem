@@ -36,6 +36,7 @@ public class ClientSkeleton extends Thread {
 		// new and open UI
 		textFrame = new TextFrame();
 		start();
+
 	}
 	
 	
@@ -59,9 +60,8 @@ public class ClientSkeleton extends Thread {
 	
 	
 	@SuppressWarnings("unchecked")
-	//TODO probability not need this method here
 	public void sendActivityObject(JSONObject activityObj){
-		
+		// TODO send message via socket
 	}
 	
 	
@@ -71,7 +71,15 @@ public class ClientSkeleton extends Thread {
 	
 	
 	public void run(){
-
+		while(true) {
+			// TODO receive message
+			textFrame.setOutputText(new JSONObject());
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	

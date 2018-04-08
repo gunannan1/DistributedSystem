@@ -15,6 +15,11 @@ Meeting minutes:
 0. Analysis client side code and assign tasks for client development and Update WBS accordingly 
 0. Assign server side code analysis tasks
 
+Questions:
+0. Does server need register to a running server before providing service? 
+0. When a new server need to provide its own secret or the secret of the connect it want to connect ?
+
+
 
 ---
 
@@ -28,6 +33,6 @@ Meeting minutes:
 
 Meeting minutes:
 0. 
-0. Discuss overview requirement of this project
-0. Analysis client side programm and assign tasks for client development 
+0. 
+0. 
 0. 

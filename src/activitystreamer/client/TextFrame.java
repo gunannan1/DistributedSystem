@@ -73,7 +73,7 @@ public class TextFrame extends JFrame implements ActionListener {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 
-		this.beginReceive();
+//		this.beginReceive();
 	}
 
 	// TODO maybe we can move this message handler into receive thread
@@ -85,8 +85,10 @@ public class TextFrame extends JFrame implements ActionListener {
 		outputText.setText(prettyJsonString);
 		outputText.revalidate();
 		outputText.repaint();
+		outputText.append("Test step ");
 	}
 
+<<<<<<< HEAD
 	//TODO how to handel message from server
 	private void beginReceive(){
 		// TODO what if disconnect ?
@@ -105,6 +107,10 @@ public class TextFrame extends JFrame implements ActionListener {
 	{
 		JOptionPane.showMessageDialog(null,error,"Error",JOptionPane.INFORMATION_MESSAGE);
 	}
+=======
+
+	
+>>>>>>> 31af276f860cfcc99772b2e972597fd44c0ee77f
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource()==sendButton){

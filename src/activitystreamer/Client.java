@@ -120,7 +120,11 @@ public class Client {
             ClientSkeleton c=ClientSkeleton.getInstance();
             c.sendAnonymousLoginMsg();
 
+<<<<<<< HEAD
 		}
+=======
+		ClientSkeleton c = ClientSkeleton.getInstance();
+>>>>>>> 31af276f860cfcc99772b2e972597fd44c0ee77f
 			
 		
 	}

@@ -42,7 +42,7 @@ public class Settings {
 			Settings.remotePort = remotePort;
 		}
 	}
-	
+	//setLoadBalancerPort, setLoadBalancerHostname, getLoadBalancerPort, getLoadBalancerhostname
 	public static String getRemoteHostname() {
 		return remoteHostname;
 	}

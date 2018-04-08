@@ -5,26 +5,18 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.net.Socket;
 
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
+import javax.swing.*;
 import javax.swing.border.Border;
 
+import com.google.gson.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 
 @SuppressWarnings("serial")
 public class TextFrame extends JFrame implements ActionListener {
@@ -85,10 +77,10 @@ public class TextFrame extends JFrame implements ActionListener {
 	}
 
 	// TODO maybe we can move this message handler into receive thread
-	public void setOutputText(final JSONObject obj){
+	public void setOutputText(final JsonObject obj){
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		JsonParser jp = new JsonParser();
-		JsonElement je = jp.parse(obj.toJSONString());
+		JsonElement je = jp.parse(obj.toString());
 		String prettyJsonString = gson.toJson(je);
 		outputText.setText(prettyJsonString);
 		outputText.revalidate();
@@ -99,10 +91,20 @@ public class TextFrame extends JFrame implements ActionListener {
 	private void beginReceive(){
 		// TODO what if disconnect ?
 		// TODO what if lost connection ?
-		ReceiveThread receiveThread = new ReceiveThread(this.socket,this.outputText);
-		receiveThread.run();
+		try {
+			ReceiveThread receiveThread = new ReceiveThread(this.socket, this.outputText);
+			receiveThread.run();
+		}catch (Exception e)
+		{
+			log.error(e.getMessage());
+		}
+
 	}
-	
+	//show error message
+	public void showErrorMsg(String error)
+	{
+		JOptionPane.showMessageDialog(null,error,"Error",JOptionPane.INFORMATION_MESSAGE);
+	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource()==sendButton){
@@ -113,11 +115,18 @@ public class TextFrame extends JFrame implements ActionListener {
 				ClientSkeleton.getInstance().sendActivityObject(obj);
 			} catch (ParseException e1) {
 				log.error("invalid JSON object entered into input text field, data not sent");
+			} catch (IOException e1) {
+				e1.printStackTrace();
 			}
-			
+
 		} else if(e.getSource()==disconnectButton){
 			// TODO need to take care of the receiving thread
-			ClientSkeleton.getInstance().disconnect();
+			try {
+				ClientSkeleton.getInstance().disconnect();
+
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 		}
 	}
 }

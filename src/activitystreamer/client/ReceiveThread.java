@@ -40,7 +40,6 @@ public class ReceiveThread implements Runnable{
 				e.printStackTrace();
 			}
 		}
-
 		// TODO receive message from socket and show it in printArea
 		// TODO what if lost connection ?
 	}

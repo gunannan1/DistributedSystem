@@ -30,4 +30,5 @@ public class ServerAnnounceMsg  extends JsonMessage{
     {
         this.load = load;
     }
+    
 }

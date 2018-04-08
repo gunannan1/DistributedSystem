@@ -39,6 +39,7 @@ public class JsonMessage {
     {
         command = c;
     }
+    protected String getCommand(){ return command;}
 
     public String toJsonString()
     {

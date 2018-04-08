@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="4f4c6070-9d37-419f-b26a-4e825016ab05" name="Default" comment="remove git log">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
+    <list default="true" id="4f4c6070-9d37-419f-b26a-4e825016ab05" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/document/Question.md" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/activitystreamer/TODO Summary.md" afterPath="$PROJECT_DIR$/document/TODO Summary.md" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/document/Command Definition.docx" afterPath="$PROJECT_DIR$/document/Command Definition.docx" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/activitystreamer/client/ClientSkeleton.java" afterPath="$PROJECT_DIR$/src/activitystreamer/client/ClientSkeleton.java" />
-    </list>
-    <list id="18ec69af-4764-4b32-b1ac-8fd10453c867" name="Revert &quot;meeting minutes for 29 Mar&quot; This reverts commit 31af276" comment="Revert &quot;meeting minutes for 29 Mar&quot;&#10;&#10;This reverts commit 31af276">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/document/minute_minutes.md" afterPath="$PROJECT_DIR$/document/minute_minutes.md" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Message/JsonMessage.java" afterPath="$PROJECT_DIR$/src/Message/JsonMessage.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Message/ServerAnnounceMsg.java" afterPath="$PROJECT_DIR$/src/Message/ServerAnnounceMsg.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/activitystreamer/Client.java" afterPath="$PROJECT_DIR$/src/activitystreamer/Client.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="./idea/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
-    <file path="$PROJECT_DIR$/document/minute_minutes.md" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,11 +21,98 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="README.md" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/README.md">
+          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+            <state split_layout="SPLIT">
+              <first_editor relative-caret-position="0">
+                <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+                <folding />
+              </first_editor>
+              <second_editor />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Client.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/activitystreamer/Client.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="265">
+              <caret line="107" column="13" lean-forward="true" selection-start-line="107" selection-start-column="13" selection-end-line="107" selection-end-column="13" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TODO Summary.md" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/document/TODO Summary.md">
+          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+            <state split_layout="SPLIT">
+              <first_editor relative-caret-position="-107">
+                <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+                <folding />
+              </first_editor>
+              <second_editor />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="RegisterFailedMsg.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Message/RegisterFailedMsg.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="30">
+              <caret line="2" column="30" lean-forward="false" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="30" />
+              <folding>
+                <element signature="e#235#236#0" expanded="true" />
+                <element signature="e#267#268#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AuthFailMsg.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Message/AuthFailMsg.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="180">
+              <caret line="15" column="0" lean-forward="true" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
+              <folding>
+                <element signature="e#225#226#0" expanded="true" />
+                <element signature="e#249#250#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ActBroadMsg.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Message/ActBroadMsg.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="285">
+              <caret line="25" column="5" lean-forward="false" selection-start-line="25" selection-start-column="5" selection-end-line="25" selection-end-column="5" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ServerAnnounceMsg.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Message/ServerAnnounceMsg.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="300">
+              <caret line="32" column="4" lean-forward="false" selection-start-line="32" selection-start-column="4" selection-end-line="32" selection-end-column="4" />
+              <folding>
+                <element signature="e#469#470#0" expanded="true" />
+                <element signature="e#501#502#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="ClientSkeleton.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/activitystreamer/client/ClientSkeleton.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="157">
-              <caret line="27" column="17" lean-forward="false" selection-start-line="27" selection-start-column="17" selection-end-line="27" selection-end-column="17" />
+            <state relative-caret-position="172">
+              <caret line="220" column="21" lean-forward="true" selection-start-line="220" selection-start-column="21" selection-end-line="220" selection-end-column="21" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#2367#2397#0" expanded="true" />
@@ -34,37 +121,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="minute_minutes.md" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/document/minute_minutes.md">
-          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-            <state split_layout="SPLIT">
-              <first_editor relative-caret-position="285">
-                <caret line="19" column="0" lean-forward="true" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
-                <folding />
-              </first_editor>
-              <second_editor />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ActBroadMsg.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Message/ActBroadMsg.java">
+      <file leaf-file-name="ReceiveThread.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/activitystreamer/client/ReceiveThread.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="300">
-              <caret line="26" column="0" lean-forward="true" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
-              <folding>
-                <element signature="e#675#676#0" expanded="true" />
-                <element signature="e#714#715#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ActivityMsg.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Message/ActivityMsg.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="226">
-              <caret line="17" column="0" lean-forward="true" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
+            <state relative-caret-position="-28">
+              <caret line="24" column="32" lean-forward="true" selection-start-line="24" selection-start-column="32" selection-end-line="24" selection-end-column="32" />
               <folding />
             </state>
           </provider>
@@ -73,8 +134,8 @@
       <file leaf-file-name="JsonMessage.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Message/JsonMessage.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="300">
-              <caret line="20" column="31" lean-forward="false" selection-start-line="20" selection-start-column="31" selection-end-line="20" selection-end-column="31" />
+            <state relative-caret-position="278">
+              <caret line="41" column="20" lean-forward="false" selection-start-line="41" selection-start-column="20" selection-end-line="41" selection-end-column="20" />
               <folding />
             </state>
           </provider>
@@ -93,6 +154,7 @@
     <findStrings>
       <find>thread</find>
       <find>JSONObject</find>
+      <find>ClientSkeleton</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -108,7 +170,6 @@
       <list>
         <option value="$PROJECT_DIR$/src/activitystreamer/util/Settings.java" />
         <option value="$PROJECT_DIR$/src/activitystreamer/client/ReceiveThread.java" />
-        <option value="$PROJECT_DIR$/src/Message/JsonMessage.java" />
         <option value="$PROJECT_DIR$/src/Message/LoginMsg.java" />
         <option value="$PROJECT_DIR$/src/Message/LoginSuccMsg.java" />
         <option value="$PROJECT_DIR$/src/Message/LoginFailedMsg.java" />
@@ -123,10 +184,11 @@
         <option value="$PROJECT_DIR$/src/Message/ActivityMsg.java" />
         <option value="$PROJECT_DIR$/src/Message/ActBroadMsg.java" />
         <option value="$PROJECT_DIR$/src/Message/RedirectMsg.java" />
-        <option value="$PROJECT_DIR$/src/Message/ServerAnnounceMsg.java" />
-        <option value="$PROJECT_DIR$/src/activitystreamer/Client.java" />
         <option value="$PROJECT_DIR$/src/activitystreamer/client/TextFrame.java" />
+        <option value="$PROJECT_DIR$/src/Message/ServerAnnounceMsg.java" />
         <option value="$PROJECT_DIR$/src/activitystreamer/client/ClientSkeleton.java" />
+        <option value="$PROJECT_DIR$/src/Message/JsonMessage.java" />
+        <option value="$PROJECT_DIR$/src/activitystreamer/Client.java" />
       </list>
     </option>
   </component>
@@ -196,13 +258,6 @@
               <item name="DistributedSystem" type="b2602c69:ProjectViewProjectNode" />
               <item name="DistributedSystem" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="activitystreamer" type="462c0819:PsiDirectoryNode" />
-              <item name="util" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="DistributedSystem" type="b2602c69:ProjectViewProjectNode" />
-              <item name="DistributedSystem" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="Message" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -223,6 +278,11 @@
     <property name="aspect.path.notification.shown" value="true" />
     <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Ignored.Files" />
     <property name="GO_FMT" value="false" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/document" />
+    </key>
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -380,12 +440,34 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1522289133910</updated>
-      <workItem from="1523183461214" duration="1234000" />
+      <workItem from="1523183461214" duration="3606000" />
     </task>
+    <task id="LOCAL-00001" summary="remove git log">
+      <created>1523184703894</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1523184703894</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Revert &quot;meeting minutes for 29 Mar&quot;&#10;&#10;This reverts commit 31af276">
+      <created>1523184725022</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1523184725022</updated>
+    </task>
+    <task id="LOCAL-00003" summary="command definition">
+      <created>1523184745490</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1523184745490</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1234000" />
+    <option name="totallyTimeSpent" value="3606000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="353" y="110" width="1436" height="870" extended-state="0" />
@@ -399,7 +481,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.256" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32903227" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32903227" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32903227" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -463,7 +545,9 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="remove git log" />
-    <option name="LAST_COMMIT_MESSAGE" value="remove git log" />
+    <MESSAGE value="Revert &quot;meeting minutes for 29 Mar&quot;&#10;&#10;This reverts commit 31af276" />
+    <MESSAGE value="command definition" />
+    <option name="LAST_COMMIT_MESSAGE" value="command definition" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -567,22 +651,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_112.jdk/Contents/Home/src.zip!/javax/swing/JFrame.java" />
-    <entry file="file://$PROJECT_DIR$/src/activitystreamer/TODO Summary.md">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="14" column="11" lean-forward="false" selection-start-line="14" selection-start-column="11" selection-end-line="14" selection-end-column="11" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_112.jdk/Contents/Home/src.zip!/java/security/SecureRandom.java" />
     <entry file="file://$PROJECT_DIR$/src/activitystreamer/server/Connection.java">
       <provider selected="true" editor-type-id="text-editor">
@@ -593,19 +662,6 @@
       </provider>
     </entry>
     <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_112.jdk/Contents/Home/src.zip!/java/awt/event/ActionListener.java" />
-    <entry file="file://$PROJECT_DIR$/src/Message/LoginFailedMsg.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="14" column="1" lean-forward="true" selection-start-line="14" selection-start-column="1" selection-end-line="14" selection-end-column="1" />
-          <folding>
-            <element signature="e#125#126#0" expanded="false" />
-            <element signature="e#177#178#0" expanded="false" />
-            <element signature="e#221#222#0" expanded="false" />
-            <element signature="e#253#254#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Message/LoginSuccMsg.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="210">
@@ -615,19 +671,6 @@
             <element signature="e#180#181#0" expanded="false" />
             <element signature="e#221#222#0" expanded="false" />
             <element signature="e#245#246#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Message/RegisterFailedMsg.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="13" column="5" lean-forward="true" selection-start-line="13" selection-start-column="5" selection-end-line="13" selection-end-column="5" />
-          <folding>
-            <element signature="e#136#137#0" expanded="false" />
-            <element signature="e#191#192#0" expanded="false" />
-            <element signature="e#235#236#0" expanded="false" />
-            <element signature="e#267#268#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -645,19 +688,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Message/InvalidMsg.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="9" column="0" lean-forward="true" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
-          <folding>
-            <element signature="e#122#123#0" expanded="false" />
-            <element signature="e#177#178#0" expanded="false" />
-            <element signature="e#221#222#0" expanded="false" />
-            <element signature="e#253#254#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Message/LogoutMsg.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="135">
@@ -665,24 +695,6 @@
           <folding>
             <element signature="e#91#92#0" expanded="false" />
             <element signature="e#137#138#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Message/ServerAnnounceMsg.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="24" column="5" lean-forward="true" selection-start-line="24" selection-start-column="5" selection-end-line="24" selection-end-column="5" />
-          <folding>
-            <element signature="e#221#222#0" expanded="false" />
-            <element signature="e#276#277#0" expanded="false" />
-            <element signature="e#316#317#0" expanded="false" />
-            <element signature="e#344#345#0" expanded="false" />
-            <element signature="e#392#393#0" expanded="false" />
-            <element signature="e#428#429#0" expanded="false" />
-            <element signature="e#501#502#0" expanded="false" />
-            <element signature="e#542#543#0" expanded="false" />
-            <element signature="e#574#575#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -711,14 +723,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Message/AnonymousLoginMsg.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" column="30" lean-forward="false" selection-start-line="8" selection-start-column="30" selection-end-line="8" selection-end-column="30" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/activitystreamer/Server.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1160">
@@ -726,22 +730,6 @@
           <folding>
             <element signature="imports" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Message/AuthFailMsg.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="12" column="17" lean-forward="true" selection-start-line="12" selection-start-column="17" selection-end-line="12" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/activitystreamer/client/ReceiveThread.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-63">
-          <caret line="24" column="32" lean-forward="true" selection-start-line="24" selection-start-column="32" selection-end-line="24" selection-end-column="32" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -757,24 +745,6 @@
             <element signature="e#1528#1529#0" expanded="true" />
             <element signature="e#1820#1821#0" expanded="true" />
             <element signature="e#1837#1838#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Message/AuthMsg.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="14" column="1" lean-forward="true" selection-start-line="14" selection-start-column="1" selection-end-line="14" selection-end-column="1" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/activitystreamer/Client.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-578">
-          <caret line="41" column="30" lean-forward="true" selection-start-line="41" selection-start-column="30" selection-end-line="41" selection-end-column="30" />
-          <folding>
-            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -805,49 +775,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Message/JsonMessage.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="20" column="31" lean-forward="false" selection-start-line="20" selection-start-column="31" selection-end-line="20" selection-end-column="31" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Message/ActivityMsg.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="226">
-          <caret line="17" column="0" lean-forward="true" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Message/ActBroadMsg.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="26" column="0" lean-forward="true" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
-          <folding>
-            <element signature="e#675#676#0" expanded="true" />
-            <element signature="e#714#715#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/activitystreamer/client/ClientSkeleton.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="157">
-          <caret line="27" column="17" lean-forward="false" selection-start-line="27" selection-start-column="17" selection-end-line="27" selection-end-column="17" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#2367#2397#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/document/minute_minutes.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
-          <first_editor relative-caret-position="285">
-            <caret line="19" column="0" lean-forward="true" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
+          <first_editor relative-caret-position="225">
+            <caret line="15" column="26" lean-forward="false" selection-start-line="15" selection-start-column="22" selection-end-line="15" selection-end-column="26" />
             <folding />
           </first_editor>
           <second_editor />
@@ -856,6 +788,168 @@
       <provider editor-type-id="text-editor">
         <state relative-caret-position="76">
           <caret line="19" column="0" lean-forward="true" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Message/AnonymousLoginMsg.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="12" column="0" lean-forward="false" selection-start-line="12" selection-start-column="0" selection-end-line="15" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Message/ActivityMsg.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="106">
+          <caret line="9" column="3" lean-forward="false" selection-start-line="9" selection-start-column="3" selection-end-line="9" selection-end-column="3" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Message/AuthMsg.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="14" column="1" lean-forward="true" selection-start-line="14" selection-start-column="1" selection-end-line="14" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Message/InvalidMsg.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="7" column="30" lean-forward="false" selection-start-line="7" selection-start-column="19" selection-end-line="7" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/document/Question.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="0">
+            <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+            <folding />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Message/LoginFailedMsg.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="14" column="1" lean-forward="true" selection-start-line="14" selection-start-column="1" selection-end-line="14" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Message/RegisterFailedMsg.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" column="30" lean-forward="false" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="30" />
+          <folding>
+            <element signature="e#235#236#0" expanded="true" />
+            <element signature="e#267#268#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Message/AuthFailMsg.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="15" column="0" lean-forward="true" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
+          <folding>
+            <element signature="e#225#226#0" expanded="true" />
+            <element signature="e#249#250#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Message/ActBroadMsg.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="25" column="5" lean-forward="false" selection-start-line="25" selection-start-column="5" selection-end-line="25" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Message/ServerAnnounceMsg.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="32" column="4" lean-forward="false" selection-start-line="32" selection-start-column="4" selection-end-line="32" selection-end-column="4" />
+          <folding>
+            <element signature="e#469#470#0" expanded="true" />
+            <element signature="e#501#502#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/activitystreamer/client/ReceiveThread.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-28">
+          <caret line="24" column="32" lean-forward="true" selection-start-line="24" selection-start-column="32" selection-end-line="24" selection-end-column="32" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/activitystreamer/client/ClientSkeleton.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="172">
+          <caret line="220" column="21" lean-forward="true" selection-start-line="220" selection-start-column="21" selection-end-line="220" selection-end-column="21" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#2367#2397#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="0">
+            <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+            <folding />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+      <provider editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Message/JsonMessage.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="278">
+          <caret line="41" column="20" lean-forward="false" selection-start-line="41" selection-start-column="20" selection-end-line="41" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/document/TODO Summary.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="-107">
+            <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+            <folding />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+      <provider editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="14" column="11" lean-forward="false" selection-start-line="14" selection-start-column="11" selection-end-line="14" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/activitystreamer/Client.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="265">
+          <caret line="107" column="13" lean-forward="true" selection-start-line="107" selection-start-column="13" selection-end-line="107" selection-end-column="13" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

@@ -29,7 +29,7 @@ public class Client {
 		Options options = new Options();
 		// TODO new option is required to separate "connect" and "register"
 		options.addOption("r", false, " user register, enter u,s then");
-		options.addOption("c", false, "start connection, enter u, s, rh, rp then");
+		options.addOption("l", false, " user login");
 
 		options.addOption("u", true, "username");
 		options.addOption("s", true, "secret for username");
@@ -47,60 +47,69 @@ public class Client {
 		} catch (ParseException e1) {
 			help(options);
 		}
-		// connect
-		if (cmd.hasOption("c")) {
-			if (cmd.hasOption("rh")) {
-				String remoteHostname = cmd.getOptionValue("rh");
-				int timeOut = 3000;
-				boolean status = InetAddress.getByName(remoteHostname).isReachable(timeOut);
-				if (status)
-					Settings.setRemoteHostname(remoteHostname);
-				else {
-					log.error("The provided remote host name is not reachable, please try again");
-					help(options);
-				}
-			}
-			//TODO what if remote host is not provided--finished
-			if (cmd.hasOption("rp")) {
-				try {
-					int port = Integer.parseInt(cmd.getOptionValue("rp"));
-					Settings.setRemotePort(port);
-				} catch (NumberFormatException e) {
-					log.error("-rp requires a port number, parsed: " + cmd.getOptionValue("rp"));
-					help(options);
-				}
-			}
 
-			//TODO what if no user information is provided or only username is provided ?
-			if (cmd.hasOption("s")) {
-				Settings.setSecret(cmd.getOptionValue("s"));
+//		if (cmd.hasOption("c")) {
+		if (cmd.hasOption("rh")) {
+			String remoteHostname = cmd.getOptionValue("rh");
+			int timeOut = 3000;
+			boolean status = InetAddress.getByName(remoteHostname).isReachable(timeOut);
+			if (status) {
+				log.debug("Set remote host to {}", remoteHostname);
+				Settings.setRemoteHostname(remoteHostname);
+			} else {
+				log.error("The provided remote host name is not reachable, please try again");
+				help(options);
 			}
-
-			if (cmd.hasOption("u")) {
-				Settings.setUsername(cmd.getOptionValue("u"));
-			}
-
-			log.info("starting client");
+		}
+		//TODO what if remote host is not provided--finished
+		if (cmd.hasOption("rp")) {
 			try {
-				ClientSkeleton c = ClientSkeleton.getInstance();
-				c.sendLoginMsg();
-
-			} catch (IOException e) {
-				log.error("client starts fail");
+				int port = Integer.parseInt(cmd.getOptionValue("rp"));
+				log.debug("Set remote port to {}", port);
+				Settings.setRemotePort(port);
+			} catch (NumberFormatException e) {
+				log.error("-rp requires a port number, parsed: " + cmd.getOptionValue("rp"));
+				help(options);
 			}
 		}
 
-		//Register
-		if (cmd.hasOption("r")) {
-			if (cmd.hasOption("u")) {
-				Settings.setUsername(cmd.getOptionValue("u"));
-			}
-			if (cmd.hasOption("s")) {
-				Settings.setSecret(cmd.getOptionValue("s"));
-			}
-			ClientSkeleton c = ClientSkeleton.getInstance();
-			c.sendRegisterMsg();
+		//TODO what if no user information is provided or only username is provided ?
+		if (cmd.hasOption("s")) {
+			Settings.setSecret(cmd.getOptionValue("s"));
+		}
 
+		if (cmd.hasOption("u")) {
+			Settings.setUsername(cmd.getOptionValue("u"));
+		}
+
+		log.info("starting client");
+		try {
+			ClientSkeleton c = ClientSkeleton.getInstance();
+			c.sendLoginMsg();
+
+		} catch (IOException e) {
+			log.error("client starts fail");
+		}
+//		}
+
+		// user info
+		if (cmd.hasOption("u")) {
+			Settings.setUsername(cmd.getOptionValue("u"));
+		}
+		if (cmd.hasOption("s")) {
+			Settings.setSecret(cmd.getOptionValue("s"));
+		}
+
+		//Register
+
+		if (cmd.hasOption("r")) {
+
+			ClientSkeleton c = ClientSkeleton.getInstance();
+			c.sendRegisterRequest();
+
+		}else if(cmd.hasOption('l')){
+			ClientSkeleton c = ClientSkeleton.getInstance();
+			c.sendLoginMsg();
 		}
 		//anonymous login
 		if (cmd.hasOption("a")) {
@@ -109,8 +118,6 @@ public class Client {
 			ClientSkeleton c = ClientSkeleton.getInstance();
 			c.sendAnonymousLoginMsg();
 		}
-
-
 	}
 
 

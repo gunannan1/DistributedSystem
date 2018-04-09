@@ -28,13 +28,15 @@ public class Client {
 
 		Options options = new Options();
 		// TODO new option is required to separate "connect" and "register"
-
-		options.addOption("u", true, "username");
-		options.addOption("rp", true, "remote port number");
-		options.addOption("rh", true, "remote hostname");
-		options.addOption("s", true, "secret for username");
 		options.addOption("r", false, " user register, enter u,s then");
 		options.addOption("c", false, "start connection, enter u, s, rh, rp then");
+
+		options.addOption("u", true, "username");
+		options.addOption("s", true, "secret for username");
+
+		options.addOption("rp", true, "remote port number");
+		options.addOption("rh", true, "remote hostname");
+
 		options.addOption("a", false, "anonymous login");
 		// build the parser
 		CommandLineParser parser = new DefaultParser();
@@ -106,8 +108,6 @@ public class Client {
 			Settings.setSecret("");
 			ClientSkeleton c = ClientSkeleton.getInstance();
 			c.sendAnonymousLoginMsg();
-
-
 		}
 
 

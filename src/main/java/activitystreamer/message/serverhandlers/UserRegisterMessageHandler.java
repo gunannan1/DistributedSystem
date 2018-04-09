@@ -30,7 +30,11 @@ public class UserRegisterMessageHandler extends MessageHandler {
 		String username = json.get("username").getAsString();
 		if(!this.control.checkUserExists(username)){ // if not exist locally
 			if(!this.lockResultHashMap.containsKey(username)){ // if not in request list
-				this.control.broadcast();//TODO broadcast lock_request, may need another method
+				if(this.control.getConnections().size() > 0) {
+					this.control.broadcast();//TODO broadcast lock_request, may need another method
+				}else{
+					return true;
+				}
 			}else{ // is already in request list and waiting for other servers' response
 				log.error("Username:{} is in registering process, waiting for other servers response.");
 				return false;

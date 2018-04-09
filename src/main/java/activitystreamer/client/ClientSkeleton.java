@@ -40,19 +40,13 @@ public class ClientSkeleton extends Thread {
 	public static ClientSkeleton getInstance() throws IOException {
 		if(clientSolution==null) {
 			clientSolution = new ClientSkeleton();
+			clientSolution.initMessageHandlers();
 		}
 		return clientSolution;
 	}
 	
 	public ClientSkeleton() throws IOException {
-		// Initialize handlers for messages that client may receive
-		clientSolution.handlerMap = new HashMap<>();
-		clientSolution.handlerMap.put(MessageType.LOGIN_FAILED,new ClientFailedMessageHandler(this));
-//		clientSolution.handlerMap.put(MessageType.LOGIN_SUCCESS,);
-//		clientSolution.handlerMap.put(MessageType.REDIRECT,);
-		clientSolution.handlerMap.put(MessageType.REGISTER_FAILED,new ClientFailedMessageHandler(this));
-//		clientSolution.handlerMap.put(MessageType.REGISTER_SUCCESS,);
-		clientSolution.handlerMap.put(MessageType.AUTHENTICATION_FAIL,new ClientFailedMessageHandler(this));
+
 		// TODO initialise socket
 //		this.s = connectToServer(remote, port);
 //		this.in = new DataInputStream(this.s.getInputStream());
@@ -61,6 +55,17 @@ public class ClientSkeleton extends Thread {
 //		textFrame = new TextFrame();
 //		start();
 
+	}
+
+	private void initMessageHandlers(){
+		// Initialize handlers for messages that client may receive
+		clientSolution.handlerMap = new HashMap<>();
+		clientSolution.handlerMap.put(MessageType.LOGIN_FAILED,new ClientFailedMessageHandler(this));
+//		clientSolution.handlerMap.put(MessageType.LOGIN_SUCCESS,);
+//		clientSolution.handlerMap.put(MessageType.REDIRECT,);
+		clientSolution.handlerMap.put(MessageType.REGISTER_FAILED,new ClientFailedMessageHandler(this));
+//		clientSolution.handlerMap.put(MessageType.REGISTER_SUCCESS,);
+		clientSolution.handlerMap.put(MessageType.AUTHENTICATION_FAIL,new ClientFailedMessageHandler(this));
 	}
 	
 	// TODO estimate connection
@@ -92,7 +97,7 @@ public class ClientSkeleton extends Thread {
 		try {
 			this.in = new DataInputStream(this.s.getInputStream());
 			this.out = new DataOutputStream((this.s.getOutputStream()));
-			this.out.writeUTF(MessageGenerator.generate(MessageType.REGISTER,username,secret));
+			this.out.writeUTF(MessageGenerator.generateRegister(MessageType.REGISTER,username,secret));
 		} catch (IOException e) {
 			e.printStackTrace();
 			//TODO add lod
@@ -371,11 +376,9 @@ public class ClientSkeleton extends Thread {
 
         public void sendLoginMsg () {
             LoginMsg loginMsg = new LoginMsg();
-            loginMsg.setUsername(Settings.getUsername());
-            loginMsg.setSecrect(Settings.getSecret());
-            String loginMessage = loginMsg.toJsonString();
+            String loginStr = MessageGenerator.generateLogin(MessageType.LOGIN,Settings.getUsername(),Settings.getSecret());
             try {
-                this.out.writeUTF(loginMessage);
+                this.out.writeUTF(loginStr);
             } catch (IOException e) {
                 e.printStackTrace();
             }

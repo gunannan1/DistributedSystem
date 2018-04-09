@@ -12,8 +12,7 @@ import activitystreamer.message.clienthandlers.ClientFailedMessageHandler;
 public class test {
 
 	public static void main(String[] argv){
-		ClientFailedMessageHandler rh = new ClientFailedMessageHandler("ningk1","abc");
-		System.out.println(rh.toJsonString());
+
 	
 	}
 

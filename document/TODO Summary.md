@@ -18,8 +18,8 @@ Check high-level design [here](https://www.draw.io/?lightbox=1&highlight=0000ff&
 
 ##### TextFrame
 
-0. Message receiving need to run in another thread or it will block the UI thread
-0. \* Message parse & print should also be in the receiving thread
+0. Message_Vivian receiving need to run in another thread or it will block the UI thread
+0. \* Message_Vivian parse & print should also be in the receiving thread
 0. Close all threads when disconnect.
 
 ##### *ReceiveThread.java

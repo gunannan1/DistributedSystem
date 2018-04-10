@@ -76,7 +76,7 @@ public class ClientSkeleton extends Thread {
 
 
 	public void startUI() {
-		if(textFrame != null) {
+		if(textFrame == null) {
 			textFrame = new ClientTextFrame();
 			UILogAppender.setTextArea(this.textFrame.getLogTextArea());
 		}

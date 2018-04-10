@@ -1,6 +1,7 @@
 package activitystreamer.message;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 /**
  * Activity
@@ -10,9 +11,15 @@ import com.google.gson.Gson;
  */
 
 public class Activity {
+	private String activity;
+
+	public Activity(String activity){
+		this.activity = activity;
+	}
+
 
 	public String toJsonString()
 	{
-		return new Gson().toJson(this);
+		return new Gson().toJson(this, JsonObject.class);
 	}
 }

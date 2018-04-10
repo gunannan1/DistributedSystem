@@ -4,6 +4,7 @@ import activitystreamer.message.MessageGenerator;
 import activitystreamer.message.MessageHandler;
 import activitystreamer.message.MessageType;
 import activitystreamer.message.serverhandlers.ServerFailedMessageHandler;
+import activitystreamer.message.serverhandlers.UserRegisterMessageHandler;
 import activitystreamer.util.Settings;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -16,16 +17,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Control extends Thread {
-	private static final Logger log = LogManager.getLogger();
+	public static final Logger log = LogManager.getLogger("serverLogger");
 
 	private static boolean term = false;
 	private static Listener listener; // why static
-	private Connection parentServer;
-	private boolean isAuthed;
 	private static ArrayList<Connection> connections;
 	private HashMap<String, User> userList; // <username, user Class>,  please note that anonymous users will not be stored here
 	private HashMap<MessageType, MessageHandler> handlerMap;
 
+	private int clientLoads;
+	private int serverLoads;
 
 	protected static Control control = null;
 
@@ -37,9 +38,13 @@ public class Control extends Thread {
 		}
 		return control;
 	}
+
 	public Control() {
 		// Initialize user list
 		userList = new HashMap<>();
+
+		clientLoads = 0;
+		serverLoads = 0;
 
 		// initialize the connections array
 		connections = new ArrayList<Connection>();
@@ -48,14 +53,12 @@ public class Control extends Thread {
 		if (Settings.getRemoteHostname() != null) {
 			// if remote server host provided, connect to it and then wait for response to start listener.
 			initiateConnection();
-		}else{
+		} else {
 			this.startListener();
 		}
-
-
 	}
 
-	public void startListener(){
+	public void startListener() {
 		// start a listener
 		try {
 			listener = new Listener();
@@ -69,21 +72,22 @@ public class Control extends Thread {
 	private void initialHandlers() {
 		this.handlerMap = new HashMap<>();
 		this.handlerMap.put(MessageType.INVALID_MESSAGE, new ServerFailedMessageHandler(this));
+		this.handlerMap.put(MessageType.REGISTER, new UserRegisterMessageHandler(this));
 
 	}
 
 
 	public void initiateConnection() {
 		// make a connection to another server if remote hostname is supplied
-			try {
-				Connection c = outgoingConnection(new Socket(Settings.getRemoteHostname(), Settings.getRemotePort()));
-				// Authen itself to remote server
-				String serverRegister = MessageGenerator.generateAuthen(MessageType.AUTHENTICATE, Settings.getSecret());
-				c.writeMsg(serverRegister);
-			} catch (IOException e) {
-				log.error("failed to make connection to " + Settings.getRemoteHostname() + ":" + Settings.getRemotePort() + " :" + e);
-				System.exit(-1);
-			}
+		try {
+			Connection c = outgoingConnection(new Socket(Settings.getRemoteHostname(), Settings.getRemotePort()));
+			// Authen itself to remote server
+			String serverRegister = MessageGenerator.generateAuthen(Settings.getSecret());
+			c.writeMsg(serverRegister);
+		} catch (IOException e) {
+			log.error("failed to make connection to " + Settings.getRemoteHostname() + ":" + Settings.getRemotePort() + " :" + e);
+			System.exit(-1);
+		}
 
 	}
 
@@ -93,13 +97,21 @@ public class Control extends Thread {
 	 */
 	public synchronized boolean process(Connection con, String msg) {
 		JsonParser parser = new JsonParser();
-		JsonObject json = parser.parse(msg).getAsJsonObject();
-		MessageType m = MessageType.valueOf(json.get("command").getAsString());
-		MessageHandler h = handlerMap.get(m);
-		if (h != null) {
-			return h.processMessage(json, con);
-		} else {
-			log.error("Cannot find message handler for message type '{}'", m.name());
+		try {
+			JsonObject json = parser.parse(msg).getAsJsonObject();
+			MessageType m = MessageType.valueOf(json.get("command").getAsString());
+			MessageHandler h = handlerMap.get(m);
+			if (h != null) {
+				return h.processMessage(json, con);
+			} else {
+				log.error("Cannot find message handler for message type '{}'", m.name());
+				return false;
+			}
+		} catch (IllegalStateException e) {
+			String info = String.format("Invalid message '%s'", msg);
+			log.error(info);
+			String invalidMsg = MessageGenerator.generateInvalid(info);
+			con.writeMsg(invalidMsg);
 			return false;
 		}
 
@@ -109,7 +121,14 @@ public class Control extends Thread {
 	 * The connection has been closed by the other party.
 	 */
 	public synchronized void connectionClosed(Connection con) {
-		if (!term) connections.remove(con);
+		if (!term){
+			connections.remove(con);
+			if(con.isAuthedServer()){
+				this.control.changeServerLoads(-1);
+			}else if(con.isAuthedClient()){
+				this.control.changeClientLoads(-1);
+			}
+		}
 	}
 
 	/*
@@ -143,6 +162,16 @@ public class Control extends Thread {
 	public synchronized boolean checkUserExists(String username) {
 		return userList.containsKey(username);
 	}
+	//TODO add user
+	public synchronized boolean addUser(User user) {
+		if(!checkUserExists(user.getUsername())){
+			userList.put(user.getUsername(),user);
+			return true;
+		}else{
+			log.info("User '{}' exists, reject register.",user.getUsername());
+			return false;
+		}
+	}
 
 	@Override
 	public void run() {
@@ -160,7 +189,6 @@ public class Control extends Thread {
 				log.debug("doing activity");
 				term = doActivity();
 			}
-
 		}
 		log.info("closing " + connections.size() + " connections");
 		// clean up
@@ -183,7 +211,19 @@ public class Control extends Thread {
 		return connections;
 	}
 
-	public synchronized void addTask() {
+	public synchronized void changeClientLoads(int n) {
+		this.clientLoads += n;
+	}
 
+	public synchronized void changeServerLoads(int n) {
+		this.serverLoads += n;
+	}
+
+	public int getClientLoads() {
+		return clientLoads;
+	}
+
+	public int getServerLoads() {
+		return serverLoads;
 	}
 }

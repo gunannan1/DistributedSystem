@@ -25,8 +25,9 @@ public class Connection extends Thread {
 	private Socket socket;
 	private boolean term=false;
 	private boolean isAuthed = false;
+	private boolean isServer;
 	
-	Connection(Socket socket) throws IOException{
+	Connection(Socket socket, Boolean isServer) throws IOException{
 		in = new DataInputStream(socket.getInputStream());
 	    out = new DataOutputStream(socket.getOutputStream());
 	    inreader = new BufferedReader( new InputStreamReader(in));
@@ -36,10 +37,17 @@ public class Connection extends Thread {
 		isAuthed = false;
 	    start();
 	}
-	
+	Connection(Socket socket) throws IOException{
+		this(socket,false);
+	}
+
+	public void setServer(boolean server) {
+		isServer = server;
+	}
+
 	/*
-	 * returns true if the message was written, otherwise false
-	 */
+		 * returns true if the message was written, otherwise false
+		 */
 	public boolean writeMsg(String msg) {
 		if(open){
 			outwriter.println(msg);
@@ -69,7 +77,7 @@ public class Connection extends Thread {
 			String data;
 			while(!term && (data = inreader.readLine())!=null){
 				log.debug("receive data {}",data);
-				term=Control.getInstance().process(this,data);
+				term = !Control.getInstance().process(this,data);
 			}
 			log.debug("connection closed to "+Settings.socketAddress(socket));
 			Control.getInstance().connectionClosed(this);
@@ -93,5 +101,25 @@ public class Connection extends Thread {
 		this.term = term;
 		if(term) interrupt();
 	}
+	public void setAuthed(boolean isAuthed){
+		this.isAuthed = isAuthed;
+	}
+
+	public boolean isAuthedClient(){
+		return !isServer && isAuthed;
+	}
+
+	public boolean isAuthedServer() {
+		return isServer && isAuthed;
+	}
+
+	public void writeAuthMsg(){}
+	public void writeInvalidMsg(){}
+	public void writeAuthFailedMsg(){}
+	public void writeAnnounceMsg(){}
+	public void writeActiveBroadcastMsg(){}
+	public void writeLockRequestMsg(){}
+	public void writeLockAllowedMsg(){}
+	public void writeLockDeniedMsg(){}
 
 }

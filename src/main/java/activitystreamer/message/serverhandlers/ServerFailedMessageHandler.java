@@ -23,9 +23,12 @@ public class ServerFailedMessageHandler extends MessageHandler {
 
 	@Override
 	public boolean processMessage(JsonObject json,Connection connection) {
-		this.log.error(json.get("info"));
-		connection.setTerm(true);
+		Control.log.error(json.get("info"));
+		connection.closeCon();
+		this.control.connectionClosed(connection);
+
 		// return false to close related connection and thread
 		return false;
 	}
+
 }

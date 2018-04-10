@@ -27,7 +27,7 @@ public class ClientFailedMessageHandler extends MessageHandler {
 
 	@Override
 	public boolean processMessage(JsonObject json,Connection connection) {
-		this.log.error(json.get("info"));
+		this.clientSkeleton.log.error(json.get("info"));
 		this.clientSkeleton.disconnect();
 		return false;
 

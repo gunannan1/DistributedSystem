@@ -1,6 +1,6 @@
 package activitystreamer;
 
-import activitystreamer.message.clienthandlers.ClientFailedMessageHandler;
+import activitystreamer.server.ServerTextFrame;
 
 /**
  * test
@@ -11,9 +11,10 @@ import activitystreamer.message.clienthandlers.ClientFailedMessageHandler;
 
 public class test {
 
-	public static void main(String[] argv){
+	public static void main(String[] argv) {
 
-	
+		ServerTextFrame t = new ServerTextFrame();
+
 	}
 
 }

@@ -83,13 +83,13 @@ public class Client {
 		}
 
 		log.info("starting client");
-		try {
-			ClientSkeleton c = ClientSkeleton.getInstance();
-			c.sendLoginMsg();
-
-		} catch (IOException e) {
-			log.error("client starts fail");
-		}
+//		try {
+//			ClientSkeleton c = ClientSkeleton.getInstance();
+//			c.sendLoginMsg();
+//
+//		} catch (IOException e) {
+//			log.error("client starts fail");
+//		}
 //		}
 
 		// user info
@@ -105,7 +105,7 @@ public class Client {
 		if (cmd.hasOption("r")) {
 
 			ClientSkeleton c = ClientSkeleton.getInstance();
-			c.sendRegisterRequest();
+			c.sendRegisterMsg();
 
 		}else if(cmd.hasOption('l')){
 			ClientSkeleton c = ClientSkeleton.getInstance();

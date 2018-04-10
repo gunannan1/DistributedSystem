@@ -1,0 +1,1 @@
+{"command":"REGISTER","username":"ningk1","secret":"abc"}

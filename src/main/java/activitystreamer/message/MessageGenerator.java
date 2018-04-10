@@ -1,8 +1,9 @@
 package activitystreamer.message;
 
+import activitystreamer.util.Settings;
+import com.google.gson.JsonObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.json.simple.JSONObject;
 
 /**
  * MessageGenerator
@@ -14,57 +15,69 @@ import org.json.simple.JSONObject;
 public class MessageGenerator {
 	protected static final Logger log = LogManager.getLogger();
 
-	public static String generateInvalid(MessageType messageType, String info) {
-		return generate(messageType, info);
+	public static String generateInvalid(String info) {
+		return generate(MessageType.INVALID_MESSAGE, info);
 	}
 
-	public static String generateAuthFail(MessageType messageType, String info) {
-		return generate(messageType, info);
+	public static String generateAuthFail( String info) {
+		return generate(MessageType.AUTHENTICATION_FAIL, info);
 	}
 
-	public static String generateRegisterFail(MessageType messageType, String info) {
-		return generate(messageType, info);
+	public static String generateRegisterFail(String info) {
+		return generate(MessageType.REGISTER_FAILED, info);
 	}
 
-	public static String generateLoginFail(MessageType messageType, String info) {
-		return generate(messageType, info);
+	public static String generateLoginFail(String info) {
+		return generate(MessageType.LOGIN_FAILED, info);
 	}
 
-	public static String generateLRegisterSucc(MessageType messageType, String info) {
-		return generate(messageType, info);
+	public static String generateRegisterSucc(String username) {
+		return generate(MessageType.REGISTER_SUCCESS, String.format("register success for %s",username));
 	}
 
-	public static String generateLoginSucc(MessageType messageType, String info) {
-		return generate(messageType, info);
+	public static String generateLoginSucc(String info) {
+		return generate(MessageType.LOGIN_SUCCESS, info);
 	}
 
-	public static String generateAuthen(MessageType messageType, String secret) {
-		return generate(messageType, secret);
+	public static String generateAuthen(String secret) {
+		return generate(MessageType.AUTHENTICATE, secret);
 	}
 
-	public static String generateLockAllow(MessageType messageType, String username, String secret) {
-		return generate(messageType, username, secret);
+	public static String generateLockAllow(String username, String secret) {
+		return generate(MessageType.LOCK_ALLOWED, username, secret);
 	}
 
-	public static String generateLockDenied(MessageType messageType, String username, String secret) {
-		return generate(messageType, username, secret);
+	public static String generateLockDenied(String username, String secret) {
+		return generate(MessageType.LOCK_DENIED, username, secret);
 	}
 
-	public static String generateLockRequest(MessageType messageType, String username, String secret) {
-		return generate(messageType, username, secret);
+	public static String generateLockRequest(String username, String secret) {
+		return generate(MessageType.LOCK_REQUEST, username, secret);
 	}
 
-	public static String generateRegister(MessageType messageType, String username, String secret) {
-		return generate(messageType, username, secret);
+	public static String generateRegister(String username, String secret) {
+		return generate(MessageType.REGISTER, username, secret);
 	}
 
-	public static String generateLogin(MessageType messageType, String username, String secret) {
-		return generate(messageType, username, secret);
+	public static String generateLogin( String username, String secret) {
+		return generate(MessageType.LOGIN, username, secret);
 	}
 
+	public static String generateAnonymousLogin( String username) {
+		return generate(MessageType.LOGIN, username);
+	}
+
+	public static String generateActivityMsg(Activity act){
+		JsonObject json = new JsonObject();
+		json.addProperty("command", MessageType.ACTIVITY_MESSAGE.name());
+		json.addProperty("username", Settings.getUsername());
+		json.addProperty("secret", Settings.getSecret());
+		json.addProperty( "activity" ,act.toJsonString());
+		return json.toString();
+	}
 
 	private static String generate(MessageType messageType, String infoOrSecret) {
-		JSONObject json = new JSONObject();
+		JsonObject json = new JsonObject();
 		switch (messageType) {
 			case INVALID_MESSAGE:
 			case AUTHENTICATION_FAIL:
@@ -72,92 +85,95 @@ public class MessageGenerator {
 			case LOGIN_FAILED:
 			case REGISTER_SUCCESS:
 			case LOGIN_SUCCESS:
-				json.put("command", messageType.name());
-				json.put("info", infoOrSecret);
-				return json.toJSONString();
+				json.addProperty("command", messageType.name());
+				json.addProperty("info", infoOrSecret);
+				return json.toString();
 			case AUTHENTICATE:
-				json.put("command", messageType.name());
-				json.put("secret", infoOrSecret);
-				return json.toJSONString();
+				json.addProperty("command", messageType.name());
+				json.addProperty("secret", infoOrSecret);
+				return json.toString();
+			case LOGIN:
+				json.addProperty("command", messageType.name());
+				json.addProperty("username", infoOrSecret);
+				return json.toString();
 			default:
 				log.error("Invalid message type '{}' with parameter 'info' {}", messageType, infoOrSecret);
 
 		}
-		return json.toJSONString();
+		return json.toString();
 	}
 
 	// For LOCK_ALLOWED,LOCK_DENIED,LOCK_REQUEST,REGISTER,LOGIN
 	private static String generate(MessageType messageType, String username, String secret) {
-		JSONObject json = new JSONObject();
+		JsonObject json = new JsonObject();
 		switch (messageType) {
 			case LOCK_ALLOWED:
 			case LOCK_DENIED:
 			case LOCK_REQUEST:
 			case REGISTER:
 			case LOGIN:
-				json.put("command", messageType.name());
-				json.put("username", username);
-				json.put("secret", secret);
-				return json.toJSONString();
+				json.addProperty("command", messageType.name());
+				json.addProperty("username", username);
+				json.addProperty("secret", secret);
+				return json.toString();
 			default:
 				log.error("Invalid message type '{}' with parameter username='{}', secret='{}' ", messageType, username, secret);
 
 		}
-		return json.toJSONString();
+		return json.toString();
 	}
 
 	// for REDIRECT
-	public static String generateRedirect(MessageType messageType, String hostname, int port) {
-		JSONObject json = new JSONObject();
-		json.put("command", messageType.name());
-		json.put("hostname", hostname);
-		json.put("port", port);
-		return json.toJSONString();
+	public static String generateRedirect(String hostname, int port) {
+		JsonObject json = new JsonObject();
+		json.addProperty("command",MessageType.REDIRECT.name());
+		json.addProperty("hostname", hostname);
+		json.addProperty("port", port);
+		return json.toString();
 	}
 
 	// for LOGOUT
-	public static String generateLogout(MessageType messageType) {
-		JSONObject json = new JSONObject();
+	public static String generateLogout() {
+		JsonObject json = new JsonObject();
 
-		json.put("command", messageType.name());
+		json.addProperty("command", MessageType.LOGOUT.name());
 
-		return json.toJSONString();
+		return json.toString();
 	}
 
 	// for SERVER_ANNOUNCE
-	public static String generateAnnounce(MessageType messageType, String id, int load, String host, int port) {
-		JSONObject json = new JSONObject();
+	public static String generateAnnounce(String id, int load, String host, int port) {
+		JsonObject json = new JsonObject();
 
-		json.put("command", messageType.name());
-		json.put("id", id);
-		json.put("load", load);
-		json.put("host", host);
-		json.put("port", port);
+		json.addProperty("command", MessageType.SERVER_ANNOUNCE.name());
+		json.addProperty("id", id);
+		json.addProperty("load", load);
+		json.addProperty("host", host);
+		json.addProperty("port", port);
 
-		return json.toJSONString();
+		return json.toString();
 	}
 
 	// for ACTIVITY_BROADCAST
-	public static String generateActBroadcast(MessageType messageType, Activity act) {
-		JSONObject json = new JSONObject();
+	public static String generateActBroadcast(Activity act) {
+		JsonObject json = new JsonObject();
 
-		json.put("command", messageType.name());
-		json.put("activity", act.toJsonString());
+		json.addProperty("command", MessageType.ACTIVITY_BROADCAST.name());
+		json.addProperty("activity", act.toJsonString());
 
-		return json.toJSONString();
+		return json.toString();
 	}
 
 	// for ACTIVITY_MESSAGE
-	public static String generateActMessage(MessageType messageType, String username, String secret, Activity act) {
-		JSONObject json = new JSONObject();
+	public static String generateActMessage(String username, String secret, Activity act) {
+		JsonObject json = new JsonObject();
 
-		json.put("command", messageType.name());
-		json.put("username", username);
-		json.put("secret", secret);
-		json.put("activity", act.toJsonString());
+		json.addProperty("command", MessageType.ACTIVITY_MESSAGE.name());
+		json.addProperty("username", username);
+		json.addProperty("secret", secret);
+		json.addProperty("activity", act.toJsonString());
 
-		return json.toJSONString();
+		return json.toString();
 	}
-
 
 }

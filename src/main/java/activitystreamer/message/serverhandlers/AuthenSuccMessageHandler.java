@@ -22,8 +22,8 @@ public class AuthenSuccMessageHandler extends MessageHandler {
 
 	@Override
 	public boolean processMessage(JsonObject json,Connection connection) {
-		this.log.info("Process message {}", json.get("command"));
-		this.control.startListener();
+		Control.log.info("Process message {}", json.get("command"));
+		control.startListener();
 		// return false to close related connection and thread
 		return true;
 	}

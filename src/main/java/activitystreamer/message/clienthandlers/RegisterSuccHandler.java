@@ -1,6 +1,7 @@
 package activitystreamer.message.clienthandlers;
 
 import activitystreamer.client.ClientSkeleton;
+import activitystreamer.message.MessageGenerator;
 import activitystreamer.message.MessageHandler;
 import activitystreamer.server.Connection;
 import activitystreamer.util.Settings;
@@ -13,17 +14,17 @@ import com.google.gson.JsonObject;
  * Date 9/4/18
  */
 
-public class LoginSuccMessageHandler extends MessageHandler {
+public class RegisterSuccHandler extends MessageHandler {
 
 	private final ClientSkeleton clientSkeleton;
 
-	public LoginSuccMessageHandler(ClientSkeleton clientSkeleton) {
+	public RegisterSuccHandler(ClientSkeleton clientSkeleton) {
 		this.clientSkeleton = clientSkeleton;
 	}
 
 	@Override
-	public boolean processMessage(JsonObject json, Connection connection) {
-		clientSkeleton.log.info("Login successfully to server {} as user='{}' and secret='{}'", Settings.getRemoteHostname(), Settings.getUsername(), Settings.getSecret());
+	public boolean processMessage(JsonObject json,Connection connection) {
+		ClientSkeleton.log.info("Register successfully to server {}", Settings.getRemoteHostname());
 		this.clientSkeleton.startUI();
 		this.clientSkeleton.sendLoginMsg();
 		return true;

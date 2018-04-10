@@ -4,16 +4,13 @@ import activitystreamer.message.Activity;
 import activitystreamer.message.MessageGenerator;
 import activitystreamer.message.MessageHandler;
 import activitystreamer.message.MessageType;
-import activitystreamer.message.clienthandlers.ClientFailedMessageHandler;
-import activitystreamer.message.clienthandlers.LoginSuccMessageHandler;
-import activitystreamer.message.clienthandlers.RegisterSuccMessageHandler;
+import activitystreamer.message.clienthandlers.*;
 import activitystreamer.util.Settings;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.swing.*;
 import java.io.*;
 import java.net.Socket;
 import java.util.HashMap;
@@ -52,12 +49,15 @@ public class ClientSkeleton extends Thread {
 	private void initMessageHandlers() {
 		// Initialize handlers for messages that client may receive
 		clientSolution.handlerMap = new HashMap<>();
-		clientSolution.handlerMap.put(MessageType.LOGIN_FAILED, new ClientFailedMessageHandler(this));
-		clientSolution.handlerMap.put(MessageType.LOGIN_SUCCESS, new LoginSuccMessageHandler(this));
-//		clientSolution.handlerMap.put(MessageType.REDIRECT,);
-		clientSolution.handlerMap.put(MessageType.REGISTER_FAILED, new ClientFailedMessageHandler(this));
-		clientSolution.handlerMap.put(MessageType.REGISTER_SUCCESS,new RegisterSuccMessageHandler(this));
-		clientSolution.handlerMap.put(MessageType.AUTHENTICATION_FAIL, new ClientFailedMessageHandler(this));
+
+		clientSolution.handlerMap.put(MessageType.LOGIN_FAILED, new LoginFailedHandler(this));
+		clientSolution.handlerMap.put(MessageType.LOGIN_SUCCESS, new LoginSuccHandler(this));
+		clientSolution.handlerMap.put(MessageType.REDIRECT,new RedirectHandler(this));
+		clientSolution.handlerMap.put(MessageType.REGISTER_FAILED, new RegisterFailedHandler(this));
+		clientSolution.handlerMap.put(MessageType.REGISTER_SUCCESS,new RegisterSuccHandler(this));
+		clientSolution.handlerMap.put(MessageType.AUTHENTICATION_FAIL, new ClientAuthenFailedHandler(this));
+		clientSolution.handlerMap.put(MessageType.INVALID_MESSAGE, new ClientInvalidHandler(this));
+
 	}
 
 	// TODO estimate connection
@@ -76,8 +76,10 @@ public class ClientSkeleton extends Thread {
 
 
 	public void startUI() {
-		textFrame = new ClientTextFrame();
-		UILogAppender.setTextArea(this.textFrame.getLogTextArea());
+		if(textFrame != null) {
+			textFrame = new ClientTextFrame();
+			UILogAppender.setTextArea(this.textFrame.getLogTextArea());
+		}
 	}
 
 

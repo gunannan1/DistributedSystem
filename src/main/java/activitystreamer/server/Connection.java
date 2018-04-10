@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+import activitystreamer.message.MessageGenerator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -16,7 +17,6 @@ import activitystreamer.util.Settings;
 
 
 public class Connection extends Thread {
-	private static final Logger log = LogManager.getLogger();
 	private DataInputStream in;
 	private DataOutputStream out;
 	private BufferedReader inreader;
@@ -59,14 +59,14 @@ public class Connection extends Thread {
 	
 	public void closeCon(){
 		if(open){
-			log.info("closing connection "+Settings.socketAddress(socket));
+			Control.log.info("closing connection "+Settings.socketAddress(socket));
 			try {
 				term=true;
 				inreader.close();
 				out.close();
 			} catch (IOException e) {
 				// already closed?
-				log.error("received exception closing the connection "+Settings.socketAddress(socket)+": "+e);
+				Control.log.error("received exception closing the connection "+Settings.socketAddress(socket)+": "+e);
 			}
 		}
 	}
@@ -76,14 +76,14 @@ public class Connection extends Thread {
 		try {
 			String data;
 			while(!term && (data = inreader.readLine())!=null){
-				log.debug("receive data {}",data);
+				Control.log.debug("receive data {}",data);
 				term = !Control.getInstance().process(this,data);
 			}
-			log.debug("connection closed to "+Settings.socketAddress(socket));
+			Control.log.debug("connection closed to "+Settings.socketAddress(socket));
 			Control.getInstance().connectionClosed(this);
 			in.close();
 		} catch (IOException e) {
-			log.error("connection "+Settings.socketAddress(socket)+" closed with exception: "+e);
+			Control.log.error("connection "+Settings.socketAddress(socket)+" closed with exception: "+e);
 			Control.getInstance().connectionClosed(this);
 		}
 		open=false;
@@ -113,13 +113,32 @@ public class Connection extends Thread {
 		return isServer && isAuthed;
 	}
 
-	public void writeAuthMsg(){}
-	public void writeInvalidMsg(){}
-	public void writeAuthFailedMsg(){}
-	public void writeAnnounceMsg(){}
-	public void writeActiveBroadcastMsg(){}
-	public void writeLockRequestMsg(){}
-	public void writeLockAllowedMsg(){}
-	public void writeLockDeniedMsg(){}
+	// TODO implement send methods for different types of messages
+	public void sendInvalidMsg(String info){
+		Control.log.debug("send invalid message to server with info={}",info);
+		String invalidStr = MessageGenerator.generateInvalid(info);
+		this.writeMsg(invalidStr);
+	}
+
+	//TODO for client
+	public void sendLoginSuccMsg(){}
+	public void sendLoginFailedMsg(){}
+
+	public void sendRegisterSuccMsg(String username){
+		String registerSucc = MessageGenerator.generateRegisterSucc(username);
+		this.writeMsg(registerSucc);
+	}
+	public void sendRegisterFailedMsg(String username){
+		String registerSucc = MessageGenerator.generateRegisterFail(username);
+		this.writeMsg(registerSucc);
+	}
+	public void sendAuthMsg(){}
+
+	public void sendAuthFailedMsg(){}
+	public void sendAnnounceMsg(){}
+	public void sendActiveBroadcastMsg(){}
+	public void sendLockRequestMsg(){}
+	public void sendLockAllowedMsg(){}
+	public void sendLockDeniedMsg(){}
 
 }

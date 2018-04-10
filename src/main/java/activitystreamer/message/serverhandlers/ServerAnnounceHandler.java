@@ -1,6 +1,5 @@
 package activitystreamer.message.serverhandlers;
 
-import activitystreamer.client.ClientSkeleton;
 import activitystreamer.message.MessageHandler;
 import activitystreamer.server.Connection;
 import activitystreamer.server.Control;
@@ -13,22 +12,19 @@ import com.google.gson.JsonObject;
  * Date 9/4/18
  */
 
-public class ServerFailedMessageHandler extends MessageHandler {
+public class ServerAnnounceHandler extends MessageHandler {
 
 	private final Control control;
 
-	public ServerFailedMessageHandler(Control control) {
+	public ServerAnnounceHandler(Control control) {
 		this.control = control;
 	}
 
 	@Override
 	public boolean processMessage(JsonObject json,Connection connection) {
-		Control.log.error(json.get("info"));
-		connection.closeCon();
-		this.control.connectionClosed(connection);
+		//TODO need future work
+		Control.log.info("Announce recieved");
 
-		// return false to close related connection and thread
-		return false;
+		return true;
 	}
-
 }

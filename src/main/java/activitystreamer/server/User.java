@@ -10,22 +10,21 @@ package activitystreamer.server;
 public class User {
 	private String username;
 	private String secret;
-	private String host;
-	private int port;
-//	private String identify;
+
 	private boolean isRegistered;
 
-	public User(String username, String secret, String host, int port) {
+	public User(String username, String secret) {
 		this.username = username;
 		this.secret = secret;
-		this.host = host;
-		this.port = port;
-//		this.identify = String.format("%s%d",host.replaceAll(".","_"),port);
 		this.isRegistered = false;
 	}
 
 	public String getUsername() {
 		return username;
+	}
+
+	public String getSecret() {
+		return secret;
 	}
 
 	public void setRegistered(boolean isRegistered){

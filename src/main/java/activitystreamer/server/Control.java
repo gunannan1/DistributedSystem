@@ -3,8 +3,7 @@ package activitystreamer.server;
 import activitystreamer.message.MessageGenerator;
 import activitystreamer.message.MessageHandler;
 import activitystreamer.message.MessageType;
-import activitystreamer.message.serverhandlers.ServerFailedMessageHandler;
-import activitystreamer.message.serverhandlers.UserRegisterMessageHandler;
+import activitystreamer.message.serverhandlers.*;
 import activitystreamer.util.Settings;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -22,11 +21,8 @@ public class Control extends Thread {
 	private static boolean term = false;
 	private static Listener listener; // why static
 	private static ArrayList<Connection> connections;
-	private HashMap<String, User> userList; // <username, user Class>,  please note that anonymous users will not be stored here
+	private HashMap<String, User> userList; // <String, user Class>,
 	private HashMap<MessageType, MessageHandler> handlerMap;
-
-	private int clientLoads;
-	private int serverLoads;
 
 	protected static Control control = null;
 
@@ -42,9 +38,6 @@ public class Control extends Thread {
 	public Control() {
 		// Initialize user list
 		userList = new HashMap<>();
-
-		clientLoads = 0;
-		serverLoads = 0;
 
 		// initialize the connections array
 		connections = new ArrayList<Connection>();
@@ -71,8 +64,27 @@ public class Control extends Thread {
 	// TODO initialize message handlers
 	private void initialHandlers() {
 		this.handlerMap = new HashMap<>();
-		this.handlerMap.put(MessageType.INVALID_MESSAGE, new ServerFailedMessageHandler(this));
-		this.handlerMap.put(MessageType.REGISTER, new UserRegisterMessageHandler(this));
+		this.handlerMap.put(MessageType.INVALID_MESSAGE, new ServerInvalidHandler(this));
+
+		// Message from Clients
+		this.handlerMap.put(MessageType.REGISTER, new UserRegisterHandler(this));
+		this.handlerMap.put(MessageType.LOGIN, new UserLoginHandler(this));
+		this.handlerMap.put(MessageType.LOGOUT, new UserLogoutHandler(this));
+		this.handlerMap.put(MessageType.ACTIVITY_MESSAGE, new ActivityRequestHandler(this));
+
+		// Message from Servers
+		this.handlerMap.put(MessageType.AUTHENTICATE, new ServerAuthenRequestHandler(this));
+		this.handlerMap.put(MessageType.AUTHENTICATION_FAIL, new ServerAuthenFailedHandler(this));
+		this.handlerMap.put(MessageType.AUTHENTICATE_SUCCESS, new ServerAuthenSuccHandler(this));
+
+		this.handlerMap.put(MessageType.SERVER_ANNOUNCE, new ServerAnnounceHandler(this));
+		this.handlerMap.put(MessageType.ACTIVITY_BROADCAST, new ActivityBroadcastHandler(this));
+
+		this.handlerMap.put(MessageType.LOCK_REQUEST, new LockRequestHandler(this));
+		this.handlerMap.put(MessageType.LOCK_ALLOWED, new LockAllowedHandler(this));
+		this.handlerMap.put(MessageType.LOCK_DENIED, new LockDeniedHandler(this));
+
+
 
 	}
 
@@ -123,11 +135,6 @@ public class Control extends Thread {
 	public synchronized void connectionClosed(Connection con) {
 		if (!term){
 			connections.remove(con);
-			if(con.isAuthedServer()){
-				this.control.changeServerLoads(-1);
-			}else if(con.isAuthedClient()){
-				this.control.changeClientLoads(-1);
-			}
 		}
 	}
 
@@ -162,6 +169,7 @@ public class Control extends Thread {
 	public synchronized boolean checkUserExists(String username) {
 		return userList.containsKey(username);
 	}
+
 	//TODO add user
 	public synchronized boolean addUser(User user) {
 		if(!checkUserExists(user.getUsername())){
@@ -171,6 +179,11 @@ public class Control extends Thread {
 			log.info("User '{}' exists, reject register.",user.getUsername());
 			return false;
 		}
+	}
+
+	public boolean checkSecret(String username,String secret){
+		User existUser = userList.get(username);
+		return existUser.getSecret().equals(secret);
 	}
 
 	@Override
@@ -211,19 +224,24 @@ public class Control extends Thread {
 		return connections;
 	}
 
-	public synchronized void changeClientLoads(int n) {
-		this.clientLoads += n;
-	}
-
-	public synchronized void changeServerLoads(int n) {
-		this.serverLoads += n;
-	}
 
 	public int getClientLoads() {
-		return clientLoads;
+		int load = 0;
+		for(Connection c:connections){
+			if(c.isAuthedClient()){
+				load++;
+			}
+		}
+		return load;
 	}
 
 	public int getServerLoads() {
-		return serverLoads;
+		int load = 0;
+		for(Connection c:connections){
+			if(c.isAuthedServer()){
+				load++;
+			}
+		}
+		return load;
 	}
 }

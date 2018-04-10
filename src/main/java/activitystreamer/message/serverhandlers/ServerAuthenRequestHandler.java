@@ -12,19 +12,21 @@ import com.google.gson.JsonObject;
  * Date 9/4/18
  */
 
-public class AuthenSuccMessageHandler extends MessageHandler {
+public class ServerAuthenRequestHandler extends MessageHandler {
 
 	private final Control control;
 
-	public AuthenSuccMessageHandler(Control control) {
+	public ServerAuthenRequestHandler(Control control) {
 		this.control = control;
 	}
 
 	@Override
 	public boolean processMessage(JsonObject json,Connection connection) {
-		Control.log.info("Process message {}", json.get("command"));
-		control.startListener();
-		// return false to close related connection and thread
+		//TODO need future work
+		String secret = json.get("secret").getAsString();
+		Control.log.debug("process authentication for server with secret {}", secret);
+		connection.setAuthed(true);
+		connection.setServer(true);
 		return true;
 	}
 }

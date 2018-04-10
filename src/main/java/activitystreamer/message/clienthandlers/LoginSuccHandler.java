@@ -3,12 +3,8 @@ package activitystreamer.message.clienthandlers;
 import activitystreamer.client.ClientSkeleton;
 import activitystreamer.message.MessageHandler;
 import activitystreamer.server.Connection;
-import activitystreamer.server.Control;
+import activitystreamer.util.Settings;
 import com.google.gson.JsonObject;
-import org.apache.logging.log4j.LogManager;
-import org.json.simple.JSONObject;
-
-import java.util.logging.Logger;
 
 /**
  * RegisterMessage
@@ -17,19 +13,19 @@ import java.util.logging.Logger;
  * Date 9/4/18
  */
 
-public class ClientFailedMessageHandler extends MessageHandler {
+public class LoginSuccHandler extends MessageHandler {
 
 	private final ClientSkeleton clientSkeleton;
 
-	public ClientFailedMessageHandler(ClientSkeleton clientSkeleton) {
+	public LoginSuccHandler(ClientSkeleton clientSkeleton) {
 		this.clientSkeleton = clientSkeleton;
 	}
 
 	@Override
 	public boolean processMessage(JsonObject json,Connection connection) {
-		this.clientSkeleton.log.error(json.get("info"));
-		this.clientSkeleton.disconnect();
-		return false;
-
+		//TODO need future work
+		ClientSkeleton.log.info("Login successfully to server {}", Settings.getRemoteHostname());
+		this.clientSkeleton.startUI();
+		return true;
 	}
 }

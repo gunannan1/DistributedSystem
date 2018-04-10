@@ -16,13 +16,13 @@ import java.util.HashMap;
  * Date 9/4/18
  */
 
-public class UserRegisterMessageHandler extends MessageHandler {
+public class UserRegisterHandler extends MessageHandler {
 
 	public static int lockRequestId = 0;
 	private HashMap<String, LockResult> lockResultHashMap;
 	private final Control control;
 
-	public UserRegisterMessageHandler(Control control) {
+	public UserRegisterHandler(Control control) {
 		this.control = control;
 		this.lockResultHashMap = new HashMap<>();
 	}
@@ -35,13 +35,15 @@ public class UserRegisterMessageHandler extends MessageHandler {
 		if (username != null && secret != null) {
 			newuser = new User(
 					username,
-					secret,
-					connection.getSocket().getRemoteSocketAddress().toString(),
-					connection.getSocket().getPort()
+					secret
 			);
 			Control.log.debug("process register for user {}", username);
 		} else {
-			Control.log.error("User register command missing information username='{}' secret='{}'", username, secret);
+			String error = String.format("User register command missing information username='{}' secret='{}'", username, secret);
+			Control.log.info(error);
+			connection.sendInvalidMsg(error);
+			connection.closeCon();
+			this.control.connectionClosed(connection);
 			return false;
 		}
 
@@ -49,26 +51,32 @@ public class UserRegisterMessageHandler extends MessageHandler {
 			if (!this.lockResultHashMap.containsKey(newuser.getUsername())) { // if not in request list
 				if (this.control.getServerLoads() > 0) {
 					Control.log.debug("broadcast to enquiry username existance:{}", username);
-					this.control.broadcast();//TODO broadcast lock_request, may need another method
+					this.control.broadcast();
+					//TODO broadcast lock_request, may need another method
 
 					return true;
 				} else {
 					Control.log.debug("No additional server connected, register successfully for user:{} ", username);
-					String registerSucc = MessageGenerator.generateRegisterSucc(username);
+					connection.sendRegisterSuccMsg(username);
 					this.control.addUser(newuser);
-					connection.writeMsg(registerSucc);
 					return true;
 				}
 			} else { // is already in request list and waiting for other servers' response
-				Control.log.error("Username:{} is in registering process, waiting for other servers response.");
+				Control.log.info("Username:{} is in registering process, waiting for other servers response.");
+				connection.sendRegisterFailedMsg(username + "( another register under processing )");
+				connection.closeCon();
+				this.control.connectionClosed(connection);
 				return false;
 			}
 		}else{
-			Control.log.debug("User with username '{}' already exists, reject register and close connection", username);
+			Control.log.info("User with username '{}' already exists, reject register and close connection", username);
+			connection.sendRegisterFailedMsg(username);
+			connection.closeCon();
+			this.control.connectionClosed(connection);
+			return false;
 		}
 
 		// return false to close related connection and thread
-		return false;
 	}
 
 	class LockResult {

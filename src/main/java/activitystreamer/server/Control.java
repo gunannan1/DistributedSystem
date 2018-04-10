@@ -183,7 +183,7 @@ public class Control extends Thread {
 
 	public boolean checkSecret(String username,String secret){
 		User existUser = userList.get(username);
-		return existUser.getSecret().equals(secret);
+		return existUser!=null && existUser.getSecret().equals(secret);
 	}
 
 	@Override

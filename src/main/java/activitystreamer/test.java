@@ -1,5 +1,6 @@
 package activitystreamer;
 
+import activitystreamer.client.UILogAppender;
 import activitystreamer.server.ServerTextFrame;
 
 /**
@@ -14,6 +15,7 @@ public class test {
 	public static void main(String[] argv) {
 
 		ServerTextFrame t = new ServerTextFrame();
+
 
 	}
 

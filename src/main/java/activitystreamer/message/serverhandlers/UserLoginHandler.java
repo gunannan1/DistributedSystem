@@ -6,8 +6,6 @@ import activitystreamer.server.Control;
 import activitystreamer.server.User;
 import com.google.gson.JsonObject;
 
-import java.util.HashMap;
-
 /**
  * RegisterMessage
  * <p>
@@ -31,21 +29,28 @@ public class UserLoginHandler extends MessageHandler {
 
 		String username = json.get("username").getAsString();
 		String secret = json.get("secret").getAsString();
-		if( username.equals("anonymous")){
-			if(secret != null){
-				//TODO add to userlist and grant auth
+		if (username.equals("anonymous")) {
+//			if(secret != null){
+			//TODO add anonymous
+			connection.sendLoginSuccMsg(String.format("user %s login successfully", username));
+			connection.setAuthed(true);
+			connection.setServer(false);
+
+//			}
+		} else if (!username.isEmpty() && !secret.isEmpty()) {
+			if (this.control.checkSecret(username, secret)) {
+				this.control.addUser(new User(username, secret));
+				connection.sendLoginSuccMsg(String.format("user %s login successfully", username));
 				connection.setAuthed(true);
-				this.control.addUser(new User(username,secret));
-			}
-		}else if(!username.isEmpty() && !secret.isEmpty()){
-			if(this.control.checkSecret(username,secret)){
-				connection.setAuthed(true);
-			}else{
-				connection.sendLoginFailedMsg();
+				connection.setServer(false);
+			} else {
+				String info = String.format("username(%s) does not or secret(%s) does not match",username,secret);
+				Control.log.info(info);
+				connection.sendLoginFailedMsg(info);
 				connection.closeCon();
 				this.control.connectionClosed(connection);
 			}
-		}else{
+		} else {
 			Control.log.info("Invalid login message received.");
 			connection.sendInvalidMsg("Invalid login message");
 			connection.closeCon();

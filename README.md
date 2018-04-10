@@ -26,3 +26,24 @@
 
 #### workplace 
 Open [this](https://kangnwh.visualstudio.com/DistributedSystem/_dashboards) for our project dashboard
+
+
+#### how to run 
+- for first server, using parameters like this:
+```bash
+    -lh localhost -lp 8001 -s abc
+```
+
+- for future server, using parameters like this:(not done)
+```bash
+```
+
+- for client register (then will login automatically):
+```bash
+    -r -u kangnwh -rp 8001 -rh localhost -s abc
+```
+
+- for client login:
+```bash
+    -l -u kangnwh -rp 8001 -rh localhost -s abc
+```

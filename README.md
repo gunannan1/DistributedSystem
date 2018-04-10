@@ -21,29 +21,33 @@
     cd <your_project_folder>
     git clone ssh://kangnwh@vs-ssh.visualstudio.com:22/_ssh/DistributedSystem
 ```
+5. *unmark src folder as source and mark folder java (src/main/java) as source* 
 
-5. Open this folder in your IDE and you can use your IDE to sync code of your PC with remote code.
+6. Open this folder in your IDE and you can use your IDE to sync code of your PC with remote code.
 
 #### workplace 
 Open [this](https://kangnwh.visualstudio.com/DistributedSystem/_dashboards) for our project dashboard
 
 
-#### how to run 
-- for first server, using parameters like this:
+#### how to run (internal)
+
+config run parameter in IDE as below:
+
+- for first server, create a config for file "src/main/java/activitystreamer/Server.java" ,using parameters like this:
 ```bash
     -lh localhost -lp 8001 -s abc
 ```
 
-- for future server, using parameters like this:(not done)
+- for future server,create  another config for file "src/main/java/activitystreamer/Server.java" using parameters like this:(not done)
 ```bash
 ```
 
-- for client register (then will login automatically):
+- for client register (then will login automatically), create a config for file "src/main/java/activitystreamer/Client.java":
 ```bash
     -r -u kangnwh -rp 8001 -rh localhost -s abc
 ```
 
-- for client login:
+- for client login, create another config for file "src/main/java/activitystreamer/Client.java":
 ```bash
     -l -u kangnwh -rp 8001 -rh localhost -s abc
 ```

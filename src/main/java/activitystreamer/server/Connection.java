@@ -137,12 +137,16 @@ public class Connection extends Thread {
 		this.writeMsg(registerSucc);
 	}
 	public void sendRegisterFailedMsg(String username){
-		String registerSucc = MessageGenerator.generateRegisterFail(username);
-		this.writeMsg(registerSucc);
+		String registerFail = MessageGenerator.generateRegisterFail(username);
+		this.writeMsg(registerFail);
 	}
 	public void sendAuthMsg(){}
 
-	public void sendAuthFailedMsg(){}
+	public void sendAuthFailedMsg(String secret){
+		String authFail = MessageGenerator.generateAuthFail(secret);
+		this.writeMsg(authFail);
+
+	}
 	public void sendAnnounceMsg(){}
 	public void sendActiveBroadcastMsg(){}
 	public void sendLockRequestMsg(){}

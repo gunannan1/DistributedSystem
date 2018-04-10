@@ -25,6 +25,8 @@ public class ServerAuthenFailedHandler extends MessageHandler {
 		//TODO need future work
 		Control.log.info("Process message {}", json.get("command"));
 		Control.log.info(json.get("info").getAsString());
+		connection.closeCon();
+		this.control.connectionClosed(connection);
 		// return false to close related connection and thread
 		return false;
 	}

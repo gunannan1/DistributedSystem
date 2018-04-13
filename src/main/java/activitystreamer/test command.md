@@ -2,6 +2,7 @@
 {"command":"REGISTER","username":"ningk2","secret":"abc"}
 {"command":"REGISTER","username":"ningk3","secret":"abc"}
 
+{"command":"LOGIN","username":"ningk1","secret":"abc"}
 
 
 ".table th, .table td {padding: 0.75rem;  vertical-align: top;  border-top: 1px solid #dee2e6;}"

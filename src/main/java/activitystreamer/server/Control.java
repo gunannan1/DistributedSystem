@@ -306,7 +306,7 @@ public class Control extends Thread {
 		public void run() {
 			refreshUI();
 			try {
-				this.sleep(1000);
+				sleep(1000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

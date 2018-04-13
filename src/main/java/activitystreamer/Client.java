@@ -1,6 +1,5 @@
 package activitystreamer;
 
-import Message_Vivian.JsonMessage;
 import activitystreamer.client.ClientSkeleton;
 import activitystreamer.util.Settings;
 import org.apache.commons.cli.*;
@@ -113,7 +112,7 @@ public class Client {
 		}
 		//anonymous login
 		if (cmd.hasOption("a")) {
-			Settings.setUsername((JsonMessage.ANONYMOUS_USERNAME));
+			Settings.setUsername("anonymous");
 			Settings.setSecret("");
 			ClientSkeleton c = ClientSkeleton.getInstance();
 			c.sendAnonymousLoginMsg();

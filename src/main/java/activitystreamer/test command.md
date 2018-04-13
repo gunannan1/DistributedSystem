@@ -10,3 +10,10 @@
 
 styleSheet.addRule(".table tbody + tbody { border-top: 2px solid #dee2e6;"}
 styleSheet.addRule(".table .table { background-color: #fff;"}
+
+lib/gson-2.2.2.jar lib/common-cli-1.3.1.jar lib/json-simple-1.1.jar lib/log4j-api-2.11.0.jar lib/log4j-core-2.11.0.jar
+
+
+java -jar Server-jar-with-dependencies.jar -lh localhost -lp 8001 -s abc
+
+java -jar Client-jar-with-dependencies.jar -r -u kangnwh -rp 8001 -rh localhost -s abc

@@ -35,14 +35,20 @@ public class ClientSkeleton extends Thread {
 		return clientSolution;
 	}
 
-	public ClientSkeleton() throws IOException {
+	public ClientSkeleton() {
 
 		// TODO initialise socket
 
 		this.s = connectToServer(Settings.getRemoteHostname(), Settings.getRemotePort());
-		this.inreader = new BufferedReader(new InputStreamReader(new DataInputStream(this.s.getInputStream())));
-		this.outwriter = new BufferedWriter(new OutputStreamWriter(new DataOutputStream(this.s.getOutputStream())));
-		start();
+		try {
+			this.inreader = new BufferedReader(new InputStreamReader(new DataInputStream(this.s.getInputStream())));
+			this.outwriter = new BufferedWriter(new OutputStreamWriter(new DataOutputStream(this.s.getOutputStream())));
+			start();
+		} catch (IOException e) {
+			log.error("Cannot connect to remote server {}", Settings.getRemoteHostname());
+		}
+
+
 
 	}
 
@@ -69,6 +75,7 @@ public class ClientSkeleton extends Thread {
 			return this.s;
 		} catch (IOException e) {
 			log.error("Cannot connect to server {} via port {}", host, port);
+			System.exit(1);
 		}
 
 		return null;

@@ -1,2 +1,12 @@
 {"command":"REGISTER","username":"ningk1","secret":"abc"}
 {"command":"REGISTER","username":"ningk2","secret":"abc"}
+{"command":"REGISTER","username":"ningk3","secret":"abc"}
+
+
+
+".table th, .table td {padding: 0.75rem;  vertical-align: top;  border-top: 1px solid #dee2e6;}"
+
+".table thead th {vertical-align: bottom;  border-bottom: 2px solid #dee2e6;}"
+
+styleSheet.addRule(".table tbody + tbody { border-top: 2px solid #dee2e6;"}
+styleSheet.addRule(".table .table { background-color: #fff;"}

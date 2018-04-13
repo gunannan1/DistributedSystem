@@ -265,12 +265,13 @@ public class Control extends Thread {
 	}
 
 	public void refreshUserInfo(){
-		StringJoiner sj = new StringJoiner("\n");
-		sj.add(User.tableHeader());
+		String html = "<table class='table table-bordered'> <thead>%s</thead><tbody>%S</tbody>";
+		StringJoiner sj = new StringJoiner("");
+//		sj.add(User.tableHeader());
 		for(Map.Entry<String,User>e:userList.entrySet()){
 			sj.add(e.getValue().toString());
 		}
-		serverTextFrame.setUserAreaText(sj.toString());
+		serverTextFrame.setUserAreaText(String.format(html,User.tableHeader(),sj.toString()));
 
 	}
 

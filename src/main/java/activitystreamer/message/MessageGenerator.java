@@ -19,12 +19,12 @@ public class MessageGenerator {
 		return generate(MessageType.INVALID_MESSAGE, info);
 	}
 
-	public static String generateAuthFail( String info) {
-		return generate(MessageType.AUTHENTICATION_FAIL, info);
+	public static String generateAuthFail(String secret) {
+		return generate(MessageType.AUTHENTICATION_FAIL, String.format("the supplied secret is incorrect: %s",secret));
 	}
 
-	public static String generateRegisterFail(String info) {
-		return generate(MessageType.REGISTER_FAILED, info);
+	public static String generateRegisterFail(String username) {
+		return generate(MessageType.REGISTER_FAILED, String.format("%s is already registered with the system",username));
 	}
 
 	public static String generateLoginFail(String info) {

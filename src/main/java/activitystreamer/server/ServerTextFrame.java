@@ -39,13 +39,13 @@ public class ServerTextFrame extends JFrame implements ActionListener {
 		Border lineBorder = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.lightGray),"Registered Clients");
 		clientListPanel.setBorder(lineBorder);
 		clientListText = new JTextArea();
-		clientListText.setLineWrap(true);
+		clientListText.setLineWrap(false);
 		JScrollPane scrollPane = new JScrollPane(clientListText);
 		clientListPanel.add(scrollPane,BorderLayout.CENTER);
 
 		JPanel connectionsPanel = new JPanel();
 		connectionsPanel.setLayout(new BorderLayout());
-		lineBorder = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.lightGray),"Exisiting Connections");
+		lineBorder = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.lightGray),"Unauthed Connections");
 		connectionsPanel.setBorder(lineBorder);
 		connectionsPanel.setName("Connectiong List");
 		connectionsText = new JTextArea();
@@ -103,9 +103,11 @@ public class ServerTextFrame extends JFrame implements ActionListener {
 		JOptionPane.showMessageDialog(null,error,"Error",JOptionPane.INFORMATION_MESSAGE);
 	}
 
-
-
 	public void actionPerformed(ActionEvent e) {
 
+	}
+
+	public void setUserAreaText(String str){
+		clientListText.setText(str);
 	}
 }

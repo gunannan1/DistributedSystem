@@ -7,13 +7,18 @@ import activitystreamer.message.serverhandlers.*;
 import activitystreamer.util.Settings;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.swing.*;
+import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.StringJoiner;
 
 public class Control extends Thread {
 	public static final Logger log = LogManager.getLogger("serverLogger");
@@ -23,6 +28,7 @@ public class Control extends Thread {
 	private static ArrayList<Connection> connections;
 	private HashMap<String, User> userList; // <String, user Class>,
 	private HashMap<MessageType, MessageHandler> handlerMap;
+	private ServerTextFrame serverTextFrame;
 
 	protected static Control control = null;
 
@@ -55,6 +61,8 @@ public class Control extends Thread {
 		// start a listener
 		try {
 			listener = new Listener();
+			serverTextFrame = new ServerTextFrame();
+
 		} catch (IOException e1) {
 			log.fatal("failed to startup a listening thread: " + e1);
 			System.exit(-1);
@@ -109,22 +117,28 @@ public class Control extends Thread {
 	 */
 	public synchronized boolean process(Connection con, String msg) {
 		JsonParser parser = new JsonParser();
+		boolean isSucc = false;
 		try {
 			JsonObject json = parser.parse(msg).getAsJsonObject();
 			MessageType m = MessageType.valueOf(json.get("command").getAsString());
 			MessageHandler h = handlerMap.get(m);
 			if (h != null) {
-				return h.processMessage(json, con);
+				isSucc = h.processMessage(json, con);
 			} else {
 				log.error("Cannot find message handler for message type '{}'", m.name());
-				return false;
+//				isSucc = false;
 			}
+
+			return isSucc;
 		} catch (IllegalStateException e) {
 			String info = String.format("Invalid message '%s'", msg);
 			log.error(info);
 			String invalidMsg = MessageGenerator.generateInvalid(info);
 			con.writeMsg(invalidMsg);
-			return false;
+//			return false;
+		}finally {
+			refreshUI();
+			return isSucc;
 		}
 
 	}
@@ -243,5 +257,44 @@ public class Control extends Thread {
 			}
 		}
 		return load;
+	}
+
+	//TODO UI information refresh
+	public void refreshUnauthCon(){
+
+	}
+
+	public void refreshUserInfo(){
+		StringJoiner sj = new StringJoiner("\n");
+		sj.add(User.tableHeader());
+		for(Map.Entry<String,User>e:userList.entrySet()){
+			sj.add(e.getValue().toString());
+		}
+		serverTextFrame.setUserAreaText(sj.toString());
+
+	}
+
+	public void refreshServerInfo(){
+
+	}
+
+	public void refreshUI(){
+		refreshServerInfo();
+		refreshUnauthCon();
+		refreshUserInfo();
+	}
+
+	private class UIRefresher extends Thread{
+		@Override
+		public void run() {
+			refreshUI();
+			try {
+				this.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
+		}
+
 	}
 }

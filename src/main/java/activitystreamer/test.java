@@ -16,7 +16,6 @@ public class test {
 
 		ServerTextFrame t = new ServerTextFrame();
 
-
 	}
 
 }

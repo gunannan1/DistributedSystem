@@ -155,7 +155,7 @@ public class ClientSkeleton extends Thread {
 
 	public void sendAnonymousLoginMsg() {
 		log.info("send register to server with user={} secret=N/A","anonymous");
-		String anonymouStr = MessageGenerator.generateAnonymousLogin("anonymous");
+		String anonymouStr = MessageGenerator.generateAnonymousLogin(Settings.getUsername());
 		this.writeMsg(anonymouStr);
 	}
 

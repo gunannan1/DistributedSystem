@@ -39,12 +39,12 @@ public class UserLoginHandler extends MessageHandler {
 //			}
 		} else if (!username.isEmpty() && !secret.isEmpty()) {
 			if (this.control.checkSecret(username, secret)) {
-				this.control.addUser(new User(username, secret));
+				this.control.addUser(new User(username, secret,connection));
 				connection.sendLoginSuccMsg(String.format("user %s login successfully", username));
 				connection.setAuthed(true);
 				connection.setServer(false);
 			} else {
-				String info = String.format("username(%s) does not or secret(%s) does not match",username,secret);
+				String info = String.format("username(%s) does not exists or secret(%s) does not match",username,secret);
 				Control.log.info(info);
 				connection.sendLoginFailedMsg(info);
 				connection.closeCon();

@@ -11,6 +11,8 @@ import com.google.gson.JsonSyntaxException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.swing.*;
+import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -60,7 +62,6 @@ public class Control extends Thread {
 		try {
 			listener = new Listener();
 			serverTextFrame = new ServerTextFrame();
-			refreshUI();
 
 		} catch (IOException e1) {
 			log.fatal("failed to startup a listening thread: " + e1);
@@ -158,7 +159,6 @@ public class Control extends Thread {
 		log.debug("incomming connection: " + Settings.socketAddress(s));
 		Connection c = new Connection(s);
 		connections.add(c);
-		refreshConnection();
 		return c;
 
 	}
@@ -191,17 +191,6 @@ public class Control extends Thread {
 			return true;
 		}else{
 			log.info("User '{}' exists, reject register.",user.getUsername());
-			return false;
-		}
-	}
-
-	public boolean markUserConnected(String username) {
-		if(checkUserExists(username)){
-			User u = userList.get(username);
-			u.setCon(true);
-			return true;
-		}else{
-			log.info("User '{}' does not exist, reject login.",username);
 			return false;
 		}
 	}
@@ -271,13 +260,8 @@ public class Control extends Thread {
 	}
 
 	//TODO UI information refresh
-	public void refreshConnection(){
-		String html = "<table class='table table-bordered'> <thead>%s</thead><tbody>%S</tbody>";
-		StringJoiner sj = new StringJoiner("");
-		for(Connection c:connections){
-			sj.add(c.toHTML());
-		}
-		serverTextFrame.setConnectionsText(String.format(html,Connection.tableHeader(),sj.toString()));
+	public void refreshUnauthCon(){
+
 	}
 
 	public void refreshUserInfo(){
@@ -285,7 +269,7 @@ public class Control extends Thread {
 		StringJoiner sj = new StringJoiner("");
 //		sj.add(User.tableHeader());
 		for(Map.Entry<String,User>e:userList.entrySet()){
-			sj.add(e.getValue().toHTML());
+			sj.add(e.getValue().toString());
 		}
 		serverTextFrame.setUserAreaText(String.format(html,User.tableHeader(),sj.toString()));
 
@@ -297,7 +281,7 @@ public class Control extends Thread {
 
 	public void refreshUI(){
 		refreshServerInfo();
-		refreshConnection();
+		refreshUnauthCon();
 		refreshUserInfo();
 	}
 

@@ -1,5 +1,6 @@
 package activitystreamer.message.serverhandlers;
 
+import activitystreamer.message.MessageGenerator;
 import activitystreamer.message.MessageHandler;
 import activitystreamer.server.Connection;
 import activitystreamer.server.Control;

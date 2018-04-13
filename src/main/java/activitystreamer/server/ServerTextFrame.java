@@ -13,16 +13,17 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import java.net.MalformedURLException;
 import java.net.Socket;
+import java.net.URL;
 
 
 @SuppressWarnings("serial")
 public class ServerTextFrame extends JFrame implements ActionListener {
 	private static final Logger log = LogManager.getLogger("clientLogger");
 	private JEditorPane clientListText;
-	private JEditorPane connectionsText;
-	private JEditorPane serversText;
-	private JEditorPane logText;
+	private JTextArea connectionsText;
+	private JTextArea serversText;
 	private JButton sendButton;
 	private JButton disconnectButton;
 	private JSONParser parser = new JSONParser();
@@ -37,35 +38,18 @@ public class ServerTextFrame extends JFrame implements ActionListener {
 		JPanel mainPanel = new JPanel();
 		mainPanel.setLayout(new GridLayout(2, 2));
 
-		clientListText = addHtmlPanel(mainPanel,"User Info");
+		JPanel clientListPanel = new JPanel();
+		clientListPanel.setLayout(new BorderLayout());
+		Border lineBorder = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.lightGray), "Registered Clients");
+		clientListPanel.setBorder(lineBorder);
+		clientListText = new JEditorPane();
+		clientListText.setEditable(false);
 
-		connectionsText = addHtmlPanel(mainPanel,"Connections");
-
-		serversText = addHtmlPanel(mainPanel,"Servers");
-
-		logText = addHtmlPanel(mainPanel,"Logging");
-
-		add(mainPanel);
-
-		setLocationRelativeTo(null);
-		setSize(1280, 768);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setVisible(true);
-	}
-
-	public JEditorPane addHtmlPanel(JPanel mainPanel,String title) {
-
-		JPanel jp = new JPanel();
-		jp.setLayout(new BorderLayout());
-		Border lineBorder = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.lightGray), title);
-		jp.setBorder(lineBorder);
-
-		JEditorPane htmlPane = new JEditorPane();
-		htmlPane.setEditable(false);
 		HTMLEditorKit kit = new HTMLEditorKit();
-		htmlPane.setEditorKit(kit);
+		clientListText.setEditorKit(kit);
+
 		Document doc = kit.createDefaultDocument();
-		htmlPane.setDocument(doc);
+		clientListText.setDocument(doc);
 		StyleSheet styleSheet = kit.getStyleSheet();
 		styleSheet.addRule(".table { width: 100%; max-width: 100%; margin-bottom: 1rem; background-color: transparent;}");
 		styleSheet.addRule(".table-bordered {border: 1; }");
@@ -73,14 +57,62 @@ public class ServerTextFrame extends JFrame implements ActionListener {
 		styleSheet.addRule(".table thead th {vertical-align: bottom;  border-bottom: 2px solid #dee2e6;}");
 		styleSheet.addRule(".table tbody + tbody { border-top: 2px solid #dee2e6;}");
 		styleSheet.addRule(".table .table { background-color: #fff;}");
-		JScrollPane scrollPane = new JScrollPane(htmlPane);
-		jp.add(scrollPane, BorderLayout.CENTER);
-		mainPanel.add(jp);
-		return htmlPane;
+
+
+		JScrollPane scrollPane = new JScrollPane(clientListText);
+		clientListPanel.add(scrollPane, BorderLayout.CENTER);
+
+		JPanel connectionsPanel = new JPanel();
+		connectionsPanel.setLayout(new BorderLayout());
+		lineBorder = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.lightGray), "Unauthed Connections");
+		connectionsPanel.setBorder(lineBorder);
+		connectionsPanel.setName("Connectiong List");
+		connectionsText = new JTextArea();
+		connectionsText.setLineWrap(true);
+		scrollPane = new JScrollPane(connectionsText);
+		connectionsPanel.add(scrollPane, BorderLayout.CENTER);
+
+		JPanel serverListPanel = new JPanel();
+		serverListPanel.setLayout(new BorderLayout());
+		lineBorder = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.lightGray), "Authened Servers");
+		serverListPanel.setBorder(lineBorder);
+		serverListPanel.setName("Server List");
+		serversText = new JTextArea();
+		serversText.setLineWrap(true);
+		serversText.setBackground(Color.gray);
+		scrollPane = new JScrollPane(serversText);
+		serverListPanel.add(scrollPane, BorderLayout.CENTER);
+
+		JPanel logPanel = new JPanel();
+		logPanel.setLayout(new BorderLayout());
+		lineBorder = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.lightGray), "Log Output");
+		logPanel.setBorder(lineBorder);
+		logPanel.setName("Log");
+		serversText = new JTextArea();
+		serversText.setLineWrap(true);
+		serversText.setBackground(Color.gray);
+		scrollPane = new JScrollPane(serversText);
+		logPanel.add(scrollPane, BorderLayout.CENTER);
+
+
+		mainPanel.add(clientListPanel);
+		mainPanel.add(serverListPanel);
+		mainPanel.add(connectionsPanel);
+		mainPanel.add(logPanel);
+		add(mainPanel);
+
+		setLocationRelativeTo(null);
+		setSize(1280, 768);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setVisible(true);
+
+//		this.beginReceive();
 	}
 
 	public void setConnectionsText(String str) {
-		connectionsText.setText(str);
+		connectionsText.append(str);
+		connectionsText.revalidate();
+		connectionsText.repaint();
 	}
 
 	//show error message

@@ -1,5 +1,7 @@
 package activitystreamer.server;
 
+import java.util.StringJoiner;
+
 /**
  * User
  * <p>
@@ -10,20 +12,21 @@ package activitystreamer.server;
 public class User {
 	private String username;
 	private String secret;
-//	private boolean registerApproved;
-	private boolean con;
+
+	private boolean isRegistered;
+	private Connection con;
 
 	public User(String username, String secret,Connection con) {
 		this.username = username;
 		this.secret = secret;
-//		this.registerApproved = false;
-		this.con = false;
+		this.isRegistered = false;
+		this.con = con;
 	}
 	public User(String username, String secret) {
 		this.username = username;
 		this.secret = secret;
-//		this.registerApproved = false;
-		this.con = false;
+		this.isRegistered = false;
+		this.con = null;
 	}
 
 	public String getUsername() {
@@ -34,23 +37,24 @@ public class User {
 		return secret;
 	}
 
-	public void setCon(boolean con) {
+	public void setCon(Connection con) {
 		this.con = con;
 	}
 
-//	public void setRegisterApproved(boolean isRegistered){
-//		this.registerApproved = isRegistered;
-//	}
+	public void setRegistered(boolean isRegistered){
+		this.isRegistered = isRegistered;
+	}
 
-
-	public String toHTML() {
-//		return String.format("%-15s|%-15s|%-20s|%-15s",username,secret,registerApproved,this.con != null);
+	@Override
+	public String toString() {
+//		return String.format("%-15s|%-15s|%-20s|%-15s",username,secret,isRegistered,this.con != null);
 		return String.format(" <tr>\n" +
 				"      <th scope=\"row\">*</th>\n" +
 				"      <td>%s</td>\n" +
 				"      <td>%s</td>\n" +
 				"      <td>%s</td>\n" +
-				"    </tr>",username,secret,this.con);
+				"      <td>%s</td>\n" +
+				"    </tr>",username,secret,isRegistered,this.con != null);
 	}
 
 	public static String tableHeader(){
@@ -61,6 +65,7 @@ public class User {
 				"      <th scope=\"col\">#</th>\n" +
 				"      <th scope=\"col\">Username</th>\n" +
 				"      <th scope=\"col\">Secret</th>\n" +
+				"      <th scope=\"col\">Is Register</th>\n" +
 				"      <th scope=\"col\">Is Connected</th>\n" +
 				"    </tr>\n" ;
 	}

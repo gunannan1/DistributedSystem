@@ -3,7 +3,6 @@ package activitystreamer.message.clienthandlers;
 import activitystreamer.client.ClientSkeleton;
 import activitystreamer.message.MessageHandler;
 import activitystreamer.server.Connection;
-import activitystreamer.util.Settings;
 import com.google.gson.JsonObject;
 
 /**
@@ -24,7 +23,7 @@ public class ClientInvalidHandler extends MessageHandler {
 	@Override
 	public boolean processMessage(JsonObject json,Connection connection) {
 		// TODO need future work
-		ClientSkeleton.log.info("Invalid message received from client");
+		ClientSkeleton.log.info("Invalid message received from server");
 		return false;
 	}
 }

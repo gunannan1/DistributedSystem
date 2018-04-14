@@ -25,6 +25,40 @@ public class ServerAuthenRequestHandler extends MessageHandler {
 		//TODO need future work
 		String secret = json.get("secret").getAsString();
 		Control.log.debug("process authentication for server with secret {}", secret);
+
+		if(connection.isAuthedServer()){
+			connection.sendInvalidMsg("Already authenticated");
+			Control.log.info("Already authenticated");
+			connection.closeCon();
+			this.control.connectionClosed(connection);
+			return false;
+		}
+
+		else if(connection.isAuthedClient()){
+			connection.sendInvalidMsg("Authenticate is for server, not client");
+			Control.log.info("Authenticate is for server, not client");
+			connection.closeCon();
+			this.control.connectionClosed(connection);
+			return false;
+		}
+
+		else if(secret==null){
+			connection.sendInvalidMsg("No secret present");
+			Control.log.info("No secret present");
+			connection.closeCon();
+			this.control.connectionClosed(connection);
+			return false;
+		}
+
+		//check if the secret is correct
+//		else if(){
+//			connection.sendAuthFailedMsg(String.format("The supplied secret is incorrect: %s",secret));
+//			Control.log.info(String.format("The supplied secret is incorrect: %s",secret));
+//			connection.closeCon();
+//			this.control.connectionClosed(connection);
+//			return false;
+//		}
+
 		connection.setAuthed(true);
 		connection.setServer(true);
 		return true;

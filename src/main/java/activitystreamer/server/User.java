@@ -14,6 +14,7 @@ public class User {
 	private String secret;
 
 	private boolean isRegistered;
+	private boolean isLogged;
 	private Connection con;
 
 	public User(String username, String secret,Connection con) {

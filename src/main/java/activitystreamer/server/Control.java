@@ -102,8 +102,7 @@ public class Control extends Thread {
 		try {
 			Connection c = outgoingConnection(new Socket(Settings.getRemoteHostname(), Settings.getRemotePort()));
 			// Authen itself to remote server
-			String serverRegister = MessageGenerator.generateAuthen(Settings.getSecret());
-			c.writeMsg(serverRegister);
+			c.sendAuthMsg(Settings.getSecret());
 		} catch (IOException e) {
 			log.error("failed to make connection to " + Settings.getRemoteHostname() + ":" + Settings.getRemotePort() + " :" + e);
 			System.exit(-1);

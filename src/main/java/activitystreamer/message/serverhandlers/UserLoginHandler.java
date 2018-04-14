@@ -38,8 +38,9 @@ public class UserLoginHandler extends MessageHandler {
 
 //			}
 		} else if (!username.isEmpty() && !secret.isEmpty()) {
-			if (this.control.checkSecret(username, secret)) {
-				this.control.addUser(new User(username, secret,connection));
+			User u = this.control.getUser(username, secret);
+			if (u != null) {
+				u.setCon(connection);
 				connection.sendLoginSuccMsg(String.format("user %s login successfully", username));
 				connection.setAuthed(true);
 				connection.setServer(false);

@@ -22,9 +22,9 @@ public class UserLogoutHandler extends MessageHandler {
 
 	@Override
 	public boolean processMessage(JsonObject json,Connection connection) {
-		//TODO need future work
-		Control.log.info("Lock request recieved");
-
+		Control.log.info("Logout request from {} is recieved.",connection.getSocket().getRemoteSocketAddress());
+		connection.closeCon();
+		control.connectionClosed(connection);
 		return true;
 	}
 }

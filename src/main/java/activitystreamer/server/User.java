@@ -54,7 +54,7 @@ public class User {
 				"      <td>%s</td>\n" +
 				"      <td>%s</td>\n" +
 				"      <td>%s</td>\n" +
-				"    </tr>",username,secret,isRegistered,this.con != null);
+				"    </tr>",username,secret,isRegistered,this.con.isOpen());
 	}
 
 	public static String tableHeader(){

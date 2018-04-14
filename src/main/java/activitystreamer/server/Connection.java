@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+import activitystreamer.message.Activity;
 import activitystreamer.message.MessageGenerator;
 
 import activitystreamer.util.Settings;
@@ -148,14 +149,25 @@ public class Connection extends Thread {
 		String registerFail = MessageGenerator.generateRegisterFail(username);
 		this.writeMsg(registerFail);
 	}
-	public void sendAuthMsg(){}
+	public void sendAuthMsg(String secret){
+		String authenticate=MessageGenerator.generateAuthen(Settings.getSecret());
+		this.writeMsg(authenticate);
+	}
 
-	public void sendAuthFailedMsg(String secret){
-		String authFail = MessageGenerator.generateAuthFail(secret);
+	public void sendAuthFailedMsg(String info){
+		String authFail = MessageGenerator.generateAuthFail(info);
 		this.writeMsg(authFail);
 	}
-	public void sendAnnounceMsg(){}
-	public void sendActiveBroadcastMsg(){}
+	public void sendAnnounceMsg(String id, int load, String host, int port){
+		String announce=MessageGenerator.generateAnnounce(id,load,host,port);
+		this.writeMsg(announce);
+	}
+
+	public void sendActivityBroadcastMsg(Activity act){
+		String activityBroadcast = MessageGenerator.generateActBroadcast(act);
+		this.writeMsg(activityBroadcast);
+	}
+
 	public void sendLockRequestMsg(){}
 
 	public void sendLockAllowedMsg(String username,String secret, String owner) {

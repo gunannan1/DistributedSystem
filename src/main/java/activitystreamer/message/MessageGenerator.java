@@ -19,8 +19,8 @@ public class MessageGenerator {
 		return generate(MessageType.INVALID_MESSAGE, info);
 	}
 
-	public static String generateAuthFail(String secret) {
-		return generate(MessageType.AUTHENTICATION_FAIL, String.format("the supplied secret is incorrect: %s",secret));
+	public static String generateAuthFail(String info) {
+		return generate(MessageType.AUTHENTICATION_FAIL, info);
 	}
 
 	public static String generateRegisterFail(String username) {
@@ -91,14 +91,15 @@ public class MessageGenerator {
 		return generate(MessageType.LOGIN, username);
 	}
 
-	public static String generateActivityMsg(Activity act){
-		JsonObject json = new JsonObject();
-		json.addProperty("command", MessageType.ACTIVITY_MESSAGE.name());
-		json.addProperty("username", Settings.getUsername());
-		json.addProperty("secret", Settings.getSecret());
-		json.addProperty( "activity" ,act.toJsonString());
-		return json.toString();
-	}
+
+//	public static String generateActivityMsg(Activity act,String username,String secret){
+//		JsonObject json = new JsonObject();
+//		json.addProperty("command", MessageType.ACTIVITY_MESSAGE.name());
+//		json.addProperty("username", username);
+//		json.addProperty("secret", secret);
+//		json.addProperty( "activity" ,act.toJsonString());
+//		return json.toString();
+//	}
 
 	private static String generate(MessageType messageType, String infoOrSecret) {
 		JsonObject json = new JsonObject();

@@ -1,5 +1,6 @@
 package activitystreamer.message.serverhandlers;
 
+import activitystreamer.message.Activity;
 import activitystreamer.message.MessageHandler;
 import activitystreamer.server.Connection;
 import activitystreamer.server.Control;
@@ -25,6 +26,35 @@ public class ActivityBroadcastHandler extends MessageHandler {
 		//TODO need future work
 		Control.log.info("Activity broadcastToAll received");
 
+		if(!connection.isAuthedServer()){
+			connection.sendInvalidMsg("Received from an unauthenticated server");
+			Control.log.info("Received from an unauthenticated server");
+			connection.closeCon();
+			this.control.connectionClosed(connection);
+			return false;
+		}
+
+		else if(json.get("activity")==null){
+			connection.sendInvalidMsg("The message don't have activity");
+			Control.log.info("The message don't have activity");
+			connection.closeCon();
+			this.control.connectionClosed(connection);
+			return false;
+		}
+
+		Activity activity=new Activity(json.get("activity").getAsString());
+
+		for(Connection c:this.control.getConnections()){
+			if(c.isAuthedClient()){
+				c.sendActivityBroadcastMsg(activity);
+			}
+			else if(c.isAuthedServer()){
+				if(c!=connection){
+					c.sendActivityBroadcastMsg(activity);
+				}
+
+			}
+		}
 		return true;
 	}
 }

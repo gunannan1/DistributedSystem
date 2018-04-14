@@ -23,7 +23,42 @@ public class ServerAnnounceHandler extends MessageHandler {
 	@Override
 	public boolean processMessage(JsonObject json,Connection connection) {
 		//TODO need future work
+
 		Control.log.info("Announce recieved");
+		String id=json.get("id").getAsString();
+		int load=json.get("load").getAsInt();
+		String host=json.get("host").getAsString();
+		int port=json.get("load").getAsInt();
+
+		if(!connection.isAuthedServer()){
+			connection.sendInvalidMsg("Received from an unauthenticated server");
+			Control.log.info("Received from an unauthenticated server");
+			connection.closeCon();
+			this.control.connectionClosed(connection);
+			return false;
+		}
+
+		else if(id==null){
+			connection.sendInvalidMsg("No id present");
+			Control.log.info("No id present");
+			connection.closeCon();
+			this.control.connectionClosed(connection);
+			return false;
+		}
+
+		else if(host==null){
+			connection.sendInvalidMsg("No host present");
+			Control.log.info("No host present");
+			connection.closeCon();
+			this.control.connectionClosed(connection);
+			return false;
+		}
+
+		for(Connection c:this.control.getConnections()){
+			if(c.isAuthedServer()&&c!=connection){
+				c.sendAnnounceMsg(id,load,host,port);
+			}
+		}
 
 		return true;
 	}

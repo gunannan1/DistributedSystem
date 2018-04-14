@@ -1,7 +1,6 @@
 package activitystreamer.message.clienthandlers;
 
 import activitystreamer.client.ClientSkeleton;
-import activitystreamer.message.MessageGenerator;
 import activitystreamer.message.MessageHandler;
 import activitystreamer.server.Connection;
 import activitystreamer.util.Settings;
@@ -25,8 +24,7 @@ public class RegisterSuccHandler extends MessageHandler {
 	@Override
 	public boolean processMessage(JsonObject json,Connection connection) {
 		ClientSkeleton.log.info("Register successfully to server {}", Settings.getRemoteHostname());
-		this.clientSkeleton.startUI();
-		this.clientSkeleton.sendLoginMsg();
-		return true;
+		//register success, close connection
+		return false;
 	}
 }

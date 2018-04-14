@@ -25,6 +25,9 @@ public class RedirectHandler extends MessageHandler {
 	public boolean processMessage(JsonObject json,Connection connection) {
 		//TODO need future work
 		ClientSkeleton.log.info("redirect message from server {}", Settings.getRemoteHostname());
+		String newRemoteHost = json.get("hostname").getAsString();
+		int newRemotePort = json.get("port").getAsInt();
+		clientSkeleton.redirectToServer(newRemoteHost,newRemotePort);
 		return true;
 	}
 }

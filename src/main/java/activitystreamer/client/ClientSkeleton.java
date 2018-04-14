@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 
 public class ClientSkeleton extends Thread {
@@ -63,6 +64,8 @@ public class ClientSkeleton extends Thread {
 		clientSolution.handlerMap.put(MessageType.REGISTER_SUCCESS,new RegisterSuccHandler(this));
 		clientSolution.handlerMap.put(MessageType.AUTHENTICATION_FAIL, new ClientAuthenFailedHandler(this));
 		clientSolution.handlerMap.put(MessageType.INVALID_MESSAGE, new ClientInvalidHandler(this));
+		//add Activity Broadcast
+		clientSolution.handlerMap.put(MessageType.ACTIVITY_BROADCAST,new ClientActivityBroadcastHandler(this));
 
 	}
 
@@ -80,6 +83,20 @@ public class ClientSkeleton extends Thread {
 
 		return null;
 	}
+	public void redirectToServer(String host, int port)
+	{
+        try {
+			this.s.close();
+			this.s = new Socket(host, port);
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+        	log.error("Cannot redirect to server{} via port{}",host, port);
+			e.printStackTrace();
+			System.exit(1);
+		}
+
+	}
 
 
 	public void startUI() {
@@ -87,6 +104,12 @@ public class ClientSkeleton extends Thread {
 			textFrame = new ClientTextFrame();
 			UILogAppender.setTextArea(this.textFrame.getLogTextArea());
 		}
+	}
+
+	//show received content in UI
+	public void showOutput(JsonObject obj)
+	{
+		textFrame.setOutputText(obj);
 	}
 
 
@@ -105,18 +128,25 @@ public class ClientSkeleton extends Thread {
 	public void run() {
 		try {
 			String data;
+			boolean status;
 			while ((data = inreader.readLine()) != null) {
 				try {
 					log.debug("Receive data {}", data);
 					JsonParser parser = new JsonParser();
 					JsonObject json = parser.parse(data).getAsJsonObject();
+					//display received content in UI
+					showOutput(json);
 					String command = json.get("command").getAsString();
 					MessageType commandType = MessageType.valueOf(command);
 					MessageHandler h = this.handlerMap.get(commandType);
 					if (h != null) {
-						h.processMessage(json, null);
+						status=h.processMessage(json, null);
+						if(status==false)
+						{
+							this.disconnect();
+						}
 					} else {
-						log.error("No hander for message:{}", command);
+						log.error("No handler for message:{}", command);
 					}
 				} catch (IllegalStateException e) {
 					String info = String.format("Invalid message '%s'", data);

@@ -22,36 +22,56 @@ public class UserLoginHandler extends MessageHandler {
 		this.control = control;
 	}
 
+
+	/**
+	 * 1. check if anoymous user
+	 * 2. check if user exists locally
+	 * 3. check if any remote servers
+	 * 		NO - login failed
+	 * 		YES - broadcast for user information
+	 */
 	@Override
 	public boolean processMessage(JsonObject json, Connection connection) {
 
-		// TODO need future work
+
+		Control.log.info("login message is received");
 
 		String username = json.get("username").getAsString();
 		String secret = json.get("secret").getAsString();
+
+		//1. Check if anoymous user
 		if (username.equals("anonymous")) {
-//			if(secret != null){
-			//TODO add anonymous
 			connection.sendLoginSuccMsg(String.format("user %s login successfully", username));
 			connection.setAuthed(true);
-			connection.setServer(false);
+			connection.setUser(new User(username, ""));
+			connection.sendLoginSuccMsg(String.format("login successfully as user '%s '", username));
+			Control.log.info("login successfully as user '{}'", username);
+			return true;
 
-//			}
-		} else if (!username.isEmpty() && !secret.isEmpty()) {
+		}
+
+		if (!username.isEmpty() && !secret.isEmpty()) {
+			// 2. check if user exists locally
 			User u = this.control.getUser(username, secret);
 			if (u != null) {
-				u.setCon(connection);
-				connection.sendLoginSuccMsg(String.format("user %s login successfully", username));
 				connection.setAuthed(true);
-				connection.setServer(false);
-			} else {
-				String info = String.format("username(%s) does not exists or secret(%s) does not match",username,secret);
+				connection.setUser(u);
+				connection.sendLoginSuccMsg(String.format("login successfully as user '%s '", username));
+				Control.log.info("login successfully as user '{}'", username);
+				return true;
+			}
+			//3. TODO check if any remote servers
+//			else if (control.getServerLoads() > 0) {
+//
+//			}
+			else {
+				String info = String.format("username(%s) does not exists or secret(%s) does not match", username, secret);
 				Control.log.info(info);
 				connection.sendLoginFailedMsg(info);
 				connection.closeCon();
 				this.control.connectionClosed(connection);
 			}
-		} else {
+		} else{
 			Control.log.info("Invalid login message received.");
 			connection.sendInvalidMsg("Invalid login message");
 			connection.closeCon();

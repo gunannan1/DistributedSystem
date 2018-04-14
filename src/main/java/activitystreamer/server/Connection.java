@@ -10,8 +10,6 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 import activitystreamer.message.MessageGenerator;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import activitystreamer.util.Settings;
 
@@ -25,7 +23,7 @@ public class Connection extends Thread {
 	private Socket socket;
 	private boolean term=false;
 	private boolean isAuthed = false;
-	private boolean isServer;
+	private User user;
 	
 	Connection(Socket socket, Boolean isServer) throws IOException{
 		in = new DataInputStream(socket.getInputStream());
@@ -35,15 +33,13 @@ public class Connection extends Thread {
 	    this.socket = socket;
 	    open = true;
 		isAuthed = false;
+		user = null;
 	    start();
 	}
 	Connection(Socket socket) throws IOException{
 		this(socket,false);
 	}
 
-	public void setServer(boolean server) {
-		isServer = server;
-	}
 
 	/*
 		 * returns true if the message was written, otherwise false
@@ -104,13 +100,25 @@ public class Connection extends Thread {
 	public void setAuthed(boolean isAuthed){
 		this.isAuthed = isAuthed;
 	}
+	public User getUser(){
+		return user;
+	}
+	public void setUser(User u){
+		this.user = user;
+	}
+
+	public void setServer(boolean isServer){
+		if(isServer){
+			this.user = null;
+		}
+	}
 
 	public boolean isAuthedClient(){
-		return !isServer && isAuthed;
+		return user != null && isAuthed;
 	}
 
 	public boolean isAuthedServer() {
-		return isServer && isAuthed;
+		return user == null && isAuthed;
 	}
 
 	// TODO implement send methods for different types of messages
@@ -145,7 +153,6 @@ public class Connection extends Thread {
 	public void sendAuthFailedMsg(String secret){
 		String authFail = MessageGenerator.generateAuthFail(secret);
 		this.writeMsg(authFail);
-
 	}
 	public void sendAnnounceMsg(){}
 	public void sendActiveBroadcastMsg(){}

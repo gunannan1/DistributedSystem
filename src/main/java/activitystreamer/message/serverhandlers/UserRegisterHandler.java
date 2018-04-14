@@ -18,13 +18,14 @@ import java.util.HashMap;
 
 public class UserRegisterHandler extends MessageHandler {
 
-	public static int lockRequestId = 0;
+	private int lockRequestId;
 	private HashMap<String, LockResult> lockResultHashMap;
 	private final Control control;
 
 	public UserRegisterHandler(Control control) {
 		this.control = control;
 		this.lockResultHashMap = new HashMap<>();
+		this.lockRequestId = 0;
 	}
 
 	@Override
@@ -39,7 +40,7 @@ public class UserRegisterHandler extends MessageHandler {
 			);
 			Control.log.debug("process register for user {}", username);
 		} else {
-			String error = String.format("User register command missing information username='{}' secret='{}'", username, secret);
+			String error = String.format("User register command missing information username='{%s}' secret='{%s}'", username, secret);
 			Control.log.info(error);
 			connection.sendInvalidMsg(error);
 			connection.closeCon();
@@ -51,6 +52,8 @@ public class UserRegisterHandler extends MessageHandler {
 			if (!this.lockResultHashMap.containsKey(newuser.getUsername())) { // if not in request list
 				if (this.control.getServerLoads() > 0) {
 					Control.log.debug("broadcast to enquiry username existance:{}", username);
+					LockResult newLockResult = new LockResult(lockRequestId++,control.getServerLoads());
+					lockResultHashMap.put(newuser.getUsername(),newLockResult);
 					this.control.broadcast();
 					//TODO broadcast lock_request, may need another method
 
@@ -82,10 +85,17 @@ public class UserRegisterHandler extends MessageHandler {
 	class LockResult {
 		public int lockRequestId;
 		private int enqueryServerCount;
+		private int allowedServerCount;
 
 		public LockResult(int lockRequestId, int enqueryServerCount) {
 			this.lockRequestId = lockRequestId;
 			this.enqueryServerCount = enqueryServerCount;
+			this.allowedServerCount = 0 ;
+		}
+
+		public boolean getLockAllow(){
+			this.allowedServerCount += 1;
+			return this.allowedServerCount == this.enqueryServerCount;
 		}
 	}
 }

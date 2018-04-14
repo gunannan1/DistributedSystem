@@ -92,8 +92,6 @@ public class Control extends Thread {
 		this.handlerMap.put(MessageType.LOCK_ALLOWED, new LockAllowedHandler(this));
 		this.handlerMap.put(MessageType.LOCK_DENIED, new LockDeniedHandler(this));
 
-
-
 	}
 
 
@@ -116,7 +114,7 @@ public class Control extends Thread {
 	 */
 	public synchronized boolean process(Connection con, String msg) {
 		JsonParser parser = new JsonParser();
-		boolean isSucc = false;
+		boolean isSucc ;
 		try {
 			JsonObject json = parser.parse(msg).getAsJsonObject();
 			MessageType m = MessageType.valueOf(json.get("command").getAsString());
@@ -125,21 +123,20 @@ public class Control extends Thread {
 				isSucc = h.processMessage(json, con);
 			} else {
 				log.error("Cannot find message handler for message type '{}'", m.name());
-//				isSucc = false;
 			}
-
-			return isSucc;
+			isSucc = true;
 		} catch (IllegalStateException e) {
 			String info = String.format("Invalid message '%s'", msg);
 			log.error(info);
+			isSucc = false;
 			String invalidMsg = MessageGenerator.generateInvalid(info);
 			con.writeMsg(invalidMsg);
-//			return false;
+
 		}finally {
 			refreshUI();
-			return isSucc;
-		}
 
+		}
+		return isSucc;
 	}
 
 	/*
@@ -147,6 +144,7 @@ public class Control extends Thread {
 	 */
 	public synchronized void connectionClosed(Connection con) {
 		if (!term){
+			log.info("Remove connection {} from list",con.getSocket().getRemoteSocketAddress());
 			connections.remove(con);
 		}
 	}
@@ -194,9 +192,13 @@ public class Control extends Thread {
 		}
 	}
 
-	public boolean checkSecret(String username,String secret){
-		User existUser = userList.get(username);
-		return existUser!=null && existUser.getSecret().equals(secret);
+	public User getUser(String username, String secret){
+		User u =  userList.get(username);
+		if (u.getUsername().equals(secret)){
+			return u;
+		}else{
+			return null;
+		}
 	}
 
 	@Override

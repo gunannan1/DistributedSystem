@@ -51,8 +51,13 @@ public class MessageGenerator {
 		return generate(MessageType.LOCK_DENIED, username, secret);
 	}
 
-	public static String generateLockRequest(String username, String secret) {
-		return generate(MessageType.LOCK_REQUEST, username, secret);
+	public static String generateLockRequest(String username, String secret, String serverSecret) {
+		JsonObject json = new JsonObject();
+		json.addProperty("command", MessageType.LOCK_REQUEST.name());
+		json.addProperty("username", username);
+		json.addProperty("secret", secret);
+		json.addProperty( "owner" ,"serverSecret");
+		return json.toString();
 	}
 
 	public static String generateRegister(String username, String secret) {

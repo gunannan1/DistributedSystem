@@ -23,7 +23,7 @@ public class ActivityBroadcastHandler extends MessageHandler {
 	@Override
 	public boolean processMessage(JsonObject json,Connection connection) {
 		//TODO need future work
-		Control.log.info("Activity broadcast received");
+		Control.log.info("Activity broadcastToAll received");
 
 		return true;
 	}

@@ -43,20 +43,39 @@ public class MessageGenerator {
 		return generate(MessageType.AUTHENTICATE, secret);
 	}
 
-	public static String generateLockAllow(String username, String secret) {
-		return generate(MessageType.LOCK_ALLOWED, username, secret);
-	}
-
-	public static String generateLockDenied(String username, String secret) {
-		return generate(MessageType.LOCK_DENIED, username, secret);
-	}
-
-	public static String generateLockRequest(String username, String secret, String serverSecret) {
+	
+	// LOCK Message types
+	public static String generateLockRequest(String username, String secret,String serverIdentifier) {
 		JsonObject json = new JsonObject();
 		json.addProperty("command", MessageType.LOCK_REQUEST.name());
 		json.addProperty("username", username);
 		json.addProperty("secret", secret);
-		json.addProperty( "owner" ,"serverSecret");
+		json.addProperty( "owner" , serverIdentifier);
+		return json.toString();
+	}
+	public static String generateLockDenied(String username, String secret,String serverIdentifier) {
+		JsonObject json = new JsonObject();
+		json.addProperty("command", MessageType.LOCK_DENIED.name());
+		json.addProperty("username", username);
+		json.addProperty("secret", secret);
+		json.addProperty( "owner" , serverIdentifier);
+		return json.toString();
+	}
+	public static String generateLockAllowed(String username, String secret,String serverIdentifier) {
+		JsonObject json = new JsonObject();
+		json.addProperty("command", MessageType.LOCK_ALLOWED.name());
+		json.addProperty("username", username);
+		json.addProperty("secret", secret);
+		json.addProperty( "owner" , serverIdentifier);
+		return json.toString();
+	}
+
+	public static String generateUserEnqueryRequest(String username, String secret,String serverIdentifier) {
+		JsonObject json = new JsonObject();
+		json.addProperty("command", MessageType.USER_ENQUIRY.name());
+		json.addProperty("username", username);
+		json.addProperty("secret", secret);
+		json.addProperty( "owner" , serverIdentifier);
 		return json.toString();
 	}
 
@@ -112,9 +131,6 @@ public class MessageGenerator {
 	private static String generate(MessageType messageType, String username, String secret) {
 		JsonObject json = new JsonObject();
 		switch (messageType) {
-			case LOCK_ALLOWED:
-			case LOCK_DENIED:
-			case LOCK_REQUEST:
 			case REGISTER:
 			case LOGIN:
 				json.addProperty("command", messageType.name());

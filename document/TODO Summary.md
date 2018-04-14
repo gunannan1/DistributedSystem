@@ -1,5 +1,18 @@
 # Development Log and TODO List Summary
 
+
+#### 2018-04-14
+Login & Register logic from Aaron
+- if the user the gives no username on the command line arguments then login as anonymous on start
+
+- if the user gives only a username but no secret then first register the user, by generating a new secret (print to screen for subsequent use), then login after/if receiving register success
+
+- if the user gives a username and secret then login on start
+
+Login info in other servers
+We need deal with it: https://app.lms.unimelb.edu.au/webapps/discussionboard/do/message?action=list_messages&course_id=_364937_1&nav=discussion_board_entry&conf_id=_729820_1&forum_id=_401176_1&message_id=_1697906_1
+
+
 #### 2018-04-09
 
 ##### Client & Server

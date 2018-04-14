@@ -19,7 +19,7 @@ public class ClientActivityBroadcastHandler extends MessageHandler {
 
     @Override
     public boolean processMessage(JsonObject json, Connection connection) {
-       clientSkeleton.log.info("Client received broadcast activity from server");
+       clientSkeleton.log.info("Client received broadcastToAll activity from server");
 
         return true;
     }

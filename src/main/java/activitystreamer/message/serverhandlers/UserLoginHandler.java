@@ -6,6 +6,8 @@ import activitystreamer.server.Control;
 import activitystreamer.server.User;
 import com.google.gson.JsonObject;
 
+import java.util.HashMap;
+
 /**
  * RegisterMessage
  * <p>
@@ -14,8 +16,7 @@ import com.google.gson.JsonObject;
  */
 
 public class UserLoginHandler extends MessageHandler {
-
-	public static int lockRequestId = 0;
+	public static HashMap<String, LoginResult> enquiryRequestHashmap = new HashMap<>();;
 	private final Control control;
 
 	public UserLoginHandler(Control control) {
@@ -25,10 +26,11 @@ public class UserLoginHandler extends MessageHandler {
 
 	/**
 	 * 1. check if anoymous user
-	 * 2. check if user exists locally
-	 * 3. check if any remote servers
+	 * 2. check if both username & secret exist
+	 * 3. check if user exists locally
+	 * 4. check if any remote servers
 	 * 		NO - login failed
-	 * 		YES - broadcast for user information
+	 * 		YES - broadcastToAll for user information
 	 */
 	@Override
 	public boolean processMessage(JsonObject json, Connection connection) {
@@ -50,8 +52,15 @@ public class UserLoginHandler extends MessageHandler {
 
 		}
 
+		// 2. check if user exists locally
+		if (username.isEmpty() || secret.isEmpty()){
+			Control.log.info("Information missing for loging, username='{}' secret='{}'",username,secret);
+		}
+
+
+
 		if (!username.isEmpty() && !secret.isEmpty()) {
-			// 2. check if user exists locally
+
 			User u = this.control.getUser(username, secret);
 			if (u != null) {
 				connection.setAuthed(true);
@@ -80,6 +89,21 @@ public class UserLoginHandler extends MessageHandler {
 		}
 
 		return true;
+	}
+
+	class LoginResult {
+		private int enqueryServerCount;
+		private int allowedServerCount;
+
+		public LoginResult(int enqueryServerCount) {
+			this.enqueryServerCount = enqueryServerCount;
+			this.allowedServerCount = 0;
+		}
+
+		public boolean getLockAllow() {
+			this.allowedServerCount += 1;
+			return this.allowedServerCount == this.enqueryServerCount;
+		}
 	}
 
 

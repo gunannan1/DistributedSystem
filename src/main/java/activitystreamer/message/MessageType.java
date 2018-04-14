@@ -32,5 +32,7 @@ public  enum MessageType {
 	INVALID_MESSAGE ,
 	SERVER_ANNOUNCE,
 
+	USER_ENQUIRY
+
 
 }

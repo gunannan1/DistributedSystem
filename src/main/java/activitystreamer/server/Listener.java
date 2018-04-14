@@ -40,6 +40,10 @@ public class Listener extends Thread{
 		this.term = term;
 		if(term) interrupt();
 	}
+
+	public String getSocketAdr(){
+		return serverSocket.getInetAddress()+":"+serverSocket.getLocalPort();
+	}
 	
 	
 }

@@ -109,14 +109,14 @@ public class ClientSkeleton extends Thread {
 	//show received content in UI
 	public void showOutput(JsonObject obj)
 	{
-		textFrame.setOutputText(obj);
+		if(textFrame != null) textFrame.setOutputText(obj);
 	}
 
 
 	public void disconnect() {
 		// TODO close socket, close TextFrame
 		try {
-			sendLogoutMsg();
+//			sendLogoutMsg();
 			s.close();
 
 		} catch (IOException e) {
@@ -128,8 +128,8 @@ public class ClientSkeleton extends Thread {
 	public void run() {
 		try {
 			String data;
-			boolean status;
-			while ((data = inreader.readLine()) != null) {
+			boolean status = true;
+			while (status && (data = inreader.readLine()) != null) {
 				try {
 					log.debug("Receive data {}", data);
 					JsonParser parser = new JsonParser();
@@ -140,11 +140,7 @@ public class ClientSkeleton extends Thread {
 					MessageType commandType = MessageType.valueOf(command);
 					MessageHandler h = this.handlerMap.get(commandType);
 					if (h != null) {
-						status=h.processMessage(json, null);
-						if(status==false)
-						{
-							this.disconnect();
-						}
+						status = h.processMessage(json, null);
 					} else {
 						log.error("No handler for message:{}", command);
 					}
@@ -172,7 +168,6 @@ public class ClientSkeleton extends Thread {
 
 		} catch (IOException e) {
 			log.error("Error sending message {}",info);
-			log.error("Client exists {}",info);
 			this.disconnect();
 		}
 

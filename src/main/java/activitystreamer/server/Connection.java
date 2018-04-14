@@ -157,7 +157,14 @@ public class Connection extends Thread {
 	public void sendAnnounceMsg(){}
 	public void sendActiveBroadcastMsg(){}
 	public void sendLockRequestMsg(){}
-	public void sendLockAllowedMsg(){}
-	public void sendLockDeniedMsg(){}
+
+	public void sendLockAllowedMsg(String username,String secret, String owner) {
+		String message = MessageGenerator.generateLockAllowed(username, secret, owner);
+		this.writeMsg(message);
+	}
+	public void sendLockDeniedMsg(String username,String secret, String owner){
+		String message = MessageGenerator.generateLockDenied(username,secret,owner);
+		this.writeMsg(message);
+	}
 
 }

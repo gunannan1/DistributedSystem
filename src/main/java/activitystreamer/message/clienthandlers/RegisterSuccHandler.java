@@ -25,6 +25,7 @@ public class RegisterSuccHandler extends MessageHandler {
 	public boolean processMessage(JsonObject json,Connection connection) {
 		ClientSkeleton.log.info("Register successfully to server {}", Settings.getRemoteHostname());
 		//register success, close connection
-		return false;
+		clientSkeleton.disconnect();
+		return true;
 	}
 }

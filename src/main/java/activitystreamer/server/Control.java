@@ -77,6 +77,8 @@ public class Control extends Thread {
 		try {
 			Socket s = new Socket(Settings.getRemoteHostname(), Settings.getRemotePort());
 			Connection c = outgoingConnection(s);
+			c.setServer(true);
+			c.setAuthed(true);
 			// Authen itself to remote server
 			String serverRegister = MessageGenerator.generateAuthen(Settings.getSecret());
 			c.writeMsg(serverRegister);

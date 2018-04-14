@@ -61,7 +61,7 @@ public class UserLoginHandler extends MessageHandler {
 
 		if (!username.isEmpty() && !secret.isEmpty()) {
 
-			User u = this.control.getUser(username, secret);
+			User u = this.control.authUser(username, secret);
 			if (u != null) {
 				connection.setAuthed(true);
 				connection.setUser(u);
@@ -70,9 +70,15 @@ public class UserLoginHandler extends MessageHandler {
 				return true;
 			}
 			//3. TODO check if any remote servers
-//			else if (control.getServerLoads() > 0) {
-//
-//			}
+			else if (control.getServerLoads(null) > 0) {
+//				Control.log.info("Remote servers exist, will check with other servers for user '{}' ", username);
+//				UserRegisterHandler.LockResult lockResult = new UserRegisterHandler.LockResult(control.getIdentifier(),connection,control.getServerLoads(null));
+//				UserRegisterHandler.registerLockHashMap.put(newuser.getUsername(), lockResult);
+//				//TODO need testing
+//				// broadcastToAll lock request and then waiting for lock_allow & lock_denied, this register process will be handled by LockAllowedHandler & LockDeniedHandler
+//				control.broadcastLockRequest(newuser,connection);
+//				return true;
+			}
 			else {
 				String info = String.format("username(%s) does not exists or secret(%s) does not match", username, secret);
 				Control.log.info(info);

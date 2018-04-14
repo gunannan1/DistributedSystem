@@ -33,7 +33,7 @@ public class LockAllowedHandler extends MessageHandler {
 	@Override
 	public boolean processMessage(JsonObject json,Connection connection) {
 		//TODO need future work
-		Control.log.info("Lock allowed recieved");
+		Control.log.info("Lock allowed is received");
 		User u = null;
 		String username = null;
 		String secret = null;
@@ -52,35 +52,45 @@ public class LockAllowedHandler extends MessageHandler {
 		}
 
 
-		UserRegisterHandler.LockResult l = UserRegisterHandler.registerLockHashMap.get(username);
-		if (l != null) {
-			// whether owner is the server itself
-			if (owner.equals(control.getIdentifier())) {
-				control.addUser(u);
-				try {
-					l.getFrom().sendRegisterSuccMsg(username);
-					return true;
-				} catch (Exception e) {
-					Control.log.info("The client sending register request is disconnected");
-					return true; // do not close any connection as closing connection should be handled in other way
-				}
-			}
+		BroadcastResult l = UserRegisterHandler.registerLockHashMap.get(username);
 
-			// if not owner, send lockAllow to "from" server
-			try {
-				l.getFrom().sendLockAllowedMsg(username, secret, owner);
-				return true;
-
-			} catch (Exception e) {
-				Control.log.info("The server sending lock request request is disconnected");
-				return true; // do not close any connection as closing connection should be handled in other way
-			}
-
+		// whether the register information in pending list
+		if(l == null){
+			Control.log.info("No register information received for user '{}' or the register information is processed already, ignore this message", username);
+			return true;
 		}
 
-		// this should not happen
-		Control.log.error("No register information received for user '%s'", username);
-		return false;
+		// whether all servers allowed
+		if( !l.addLockAllow()) {
+			Control.log.info("Although LOCK ALLOWED is received, not all servers reply, continue waiting future information...");
+			return true;
+		}
+
+		// here means this server receives LOCK ALLOWED from all other servers
+		// if owner is the server itself
+		if (owner.equals(control.getIdentifier())) {
+			control.addUser(u);
+			try {
+				l.getFrom().sendRegisterSuccMsg(username);
+				UserRegisterHandler.registerLockHashMap.remove(username);
+				return true;
+			} catch (Exception e) {
+				Control.log.info("The client sending register request is disconnected");
+				return true; // do not close any connection as closing connection should be handled in other way
+			}
+		}
+
+		// if not owner, send lockAllow to "from" server
+		try {
+			l.getFrom().sendLockAllowedMsg(username, secret, owner);
+			return true;
+
+		} catch (Exception e) {
+			Control.log.info("The server sending lock request request is disconnected");
+			return true; // do not close any connection as closing connection should be handled in other way
+		}
+
+
 
 	}
 	private void failHandler(String error, Connection connection) {

@@ -64,7 +64,7 @@ public class Control extends Thread {
 		try {
 			listener = new Listener();
 //			serverTextFrame = new ServerTextFrame();
-			identifier = listener.getSocketAdr();
+			identifier = Settings.getLocalHostname() + Settings.getLocalPort();
 		} catch (IOException e1) {
 			log.fatal("failed to startup a listening thread: " + e1);
 			System.exit(-1);
@@ -83,7 +83,7 @@ public class Control extends Thread {
 			String serverRegister = MessageGenerator.generateAuthen(Settings.getSecret());
 			c.writeMsg(serverRegister);
 			startListener();
-			identifier = Settings.socketAddress(s);
+			identifier = Settings.getLocalHostname() + Settings.getLocalPort();
 		} catch (IOException e) {
 			log.error("failed to make connection to " + Settings.getRemoteHostname() + ":" + Settings.getRemotePort() + " :" + e);
 			System.exit(-1);
@@ -124,6 +124,7 @@ public class Control extends Thread {
 	 * Return true if the connection should close.
 	 */
 	public synchronized boolean process(Connection con, String msg) {
+		Control.log.debug("received message [{}] from server [{}]",msg,Settings.socketAddress(con.getSocket()));
 		JsonParser parser = new JsonParser();
 		boolean isSucc = false ;
 		try {
@@ -179,9 +180,9 @@ public class Control extends Thread {
 	}
 
 	//TODO handle boradcast task
-	public synchronized void broadcastToAll(String msg,Connection from) {
+	public synchronized void broadcastToServers(String msg,Connection from) {
 		for(Connection c:connections){
-			if(c != from & (c.isAuthedServer() || c.isAuthedClient())) {
+			if(c != from && c.isAuthedServer()) {
 				c.writeMsg(msg);
 			}
 		}
@@ -196,9 +197,9 @@ public class Control extends Thread {
 	}
 
 	// broadcastToAll lock request
-	public  void broadcastLockRequest(User u,Connection from) {
-		String lockRequest = MessageGenerator.generateLockRequest(u.getUsername(),u.getSecret(),identifier);
-		broadcastToAll(lockRequest,from);
+	public  void broadcastLockRequest(String serverId,User u,Connection from) {
+		String lockRequest = MessageGenerator.generateLockRequest(u.getUsername(),u.getSecret(),serverId);
+		broadcastToServers(lockRequest,from);
 
 	}
 
@@ -206,9 +207,9 @@ public class Control extends Thread {
 
 	}
 
-	public  void broadcastEnquiry(User u,Connection from) {
-		String enquiryRequest = MessageGenerator.generateUserEnqueryRequest(u.getUsername(),u.getSecret(),identifier);
-		broadcastToAll(enquiryRequest,from);
+	public  void broadcastEnquiry(String serverId,User u,Connection from) {
+		String enquiryRequest = MessageGenerator.generateUserEnqueryRequest(u.getUsername(),u.getSecret(),serverId);
+		broadcastToServers(enquiryRequest,from);
 
 	}
 
@@ -230,9 +231,9 @@ public class Control extends Thread {
 		}
 	}
 
-	public User getUser(String username, String secret){
+	public User authUser(String username, String secret){
 		User u =  userList.get(username);
-		if (u.getUsername().equals(secret)){
+		if (u.getSecret().equals(secret)){
 			return u;
 		}else{
 			return null;

@@ -61,7 +61,7 @@ public class ActivityRequestHandler extends MessageHandler {
 			return false;
 		}
 
-		else if(!username.equals("anonymous")&&this.control.getUser(username,secret)!=null){
+		else if(!username.equals("anonymous")&&this.control.authUser(username,secret)!=null){
 			connection.sendAuthFailedMsg("The username and secret do not match the logged in the user");
 			Control.log.info("The username and secret do not match the logged in the user");
 			connection.closeCon();

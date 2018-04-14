@@ -3,7 +3,6 @@ package activitystreamer.message.serverhandlers;
 import activitystreamer.message.MessageHandler;
 import activitystreamer.server.Connection;
 import activitystreamer.server.Control;
-import activitystreamer.server.User;
 import com.google.gson.JsonObject;
 
 /**
@@ -49,7 +48,7 @@ public class LockDeniedHandler extends MessageHandler {
 		}
 
 
-		UserRegisterHandler.LockResult l = UserRegisterHandler.registerLockHashMap.get(username);
+		BroadcastResult l = UserRegisterHandler.registerLockHashMap.get(username);
 		if (l != null) {
 			// whether owner is the server itself
 			if (owner.equals(control.getIdentifier())) {

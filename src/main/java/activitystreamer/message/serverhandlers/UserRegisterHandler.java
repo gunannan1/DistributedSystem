@@ -17,7 +17,7 @@ import java.util.HashMap;
 
 public class UserRegisterHandler extends MessageHandler {
 	// HashMap<username, LockResult>
-	public static HashMap<String, LockResult> registerLockHashMap = new HashMap<>();
+	public static HashMap<String, BroadcastResult> registerLockHashMap = new HashMap<>();
 	private final Control control;
 
 	public UserRegisterHandler(Control control) {
@@ -81,11 +81,11 @@ public class UserRegisterHandler extends MessageHandler {
 		// 2.1.1 check if any remote servers exists
 		if (this.control.getServerLoads(null) > 0) {
 			Control.log.info("Remote servers exist, need to get confirmation from remote servers for user register '{}' ", username);
-			LockResult lockResult = new LockResult(control.getIdentifier(),connection,control.getServerLoads(null));
+			BroadcastResult lockResult = new BroadcastResult(connection,control.getServerLoads(null));
 			UserRegisterHandler.registerLockHashMap.put(newuser.getUsername(), lockResult);
 			//TODO need testing
 			// broadcastToAll lock request and then waiting for lock_allow & lock_denied, this register process will be handled by LockAllowedHandler & LockDeniedHandler
-			control.broadcastLockRequest(newuser,connection);
+			control.broadcastLockRequest(control.getIdentifier(),newuser,connection);
 			return true;
 		}
 
@@ -103,28 +103,5 @@ public class UserRegisterHandler extends MessageHandler {
 		Control.log.info(error);
 		connection.closeCon();
 		this.control.connectionClosed(connection);
-	}
-
-	class LockResult {
-		private String serverIdentifier;
-		private int enqueryServerCount;
-		private int allowedServerCount;
-		private Connection from;
-
-		public LockResult(String serverIdentifier,Connection c, int enqueryServerCount) {
-			this.from = c;
-			this.serverIdentifier = serverIdentifier;
-			this.enqueryServerCount = enqueryServerCount;
-			this.allowedServerCount = 0;
-		}
-
-		public boolean addLockAllow() {
-			this.allowedServerCount += 1;
-			return this.allowedServerCount == this.enqueryServerCount;
-		}
-
-		public Connection getFrom() {
-			return from;
-		}
 	}
 }

@@ -1,6 +1,5 @@
 package activitystreamer.message.serverhandlers;
 
-import activitystreamer.message.MessageGenerator;
 import activitystreamer.message.MessageHandler;
 import activitystreamer.server.Connection;
 import activitystreamer.server.Control;
@@ -46,7 +45,7 @@ public class LockRequestHandler extends MessageHandler {
 			secret = json.get("secret").getAsString();
 			owner = json.get("owner").getAsString();
 		}catch (NullPointerException e){
-			String error = String.format("Lock request command missing information username='%s' secret='%s' owner='%s", username, secret,owner);
+			String error = String.format("Lock request command missing information username='%s' secret='%s' owner='%s'", username, secret,owner);
 			failHandler(error, connection);
 			return false;
 		}
@@ -59,10 +58,16 @@ public class LockRequestHandler extends MessageHandler {
 			return true;
 		}
 
+
 		// Check remotely if server load > 0 exclude the sending server
+		Control.log.info("User '{}' does not exist in this server",username);
 		if(control.getServerLoads(connection) > 0) {
 			Control.log.info("More server found, check with other servers(exclude the sending server)");
-			control.broadcastLockRequest(u, connection);
+			// add this requst to local requst hashmap
+			BroadcastResult lockResult = new BroadcastResult(connection,control.getServerLoads(connection));
+			UserRegisterHandler.registerLockHashMap.put(username, lockResult);
+			control.broadcastLockRequest(owner, u, connection);
+
 		}else{
 			Control.log.info("No other servers in this system(exclude the sending server), reply lockAllow message back");
 			connection.sendLockAllowedMsg(username,secret,owner);

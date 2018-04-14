@@ -26,6 +26,6 @@ public class RegisterSuccHandler extends MessageHandler {
 		ClientSkeleton.log.info("Register successfully to server {}", Settings.getRemoteHostname());
 		//register success, close connection
 		clientSkeleton.disconnect();
-		return true;
+		return false;// return false so that run loop will end
 	}
 }

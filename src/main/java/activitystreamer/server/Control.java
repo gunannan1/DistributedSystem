@@ -286,10 +286,10 @@ public class Control extends Thread {
 		return load;
 	}
 
-	public int getServerLoads() {
+	public int getServerLoads(Connection exclude) {
 		int load = 0;
 		for(Connection c:connections){
-			if(c.isAuthedServer()){
+			if(exclude !=c && c.isAuthedServer()){
 				load++;
 			}
 		}

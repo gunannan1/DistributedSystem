@@ -12,18 +12,18 @@ import com.google.gson.JsonObject;
  * Date 9/4/18
  */
 
-public class LockDeniedHandler extends MessageHandler {
+public class UserFoundHandler extends MessageHandler {
 
 	private final Control control;
 
-	public LockDeniedHandler(Control control) {
+	public UserFoundHandler(Control control) {
 		this.control = control;
 	}
 	/**
 	 * |- validate message
 	 * |- whether owner is the server itself
-	 * 		|- Yes: send back RegisterFailed message to corresponding user
-	 * 		|- No: send LockDenied to the server who sends lock request
+	 * 		|- Yes: send back User_Found message to corresponding user
+	 * 		|- No: send User_Found to the server who sends enquiry message
 	 * @param json
 	 * @param connection
 	 * @return
@@ -31,7 +31,7 @@ public class LockDeniedHandler extends MessageHandler {
 	@Override
 	public boolean processMessage(JsonObject json,Connection connection) {
 		//TODO need future work
-		Control.log.info("Lock Denied message is recieved");
+		Control.log.info("USER_FOUND message is recieved");
 		String username = null;
 		String secret = null;
 		String owner = null;
@@ -42,16 +42,16 @@ public class LockDeniedHandler extends MessageHandler {
 			secret = json.get("secret").getAsString();
 			owner = json.get("owner").getAsString();
 		}catch (NullPointerException e){
-			String error = String.format("Lock denied command missing information username='%s' secret='%s' owner='%s", username, secret,owner);
+			String error = String.format("USER_FOUND command missing information username='%s' secret='%s' owner='%s", username, secret,owner);
 			failHandler(error, connection);
 			return false;
 		}
 
 
-		BroadcastResult l = UserRegisterHandler.registerLockHashMap.get(username);
+		BroadcastResult l = UserLoginHandler.enquiryRequestHashmap.get(username);
 		if (l == null) {
 			// this should not happen
-			Control.log.error("No register information received for user '%s'", username);
+			Control.log.error("No enquiry request received for user '%s'", username);
 			return false;
 		}
 
@@ -59,27 +59,25 @@ public class LockDeniedHandler extends MessageHandler {
 		// whether owner is the server itself
 		if (owner.equals(control.getIdentifier())) {
 			try {
-				l.getFrom().sendRegisterFailedMsg(username);
+				String info = String.format("User '%s' login successfully.", username);
+				l.getFrom().sendLoginSuccMsg(info);
 				return true;
 			} catch (Exception e) {
-				Control.log.info("The client sending register request is disconnected");
+				Control.log.info("The client sending login request was disconnected");
 				return true; // do not close any connection as closing connection should be handled in other way
 			}
 		}
 
-		// if not owner, send lockAllow to "from" server
+		// if not owner, send USER_FOUND to "from" server
 		try {
 
-			l.getFrom().sendLockDeniedMsg(username, secret, owner);
+			l.getFrom().sendUserFoundMsg(username, secret, owner);
 			return true;
 
 		} catch (Exception e) {
 			Control.log.info("The server sending lock request request is disconnected");
 			return true; // do not close any connection as closing connection should be handled in other way
 		}
-
-
-
 
 
 	}

@@ -46,37 +46,24 @@ public class MessageGenerator {
 	
 	// LOCK Message types
 	public static String generateLockRequest(String username, String secret,String serverIdentifier) {
-		JsonObject json = new JsonObject();
-		json.addProperty("command", MessageType.LOCK_REQUEST.name());
-		json.addProperty("username", username);
-		json.addProperty("secret", secret);
-		json.addProperty( "owner" , serverIdentifier);
-		return json.toString();
+		return generate(MessageType.LOCK_REQUEST,username,secret,serverIdentifier);
 	}
 	public static String generateLockDenied(String username, String secret,String serverIdentifier) {
-		JsonObject json = new JsonObject();
-		json.addProperty("command", MessageType.LOCK_DENIED.name());
-		json.addProperty("username", username);
-		json.addProperty("secret", secret);
-		json.addProperty( "owner" , serverIdentifier);
-		return json.toString();
+		return generate(MessageType.LOCK_DENIED,username,secret,serverIdentifier);
 	}
 	public static String generateLockAllowed(String username, String secret,String serverIdentifier) {
-		JsonObject json = new JsonObject();
-		json.addProperty("command", MessageType.LOCK_ALLOWED.name());
-		json.addProperty("username", username);
-		json.addProperty("secret", secret);
-		json.addProperty( "owner" , serverIdentifier);
-		return json.toString();
+		return generate(MessageType.LOCK_ALLOWED,username,secret,serverIdentifier);
 	}
 
+	// User enquiry types
 	public static String generateUserEnqueryRequest(String username, String secret,String serverIdentifier) {
-		JsonObject json = new JsonObject();
-		json.addProperty("command", MessageType.USER_ENQUIRY.name());
-		json.addProperty("username", username);
-		json.addProperty("secret", secret);
-		json.addProperty( "owner" , serverIdentifier);
-		return json.toString();
+		return generate(MessageType.USER_ENQUIRY,username,secret,serverIdentifier);
+	}
+	public static String generateUserFound(String username, String secret,String serverIdentifier) {
+		return generate(MessageType.USER_FOUND,username,secret,serverIdentifier);
+	}
+	public static String generateUserNotFound(String username, String secret,String serverIdentifier) {
+		return generate(MessageType.USER_NOT_FOUND,username,secret,serverIdentifier);
 	}
 
 	public static String generateRegister(String username, String secret) {
@@ -91,6 +78,15 @@ public class MessageGenerator {
 		return generate(MessageType.LOGIN, username);
 	}
 
+
+	private static String generate(MessageType messageType, String username,String secret, String owner){
+		JsonObject json = new JsonObject();
+		json.addProperty("command", messageType.name());
+		json.addProperty("username", username);
+		json.addProperty("secret", secret);
+		json.addProperty( "owner" , owner);
+		return json.toString();
+	}
 
 //	public static String generateActivityMsg(Activity act,String username,String secret){
 //		JsonObject json = new JsonObject();

@@ -111,8 +111,12 @@ public class Control extends Thread {
 		this.handlerMap.put(MessageType.SERVER_ANNOUNCE, new ServerAnnounceHandler(this));
 		this.handlerMap.put(MessageType.ACTIVITY_BROADCAST, new ActivityBroadcastHandler(this));
 
-		this.handlerMap.put(MessageType.USER_ENQUIRY, new UserEnqieryHandler(this));
+		// Messages for Login
+		this.handlerMap.put(MessageType.USER_ENQUIRY, new UserEnquiryHandler(this));
+		this.handlerMap.put(MessageType.USER_FOUND, new UserFoundHandler(this));
+		this.handlerMap.put(MessageType.USER_NOT_FOUND, new UserNotFoundHandler(this));
 
+		// Messages for Register
 		this.handlerMap.put(MessageType.LOCK_REQUEST, new LockRequestHandler(this));
 		this.handlerMap.put(MessageType.LOCK_ALLOWED, new LockAllowedHandler(this));
 		this.handlerMap.put(MessageType.LOCK_DENIED, new LockDeniedHandler(this));
@@ -233,7 +237,7 @@ public class Control extends Thread {
 
 	public User authUser(String username, String secret){
 		User u =  userList.get(username);
-		if (u.getSecret().equals(secret)){
+		if (u !=null && u.getSecret().equals(secret)){
 			return u;
 		}else{
 			return null;

@@ -16,7 +16,7 @@ import java.util.HashMap;
  */
 
 public class UserLoginHandler extends MessageHandler {
-	public static HashMap<String, LoginResult> enquiryRequestHashmap = new HashMap<>();;
+	public static HashMap<String, BroadcastResult> enquiryRequestHashmap = new HashMap<>();;
 	private final Control control;
 
 	public UserLoginHandler(Control control) {
@@ -52,65 +52,41 @@ public class UserLoginHandler extends MessageHandler {
 
 		}
 
-		// 2. check if user exists locally
+		// 2. check if both username & secret exist
 		if (username.isEmpty() || secret.isEmpty()){
 			Control.log.info("Information missing for loging, username='{}' secret='{}'",username,secret);
-		}
-
-
-
-		if (!username.isEmpty() && !secret.isEmpty()) {
-
-			User u = this.control.authUser(username, secret);
-			if (u != null) {
-				connection.setAuthed(true);
-				connection.setUser(u);
-				connection.sendLoginSuccMsg(String.format("login successfully as user '%s '", username));
-				Control.log.info("login successfully as user '{}'", username);
-				return true;
-			}
-			//3. TODO check if any remote servers
-			else if (control.getServerLoads(null) > 0) {
-//				Control.log.info("Remote servers exist, will check with other servers for user '{}' ", username);
-//				UserRegisterHandler.LockResult lockResult = new UserRegisterHandler.LockResult(control.getIdentifier(),connection,control.getServerLoads(null));
-//				UserRegisterHandler.registerLockHashMap.put(newuser.getUsername(), lockResult);
-//				//TODO need testing
-//				// broadcastToAll lock request and then waiting for lock_allow & lock_denied, this register process will be handled by LockAllowedHandler & LockDeniedHandler
-//				control.broadcastLockRequest(newuser,connection);
-//				return true;
-			}
-			else {
-				String info = String.format("username(%s) does not exists or secret(%s) does not match", username, secret);
-				Control.log.info(info);
-				connection.sendLoginFailedMsg(info);
-				connection.closeCon();
-				this.control.connectionClosed(connection);
-			}
-		} else{
-			Control.log.info("Invalid login message received.");
-			connection.sendInvalidMsg("Invalid login message");
+			connection.sendInvalidMsg("Invalid login message " + json.toString());
 			connection.closeCon();
 			this.control.connectionClosed(connection);
 			return false;
 		}
 
-		return true;
-	}
 
-	class LoginResult {
-		private int enqueryServerCount;
-		private int allowedServerCount;
-
-		public LoginResult(int enqueryServerCount) {
-			this.enqueryServerCount = enqueryServerCount;
-			this.allowedServerCount = 0;
+		// 3. Check if user exists locally
+		User u = this.control.authUser(username, secret);
+		if (u != null) {
+			connection.setAuthed(true);
+			connection.setUser(u);
+			connection.sendLoginSuccMsg(String.format("login successfully as user '%s '", username));
+			Control.log.info("login successfully as user '{}'", username);
+			return true;
 		}
 
-		public boolean getLockAllow() {
-			this.allowedServerCount += 1;
-			return this.allowedServerCount == this.enqueryServerCount;
+		//3. check if any remote servers
+		 if (control.getServerLoads(null) > 0) {
+			Control.log.info("Remote servers exist, will check with other servers for user '{}' ", username);
+			BroadcastResult loginResult = new BroadcastResult(connection,control.getServerLoads(connection));
+			UserLoginHandler.enquiryRequestHashmap.put(username, loginResult);
+			//TODO need testing
+			// broadcastToAll lock request and then waiting for lock_allow & lock_denied, this register process will be handled by LockAllowedHandler & LockDeniedHandler
+			control.broadcastEnquiry(control.getIdentifier(),new User(username,secret),connection);
+			return true;
 		}
-	}
 
+		// Should not run to here
+		Control.log.error("Wired things happened in class UserLoginHandler");
+		return false;
+
+	}
 
 }

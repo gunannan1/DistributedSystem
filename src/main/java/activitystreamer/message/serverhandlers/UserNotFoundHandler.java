@@ -13,21 +13,23 @@ import com.google.gson.JsonObject;
  * Date 9/4/18
  */
 
-public class LockAllowedHandler extends MessageHandler {
+public class UserNotFoundHandler extends MessageHandler {
 
 	private final Control control;
 
-	public LockAllowedHandler(Control control) {
+	public UserNotFoundHandler(Control control) {
 		this.control = control;
 	}
 
 	/**
 	 * |- validate message
-	 * |- whether the register information in pending list
-	 * |- whether all servers allowed
-	 * |- whether owner is the server itself
-	 * 		|- Yes: send back RegisterSucc message to corresponding user
-	 * 		|- No: send LockAllow to the server who sends lock request
+	 * |- whether the login information in pending list
+	 * |- whether all servers reply NOT FOUND
+	 * 		NO: Ignore and waiting
+	 * 		YES: |- whether owner is the server itself
+	 * 			 	|- Yes: send back LOGIN_FAILED message to corresponding user
+	 * 			 	|- No: send USER_NOT_FOUND to the server who sends USER_ENQUIRY
+	 *
 	 * @param json
 	 * @param connection
 	 * @return
@@ -35,7 +37,7 @@ public class LockAllowedHandler extends MessageHandler {
 	@Override
 	public boolean processMessage(JsonObject json,Connection connection) {
 		//TODO need future work
-		Control.log.info("Lock allowed is received");
+		Control.log.info("USER_NOT_FOUND message is received.");
 		User u = null;
 		String username = null;
 		String secret = null;
@@ -48,44 +50,47 @@ public class LockAllowedHandler extends MessageHandler {
 			owner = json.get("owner").getAsString();
 			u = new User(username,secret);
 		}catch (NullPointerException e){
-			String error = String.format("Lock allowed command missing information username='%s' secret='%s' owner='%s", username, secret,owner);
+			String error = String.format("USER_NOT_FOUND command missing information username='%s' secret='%s' owner='%s", username, secret,owner);
 			failHandler(error, connection);
 			return false;
 		}
 
 
-		BroadcastResult l = UserRegisterHandler.registerLockHashMap.get(username);
+		BroadcastResult l = UserLoginHandler.enquiryRequestHashmap.get(username);
 
 		// whether the register information in pending list
 		if(l == null){
-			Control.log.info("No register information received for user '{}' or the register information is processed already, ignore this message", username);
+			Control.log.info("No login request / enquiry information received for user '{}' or the enquiry is processed already, ignore this message", username);
 			return true;
 		}
 
 		// whether all servers allowed
-		if( !l.addAllow()) {
-			Control.log.info("Although LOCK ALLOWED is received, not all servers reply, continue waiting future information...");
+		if(!l.addDeny()) {
+			Control.log.info("Although USER_NOT_FOUND is received, not all servers reply, continue waiting future information...");
 			return true;
 		}
 
 		// here means this server receives LOCK ALLOWED from all other servers
 		// if owner is the server itself
 		if (owner.equals(control.getIdentifier())) {
-			control.addUser(u);
 			try {
-				Control.log.info("User '{}' registered successfully.", username);
-				l.getFrom().sendRegisterSuccMsg(username);
-				UserRegisterHandler.registerLockHashMap.remove(username);
+				String info = String.format("User '%s' does not exist in this system", username);
+				Control.log.info(info);
+				Connection c = l.getFrom();
+				c.sendLoginFailedMsg(info);
+				c.closeCon();
+				control.connectionClosed(c);
+				UserLoginHandler.enquiryRequestHashmap.remove(username);
 				return true;
 			} catch (Exception e) {
-				Control.log.info("The client sending register request was disconnected");
+				Control.log.info("The client sending login request was disconnected.");
 				return true; // do not close any connection as closing connection should be handled in other way
 			}
 		}
 
-		// if not owner, send lockAllow to "from" server
+		// if not owner, send USER_NOT_FOUND to "from" server
 		try {
-			l.getFrom().sendLockAllowedMsg(username, secret, owner);
+			l.getFrom().sendUserNotFoundMsg(username, secret, owner);
 			return true;
 
 		} catch (Exception e) {

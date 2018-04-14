@@ -158,6 +158,7 @@ public class Connection extends Thread {
 		String authFail = MessageGenerator.generateAuthFail(info);
 		this.writeMsg(authFail);
 	}
+
 	public void sendAnnounceMsg(String id, int load, String host, int port){
 		String announce=MessageGenerator.generateAnnounce(id,load,host,port);
 		this.writeMsg(announce);
@@ -168,14 +169,25 @@ public class Connection extends Thread {
 		this.writeMsg(activityBroadcast);
 	}
 
-	public void sendLockRequestMsg(){}
+//	public void sendLockRequestMsg(){}
 
+	// User register messages
 	public void sendLockAllowedMsg(String username,String secret, String owner) {
 		String message = MessageGenerator.generateLockAllowed(username, secret, owner);
 		this.writeMsg(message);
 	}
 	public void sendLockDeniedMsg(String username,String secret, String owner){
 		String message = MessageGenerator.generateLockDenied(username,secret,owner);
+		this.writeMsg(message);
+	}
+
+	// User login messages
+	public void sendUserNotFoundMsg(String username,String secret, String owner) {
+		String message = MessageGenerator.generateUserNotFound(username, secret, owner);
+		this.writeMsg(message);
+	}
+	public void sendUserFoundMsg(String username,String secret, String owner){
+		String message = MessageGenerator.generateUserFound(username,secret,owner);
 		this.writeMsg(message);
 	}
 

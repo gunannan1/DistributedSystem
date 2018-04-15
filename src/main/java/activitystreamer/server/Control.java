@@ -253,8 +253,10 @@ public class Control extends Thread {
 			// do something with 5 second intervals in between
 			// TODO boradcast SERVER_ANNOUNCE
 			for(Connection c:connections){
-				c.sendAnnounceMsg(Settings.getServerId(),this.getClientLoads(),
-						Settings.getLocalHostname(),Settings.getLocalPort());
+				if(c.isAuthedServer()){
+					c.sendAnnounceMsg(Settings.getServerId(),this.getClientLoads(),
+							Settings.getLocalHostname(),Settings.getLocalPort());
+				}
 			}
 			try {
 				Thread.sleep(Settings.getActivityInterval());

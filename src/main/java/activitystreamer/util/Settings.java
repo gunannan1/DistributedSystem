@@ -17,6 +17,7 @@ public class Settings {
 	private static int activityInterval = 5000; // milliseconds
 	private static String secret = null;
 	private static String username = "anonymous";
+	private static String serverId=null;
 
 	
 	public static int getLocalPort() {
@@ -83,6 +84,13 @@ public class Settings {
 		Settings.localHostname = localHostname;
 	}
 
+	public static String getServerId() {
+		return serverId;
+	}
+
+	public static void setServerId(String s) {
+		serverId = s;
+	}
 	
 	/*
 	 * some general helper functions

@@ -3,6 +3,7 @@ package activitystreamer.message.serverhandlers;
 import activitystreamer.message.MessageHandler;
 import activitystreamer.server.Connection;
 import activitystreamer.server.Control;
+import activitystreamer.util.Settings;
 import com.google.gson.JsonObject;
 
 /**
@@ -51,13 +52,13 @@ public class ServerAuthenRequestHandler extends MessageHandler {
 		}
 
 		//check if the secret is correct
-//		else if(){
-//			connection.sendAuthFailedMsg(String.format("The supplied secret is incorrect: %s",secret));
-//			Control.log.info(String.format("The supplied secret is incorrect: %s",secret));
-//			connection.closeCon();
-//			this.control.connectionClosed(connection);
-//			return false;
-//		}
+		else if(secret!= Settings.getSecret()){
+			connection.sendAuthFailedMsg(String.format("The supplied secret is incorrect: %s",secret));
+			Control.log.info(String.format("The supplied secret is incorrect: %s",secret));
+			connection.closeCon();
+			this.control.connectionClosed(connection);
+			return false;
+		}
 
 		connection.setAuthed(true);
 		connection.setServer(true);

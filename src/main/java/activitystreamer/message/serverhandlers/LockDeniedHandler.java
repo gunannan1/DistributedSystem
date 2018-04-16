@@ -67,7 +67,7 @@ public class LockDeniedHandler extends MessageHandler {
 			}
 		}
 
-		// if not owner, send lockAllow to "from" server
+		// if not owner, send lockDenied to "from" server
 		try {
 
 			l.getFrom().sendLockDeniedMsg(username, secret, owner);

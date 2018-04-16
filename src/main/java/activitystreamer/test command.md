@@ -15,8 +15,14 @@ lib/gson-2.2.2.jar lib/common-cli-1.3.1.jar lib/json-simple-1.1.jar lib/log4j-ap
 
 
 #### test case - user register with multi servers
-java -jar Server-jar-with-dependencies.jar -lh localhost -lp 8001
-java -jar Server-jar-with-dependencies.jar -lh localhost -lp 8002 -s p3qm0lfhnc5tller1rktbbr3qi -rh localhost -rp 8001
+java -jar Server-jar-with-dependencies.jar -lh localhost -lp 8001 -s abc
+java -jar Server-jar-with-dependencies.jar -lh localhost -lp 8002 -s abc -rh localhost -rp 8001
 java -jar Server-jar-with-dependencies.jar -lh localhost -lp 8003 -s abc -rh localhost -rp 8001
 
 java -jar Client-jar-with-dependencies.jar -r -u kangnwh -rp 8001 -rh localhost -s abc
+
+java -jar Client-jar-with-dependencies.jar -l -u kangnwh -rp 8003 -rh localhost -s abc
+
+java -jar Client-jar-with-dependencies.jar -r -u kangnwh -rp 8002 -rh localhost -s abc
+
+java -jar Client-jar-with-dependencies.jar -r -u kangnwh1 -rp 8002 -rh localhost -s abc

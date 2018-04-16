@@ -52,7 +52,7 @@ public class ServerAuthenRequestHandler extends MessageHandler {
 		}
 
 		//check if the secret is correct
-		else if(secret!= Settings.getSecret()){
+		else if(!secret.equals(Settings.getSecret())){
 			connection.sendAuthFailedMsg(String.format("The supplied secret is incorrect: %s",secret));
 			Control.log.info(String.format("The supplied secret is incorrect: %s",secret));
 			connection.closeCon();

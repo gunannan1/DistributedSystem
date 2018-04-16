@@ -28,6 +28,7 @@ public class Control extends Thread {
 	private HashMap<MessageType, MessageHandler> handlerMap;
 //	private ServerTextFrame serverTextFrame;
 	private String identifier;
+	private HashMap<String,ServerState> serverStateList;
 
 	protected static Control control = null;
 
@@ -49,6 +50,9 @@ public class Control extends Thread {
 
 		// initialize the identifier
 		identifier = null;
+
+		// initialize the serverStateList
+		serverStateList=new HashMap<>();
 
 		// connect to another remote server if remote host is provided, or just start listener to provide services
 		if (Settings.getRemoteHostname() != null) {
@@ -310,6 +314,46 @@ public class Control extends Thread {
 			}
 		}
 		return load;
+	}
+
+
+	public void maintainServerState(String id,String host,int load,int port){
+		if(serverStateList.containsKey(id)){
+			serverStateList.get(id).setLoad(load);
+		}
+		else {
+			serverStateList.put(id,new ServerState(port,load,host,id));
+		}
+	}
+
+	public HashMap<String, ServerState> getServerStateList() {
+		return serverStateList;
+	}
+
+	//if any other server's loads are at less than the own server, return the id of server which has least loads
+	//else return null
+	public String findRedirectServer(){
+		int minLoad=this.getClientLoads();
+		String minLoadServerId=null;
+		for(String id:serverStateList.keySet()){
+			if(serverStateList.get(id).getLoad()<minLoad){
+				minLoad=serverStateList.get(id).getLoad();
+				minLoadServerId=id;
+			}
+		}
+		if(this.getClientLoads()-minLoad>=2){
+			return minLoadServerId;
+		}
+		return null;
+	}
+
+	public void doRedirect(Connection connection,String id,String username){
+		connection.sendRedirectMsg(this.getServerStateList().get(id).getHost(),
+				this.getServerStateList().get(id).getPort());
+		Control.log.info(" user '{}' needs redirect", username);
+		connection.closeCon();
+		control.connectionClosed(connection);
+		UserLoginHandler.enquiryRequestHashmap.remove(username);
 	}
 
 	public String getIdentifier(){

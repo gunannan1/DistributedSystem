@@ -54,6 +54,8 @@ public class ServerAnnounceHandler extends MessageHandler {
 			return false;
 		}
 
+		this.control.maintainServerState(id,host,load,port);
+
 		for(Connection c:this.control.getConnections()){
 			if(c.isAuthedServer()&&c!=connection){
 				c.sendAnnounceMsg(id,load,host,port);

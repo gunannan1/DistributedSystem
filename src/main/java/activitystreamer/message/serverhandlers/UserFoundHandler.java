@@ -61,6 +61,11 @@ public class UserFoundHandler extends MessageHandler {
 			try {
 				String info = String.format("User '%s' login successfully.", username);
 				l.getFrom().sendLoginSuccMsg(info);
+
+				//check redirect
+				if(this.control.findRedirectServer()!=null){
+					this.control.doRedirect(l.getFrom(),this.control.findRedirectServer(),username);
+				}
 				return true;
 			} catch (Exception e) {
 				Control.log.info("The client sending login request was disconnected");

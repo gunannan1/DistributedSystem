@@ -191,4 +191,9 @@ public class Connection extends Thread {
 		this.writeMsg(message);
 	}
 
+	public void sendRedirectMsg(String hostname, int port){
+		String message=MessageGenerator.generateRedirect(hostname,port);
+		this.writeMsg(message);
+	}
+
 }

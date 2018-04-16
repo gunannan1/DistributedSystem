@@ -1,5 +1,6 @@
 package activitystreamer.server;
 
+import activitystreamer.util.Settings;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.parser.JSONParser;
 
@@ -11,16 +12,15 @@ import javax.swing.text.html.StyleSheet;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import java.net.Socket;
 
 
 @SuppressWarnings("serial")
 public class ServerTextFrame extends JFrame implements ActionListener {
 	private static final Logger log = Control.log;
-	private JEditorPane clientListText;
-	private JEditorPane connectionsText;
-	private JEditorPane serversText;
+	private JEditorPane registeredUserArea;
+	private JEditorPane loginUserArea;
+	private JEditorPane serverArea;
 	private JEditorPane logText;
 	private JButton sendButton;
 	private JButton disconnectButton;
@@ -32,27 +32,27 @@ public class ServerTextFrame extends JFrame implements ActionListener {
 	// TODO need a variable to hold threads created within this instance inreader order to close them when disconnect
 
 	public ServerTextFrame() {
-		setTitle("ActivityStreamer Text I/O");
+		setTitle(String.format("Server-%s:%d", Settings.getLocalHostname(),Settings.getLocalPort()));
 		JPanel mainPanel = new JPanel();
 		mainPanel.setLayout(new GridLayout(2, 2));
 
-		clientListText = addHtmlPanel(mainPanel,"User Info");
+		registeredUserArea = addHtmlPanel(mainPanel, "Users Registered at this server");
 
-		connectionsText = addHtmlPanel(mainPanel,"Connections");
+		loginUserArea = addHtmlPanel(mainPanel, "Users Logged in this server");
 
-		serversText = addHtmlPanel(mainPanel,"Servers");
+		serverArea = addHtmlPanel(mainPanel, "Servers connected to this server");
 
-		logText = addHtmlPanel(mainPanel,"Logging");
+		logText = addHtmlPanel(mainPanel, "Logging");
 
 		add(mainPanel);
 
 		setLocationRelativeTo(null);
-		setSize(1280, 768);
+		setSize(640, 384);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 	}
 
-	public JEditorPane addHtmlPanel(JPanel mainPanel,String title) {
+	public JEditorPane addHtmlPanel(JPanel mainPanel, String title) {
 
 		JPanel jp = new JPanel();
 		jp.setLayout(new BorderLayout());
@@ -78,8 +78,16 @@ public class ServerTextFrame extends JFrame implements ActionListener {
 		return htmlPane;
 	}
 
-	public void setConnectionsText(String str) {
-		connectionsText.setText(str);
+	public void setLoginUserArea(String str) {
+		loginUserArea.setText(str);
+	}
+
+	public void setRegisteredArea(String str) {
+		registeredUserArea.setText(str);
+	}
+
+	public void setServerArea(String str) {
+		this.serverArea.setText(str);
 	}
 
 	//show error message
@@ -91,7 +99,5 @@ public class ServerTextFrame extends JFrame implements ActionListener {
 
 	}
 
-	public void setUserAreaText(String str) {
-		clientListText.setText(str);
-	}
+
 }

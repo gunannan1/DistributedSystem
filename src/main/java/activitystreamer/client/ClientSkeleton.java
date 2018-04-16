@@ -213,6 +213,9 @@ public class ClientSkeleton extends Thread {
 			this.writeMsg(actStr);
 	}
 
+	public String getLocalAddress(){
+		return String.format("%s:%s",this.s.getLocalAddress(),this.s.getLocalPort());
+	}
 
 
 }

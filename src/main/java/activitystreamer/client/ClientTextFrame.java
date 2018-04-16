@@ -37,7 +37,11 @@ public class ClientTextFrame extends JFrame implements ActionListener {
 	// TODO need a variable to hold threads created within this instance inreader order to close them when disconnect
 	
 	public ClientTextFrame(){
-		setTitle(String.format("Client-%s-%s",Settings.getLocalHostname(),Settings.getLocalPort()));
+		try {
+			setTitle(String.format("Client-%s",ClientSkeleton.getInstance().getLocalAddress()));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		JPanel mainPanel = new JPanel();
 		mainPanel.setLayout(new GridLayout(1,3));
 

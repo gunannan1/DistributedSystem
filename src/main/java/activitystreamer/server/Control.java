@@ -179,7 +179,7 @@ public class Control extends Thread {
 		log.debug("outgoing connection: " + Settings.socketAddress(s));
 		Connection c = new Connection(s);
 		connections.add(c);
-		c.sendAuthMsg(Settings.getSecret());
+//		c.sendAuthMsg(Settings.getSecret());
 		return c;
 
 	}
@@ -253,8 +253,10 @@ public class Control extends Thread {
 			// do something with 5 second intervals in between
 			// TODO boradcast SERVER_ANNOUNCE
 			for(Connection c:connections){
-				c.sendAnnounceMsg(Settings.getServerId(),this.getClientLoads(),
-						Settings.getLocalHostname(),Settings.getLocalPort());
+				if(c.isAuthedServer()){
+					c.sendAnnounceMsg(Settings.getServerId(),this.getClientLoads(),
+							Settings.getLocalHostname(),Settings.getLocalPort());
+				}
 			}
 			try {
 				Thread.sleep(Settings.getActivityInterval());

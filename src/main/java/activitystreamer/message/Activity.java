@@ -22,4 +22,9 @@ public class Activity {
 	{
 		return new Gson().toJson(this, JsonObject.class);
 	}
+
+	@Override
+	public String toString() {
+		return this.activity;
+	}
 }

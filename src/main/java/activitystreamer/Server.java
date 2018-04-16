@@ -69,10 +69,10 @@ public class Server {
 		if(cmd.hasOption("rh")){
 			Settings.setRemoteHostname(cmd.getOptionValue("rh"));
 		}
-		else {
-			Settings.setSecret(Settings.nextSecret());
-			log.info("Secret for the system: "+Settings.getSecret());
-		}
+//		else {
+////			Settings.setSecret(Settings.nextSecret());
+////			log.info("Secret for the system: "+Settings.getSecret());
+//		}
 		
 		if(cmd.hasOption("rp")){
 			try{

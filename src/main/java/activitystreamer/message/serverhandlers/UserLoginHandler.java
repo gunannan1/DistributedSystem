@@ -43,7 +43,13 @@ public class UserLoginHandler extends MessageHandler {
 
 		//1. Check if anoymous user
 		if (username.equals("anonymous")) {
-			connection.sendLoginSuccMsg(String.format("user %s login successfully", username));
+
+			//check redirect
+			if(this.control.findRedirectServer()!=null){
+				if(this.control.findRedirectServer()!=null){
+					this.control.doRedirect(connection,this.control.findRedirectServer(),username);
+				}
+			}
 			connection.setAuthed(true);
 			connection.setUser(new User(username, ""));
 			connection.sendLoginSuccMsg(String.format("login successfully as user '%s '", username));
@@ -68,6 +74,13 @@ public class UserLoginHandler extends MessageHandler {
 			connection.setAuthed(true);
 			connection.setUser(u);
 			connection.sendLoginSuccMsg(String.format("login successfully as user '%s '", username));
+
+			//check redirect
+			if(this.control.findRedirectServer()!=null){
+				if(this.control.findRedirectServer()!=null){
+					this.control.doRedirect(connection,this.control.findRedirectServer(),username);
+				}
+			}
 			Control.log.info("login successfully as user '{}'", username);
 			return true;
 		}

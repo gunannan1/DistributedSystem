@@ -171,26 +171,3 @@ Note:
 #### Login Redirection
 
 Use the table that maintained by the announce process, new coming client connection may be redirected to another server which hold 2 or more clients than the server itself.
-
-
-
-#### 
-
-
-
-
-
-#### 
-
-
-
-
-
-
-
-
-
-
-
-
-

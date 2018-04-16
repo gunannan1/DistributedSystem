@@ -29,6 +29,7 @@ public class ServerAnnounceHandler extends MessageHandler {
 		int load=json.get("load").getAsInt();
 		String host=json.get("host").getAsString();
 		int port=json.get("load").getAsInt();
+		System.out.println("hahhahaaaaaaahahahahahahahaha"+port);
 
 		if(!connection.isAuthedServer()){
 			connection.sendInvalidMsg("Received from an unauthenticated server");

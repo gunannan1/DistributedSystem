@@ -171,3 +171,23 @@ Note:
 #### Login Redirection
 
 Use the table that maintained by the announce process, new coming client connection may be redirected to another server which hold 2 or more clients than the server itself.
+
+
+
+## Contributors
+
+Ning Kang
+
+Nannan Gu
+
+Yiru Pan
+
+Wenyi Zhao
+
+
+
+## Copyright
+
+This is a solution of Distributed System of University of Melbourne(2018).
+
+Refer to the idea of this project is ok but **DO NOT COPY**.

@@ -1,5 +1,22 @@
 # Meeting Minutes
 
+
+##### Date: 16 Apr 2018
+
+##### Duration: 2 hours
+
+##### Attentance: Yirun Pan, Ning Kang, Nannan Gu, Wenyi Zhao
+
+
+Meeting minutes:
+
+0. Task process tracing
+0. Simple overall testing of current project by task owners
+0. Test cases designing
+0. Test cases tasks assignments
+0. Useless code clearance 
+0. Documentation tasks assignment
+
 ##### Date: 13 Apr 2018
 
 ##### Duration: 2 hours
@@ -9,12 +26,9 @@
 
 Meeting minutes:
 
-0. Finalise client design
-0. 
-0. Initialise development environment .
-0. Analysis client side code and assign tasks for client development and Update WBS accordingly 
-0. Assign server side code analysis tasks
-
+0. Finalise and explain whole system architecture of communication 
+0. Discuss message handler designings
+0. Assign tasks
 
 ##### Date: 29 Mar 2018
 

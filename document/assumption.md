@@ -6,4 +6,4 @@
 
 
 #### Server
-0. All servers use same secret
+0. All servers use the same secret

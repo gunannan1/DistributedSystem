@@ -3,6 +3,7 @@ package activitystreamer.message.serverhandlers;
 import activitystreamer.message.MessageHandler;
 import activitystreamer.server.Connection;
 import activitystreamer.server.Control;
+import activitystreamer.server.User;
 import com.google.gson.JsonObject;
 
 /**
@@ -60,7 +61,9 @@ public class UserFoundHandler extends MessageHandler {
 		if (owner.equals(control.getIdentifier())) {
 			try {
 				String info = String.format("User '%s' login successfully.", username);
-				l.getFrom().sendLoginSuccMsg(info);
+				Connection c = l.getFrom();
+				c.setAuthed(true);
+				c.sendLoginSuccMsg(info);
 
 				//check redirect
 				if(this.control.findRedirectServer()!=null){

@@ -133,7 +133,7 @@ public class Control extends Thread {
 	 * Return true if the connection should close.
 	 */
 	public synchronized boolean process(Connection con, String msg) {
-		Control.log.debug("received message [{}] from server [{}]",msg,Settings.socketAddress(con.getSocket()));
+		Control.log.debug("received message [{}] from [{}]",msg,Settings.socketAddress(con.getSocket()));
 		JsonParser parser = new JsonParser();
 		boolean isSucc = false ;
 		try {
@@ -256,34 +256,38 @@ public class Control extends Thread {
 		log.info("using activity interval of " + Settings.getActivityInterval() + " milliseconds");
 		while (!term) {
 			// do something with 5 second intervals in between
-			// TODO boradcast SERVER_ANNOUNCE
 			try {
 				Thread.sleep(Settings.getActivityInterval());
+				sendServerAnnounce();
 			} catch (InterruptedException e) {
 				log.info("received an interrupt, system is shutting down");
 				break;
 			}
-			if (!term) {
+//			if (!term) {
 //				log.debug("doing activity");
-				term = doActivity();
-			}
+//				term = doActivity();
+//			}
 		}
 		log.info("closing " + connections.size() + " connections");
 		// clean up
 		for (Connection connection : connections) {
-			connection.closeCon();
+				connection.closeCon();
 		}
 		listener.setTerm(true);
 		//TODO close All other threads.
 	}
 
-	public boolean doActivity() {
+	private void sendServerAnnounce(){
 		for(Connection c:connections){
 			if(c.isAuthedServer()){
 				c.sendAnnounceMsg(Settings.getServerId(),this.getClientLoads(),
 						Settings.getLocalHostname(),Settings.getLocalPort());
 			}
 		}
+	}
+
+	public boolean doActivity() {
+
 		return false;
 	}
 

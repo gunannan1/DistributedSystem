@@ -177,7 +177,7 @@ public class MessageGenerator {
 		JsonObject json = new JsonObject();
 
 		json.addProperty("command", MessageType.ACTIVITY_BROADCAST.name());
-		json.addProperty("activity", act.toJsonString());
+		json.addProperty("activity", act.toString());
 
 		return json.toString();
 	}

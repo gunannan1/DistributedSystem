@@ -21,32 +21,28 @@ public class ServerAnnounceHandler extends MessageHandler {
 	}
 
 	@Override
-	public boolean processMessage(JsonObject json,Connection connection) {
+	public boolean processMessage(JsonObject json, Connection connection) {
 		//TODO need future work
 
-		Control.log.info("Announce recieved");
-		String id=json.get("id").getAsString();
-		int load=json.get("load").getAsInt();
-		String host=json.get("host").getAsString();
-		int port=json.get("load").getAsInt();
+		Control.log.info("Announce recieved from " + connection.getSocket().getRemoteSocketAddress());
+		String id = json.get("id").getAsString();
+		int load = json.get("load").getAsInt();
+		String host = json.get("host").getAsString();
+		int port = json.get("port").getAsInt();
 
-		if(!connection.isAuthedServer()){
-			connection.sendInvalidMsg("Received from an unauthenticated server");
-			Control.log.info("Received from an unauthenticated server");
+		if (!connection.isAuthedServer()) {
+			connection.sendInvalidMsg("Received announce from an unauthenticated server");
+			Control.log.info("Received announce from an unauthenticated server");
 			connection.closeCon();
 			this.control.connectionClosed(connection);
 			return false;
-		}
-
-		else if(id==null){
+		} else if (id == null) {
 			connection.sendInvalidMsg("No id present");
 			Control.log.info("No id present");
 			connection.closeCon();
 			this.control.connectionClosed(connection);
 			return false;
-		}
-
-		else if(host==null){
+		} else if (host == null) {
 			connection.sendInvalidMsg("No host present");
 			Control.log.info("No host present");
 			connection.closeCon();
@@ -54,11 +50,12 @@ public class ServerAnnounceHandler extends MessageHandler {
 			return false;
 		}
 
-		this.control.maintainServerState(id,host,load,port);
+		this.control.maintainServerState(id, host, load, port);
 
-		for(Connection c:this.control.getConnections()){
-			if(c.isAuthedServer()&&c!=connection){
-				c.sendAnnounceMsg(id,load,host,port);
+		for (Connection c : this.control.getConnections()) {
+			if (c.isAuthedServer() && c != connection) {
+				Control.log.debug("Send announce to " + c.getSocket().getRemoteSocketAddress());
+				c.sendAnnounceMsg(id, load, host, port);
 			}
 		}
 

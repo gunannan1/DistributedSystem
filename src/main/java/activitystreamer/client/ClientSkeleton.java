@@ -6,6 +6,7 @@ import activitystreamer.message.MessageHandler;
 import activitystreamer.message.MessageType;
 import activitystreamer.message.clienthandlers.*;
 import activitystreamer.util.Settings;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.apache.logging.log4j.LogManager;
@@ -102,7 +103,7 @@ public class ClientSkeleton extends Thread {
 	public void startUI() {
 		if(textFrame == null) {
 			textFrame = new ClientTextFrame();
-			UILogAppender.setTextArea(this.textFrame.getLogTextArea());
+//			UILogAppender.setTextArea(this.textFrame.getLogTextArea());
 		}
 	}
 
@@ -151,7 +152,9 @@ public class ClientSkeleton extends Thread {
 					this.disconnect();
 				}
 			}
-			log.info("Connection" + Settings.socketAddress(s) + " closed by remote server" );
+			String closeInfo = "Connection" + Settings.socketAddress(s) + " closed by remote server";
+			log.info(closeInfo);
+			if (this.textFrame!=null) this.textFrame.setOutputText(closeInfo);
 			s.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -206,6 +209,7 @@ public class ClientSkeleton extends Thread {
 	public void sendActivityObject(Activity activityObj) {
 		log.info("send activity to server with activity={}",activityObj.toString());
 			String actStr = MessageGenerator.generateActMessage(Settings.getUsername(),Settings.getSecret(),activityObj);
+			log.debug(actStr);
 			this.writeMsg(actStr);
 	}
 

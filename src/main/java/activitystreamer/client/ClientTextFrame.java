@@ -11,7 +11,9 @@ import java.net.Socket;
 import javax.swing.*;
 import javax.swing.border.Border;
 
+import activitystreamer.Client;
 import activitystreamer.message.Activity;
+import activitystreamer.util.Settings;
 import com.google.gson.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,7 +26,7 @@ public class ClientTextFrame extends JFrame implements ActionListener {
 	private static final Logger log = LogManager.getLogger("clientLogger");
 	private JTextArea inputText;
 	private JTextArea outputText;
-	private JTextArea logText;
+//	private JTextArea logText;
 	private JButton sendButton;
 	private JButton disconnectButton;
 	private JSONParser parser = new JSONParser();
@@ -35,7 +37,7 @@ public class ClientTextFrame extends JFrame implements ActionListener {
 	// TODO need a variable to hold threads created within this instance inreader order to close them when disconnect
 	
 	public ClientTextFrame(){
-		setTitle("ActivityStreamer Text I/O");
+		setTitle(String.format("Client-%s-%s",Settings.getLocalHostname(),Settings.getLocalPort()));
 		JPanel mainPanel = new JPanel();
 		mainPanel.setLayout(new GridLayout(1,3));
 
@@ -49,12 +51,12 @@ public class ClientTextFrame extends JFrame implements ActionListener {
 		lineBorder = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.lightGray),"JSON output, received from server");
 		outputPanel.setBorder(lineBorder);
 		outputPanel.setName("Text output");
-
-		JPanel logPanel = new JPanel();
-		logPanel.setLayout(new BorderLayout());
-		lineBorder = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.lightGray),"Log Output");
-		logPanel.setBorder(lineBorder);
-		logPanel.setName("Log");
+//
+//		JPanel logPanel = new JPanel();
+//		logPanel.setLayout(new BorderLayout());
+//		lineBorder = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.lightGray),"Log Output");
+//		logPanel.setBorder(lineBorder);
+//		logPanel.setName("Log");
 
 		
 		inputText = new JTextArea();
@@ -71,11 +73,11 @@ public class ClientTextFrame extends JFrame implements ActionListener {
 		sendButton.addActionListener(this);
 		disconnectButton.addActionListener(this);
 
-		logText = new JTextArea();
-		logText.setLineWrap(true);
-		logText.setBackground(Color.gray);
-		scrollPane = new JScrollPane(logText);
-		logPanel.add(scrollPane,BorderLayout.CENTER);
+//		logText = new JTextArea();
+//		logText.setLineWrap(true);
+//		logText.setBackground(Color.gray);
+//		scrollPane = new JScrollPane(logText);
+//		logPanel.add(scrollPane,BorderLayout.CENTER);
 
 		outputText = new JTextArea();
 		outputText.setLineWrap(true);
@@ -85,20 +87,20 @@ public class ClientTextFrame extends JFrame implements ActionListener {
 		
 		mainPanel.add(inputPanel);
 		mainPanel.add(outputPanel);
-		mainPanel.add(logPanel);
+//		mainPanel.add(logPanel);
 		add(mainPanel);
 		
 		setLocationRelativeTo(null); 
-		setSize(1280,768);
+		setSize(640,384);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 
 //		this.beginReceive();
 	}
 
-	public JTextArea getLogTextArea() {
-		return logText;
-	}
+//	public JTextArea getLogTextArea() {
+//		return logText;
+//	}
 
 	// TODO maybe we can move this message handler into receive thread
 	public void setOutputText(final JsonObject obj){
@@ -106,25 +108,14 @@ public class ClientTextFrame extends JFrame implements ActionListener {
 		JsonParser jp = new JsonParser();
 		JsonElement je = jp.parse(obj.toString());
 		String prettyJsonString = gson.toJson(je);
-		outputText.append(prettyJsonString);
+		setOutputText(prettyJsonString);
+	}
+	public void setOutputText(String info){
+		outputText.append(info);
 		outputText.revalidate();
 		outputText.repaint();
-//		outputText.append("Test step ");
 	}
 
-//	//TODO how to handel message from server
-//	private void beginReceive(){
-//		// TODO what if disconnect ?
-//		// TODO what if lost connection ?
-//		try {
-//			ReceiveThread receiveThread = new ReceiveThread(this.socket, this.outputText);
-//			receiveThread.run();
-//		}catch (Exception e)
-//		{
-//			log.error(e.getMessage());
-//		}
-//
-//	}
 	//show error message
 	public void showErrorMsg(String error)
 	{

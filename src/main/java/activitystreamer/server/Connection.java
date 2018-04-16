@@ -105,7 +105,7 @@ public class Connection extends Thread {
 		return user;
 	}
 	public void setUser(User u){
-		this.user = user;
+		this.user = u;
 	}
 
 	public void setServer(boolean isServer){

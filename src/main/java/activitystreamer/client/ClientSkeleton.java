@@ -204,7 +204,7 @@ public class ClientSkeleton extends Thread {
 
 	@SuppressWarnings("unchecked")
 	public void sendActivityObject(Activity activityObj) {
-		log.info("send activity to server with activity={}",activityObj.toJsonString());
+		log.info("send activity to server with activity={}",activityObj.toString());
 			String actStr = MessageGenerator.generateActMessage(Settings.getUsername(),Settings.getSecret(),activityObj);
 			this.writeMsg(actStr);
 	}

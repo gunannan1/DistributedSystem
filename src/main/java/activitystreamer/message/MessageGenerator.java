@@ -189,7 +189,7 @@ public class MessageGenerator {
 		json.addProperty("command", MessageType.ACTIVITY_MESSAGE.name());
 		json.addProperty("username", username);
 		json.addProperty("secret", secret);
-		json.addProperty("activity", act.toJsonString());
+		json.addProperty("activity", act.toString());
 
 		return json.toString();
 	}

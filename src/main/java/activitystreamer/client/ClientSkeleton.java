@@ -207,7 +207,8 @@ public class ClientSkeleton extends Thread {
 		log.info("send activity to server with activity={}",activityObj.toJsonString());
 			String actStr = MessageGenerator.generateActMessage(Settings.getUsername(),Settings.getSecret(),activityObj);
 			this.writeMsg(actStr);
-
 	}
+
+
 
 }

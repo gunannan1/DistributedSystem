@@ -57,6 +57,7 @@ public class Control extends Thread {
 		} else {
 			this.startListener();
 		}
+		start();
 	}
 
 	public void startListener() {
@@ -252,12 +253,6 @@ public class Control extends Thread {
 		while (!term) {
 			// do something with 5 second intervals in between
 			// TODO boradcast SERVER_ANNOUNCE
-			for(Connection c:connections){
-				if(c.isAuthedServer()){
-					c.sendAnnounceMsg(Settings.getServerId(),this.getClientLoads(),
-							Settings.getLocalHostname(),Settings.getLocalPort());
-				}
-			}
 			try {
 				Thread.sleep(Settings.getActivityInterval());
 			} catch (InterruptedException e) {
@@ -265,7 +260,7 @@ public class Control extends Thread {
 				break;
 			}
 			if (!term) {
-				log.debug("doing activity");
+//				log.debug("doing activity");
 				term = doActivity();
 			}
 		}
@@ -279,6 +274,12 @@ public class Control extends Thread {
 	}
 
 	public boolean doActivity() {
+		for(Connection c:connections){
+			if(c.isAuthedServer()){
+				c.sendAnnounceMsg(Settings.getServerId(),this.getClientLoads(),
+						Settings.getLocalHostname(),Settings.getLocalPort());
+			}
+		}
 		return false;
 	}
 

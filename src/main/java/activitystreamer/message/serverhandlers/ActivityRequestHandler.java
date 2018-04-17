@@ -69,7 +69,7 @@ public class ActivityRequestHandler extends MessageHandler {
 		Activity activity = new Activity(json.get("activity").getAsString());
 
 		for (Connection c : this.control.getConnections()) {
-			if ((c.isAuthedServer() || c.isAuthedClient()) && c != connection) {
+			if (c.isAuthedServer() || c.isAuthedClient()) {
 				c.sendActivityBroadcastMsg(activity);
 			}
 		}

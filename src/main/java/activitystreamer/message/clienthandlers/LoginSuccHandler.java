@@ -23,8 +23,9 @@ public class LoginSuccHandler extends MessageHandler {
 
 	@Override
 	public boolean processMessage(JsonObject json,Connection connection) {
-		//TODO need future work
+
 		ClientSkeleton.log.info("Login successfully to server {}", Settings.getRemoteHostname());
+		ClientSkeleton.log.info("Start User Interface");
 		this.clientSkeleton.startUI();
 		return true;
 	}

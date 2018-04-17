@@ -23,8 +23,9 @@ public class RegisterFailedHandler extends MessageHandler {
 
 	@Override
 	public boolean processMessage(JsonObject json,Connection connection) {
-		//TODO need future work
+
 		ClientSkeleton.log.info("Register failed to server {}", Settings.getRemoteHostname());
+		ClientSkeleton.log.info("Connection will be closed");
 		return false;
 	}
 }

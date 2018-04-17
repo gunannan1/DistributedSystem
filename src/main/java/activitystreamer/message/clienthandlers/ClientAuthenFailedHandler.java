@@ -22,8 +22,9 @@ public class ClientAuthenFailedHandler extends MessageHandler {
 
 	@Override
 	public boolean processMessage(JsonObject json,Connection connection) {
-		//TODO need future work
+
 		ClientSkeleton.log.info("Cannot send activity as username or secret is not correct or you are an anonymous");
+		ClientSkeleton.log.info("Connection will be closed");
 		return false;
 	}
 }

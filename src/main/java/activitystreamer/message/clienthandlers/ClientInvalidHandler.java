@@ -22,8 +22,9 @@ public class ClientInvalidHandler extends MessageHandler {
 
 	@Override
 	public boolean processMessage(JsonObject json,Connection connection) {
-		// TODO need future work
+
 		ClientSkeleton.log.info("Invalid message received from server");
+		ClientSkeleton.log.info("Connection will be closed");
 		return false;
 	}
 }

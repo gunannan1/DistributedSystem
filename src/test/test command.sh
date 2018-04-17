@@ -61,7 +61,12 @@ java -jar Client-jar-with-dependencies.jar -l -u wenyizhao -rp 8002 -rh localhos
 
 
 
+# Connect to teachers' server
+java -jar Client-jar-with-dependencies.jar -r  -u kangnwh -rp 3781 -rh sunrise.cis.unimelb.edu.au -s abc
+java -jar Client-jar-with-dependencies.jar -l  -u kangnwh -rp 3781 -rh sunrise.cis.unimelb.edu.au -s abc
 
+java -jar Server-jar-with-dependencies.jar -lh localhost -lp 8006 -s 'gen1p85md2qnq0d59qll3fbcoa' -rh sunrise.cis.unimelb.edu.au -rp 3781
+{"command": "AUTHENTICATE","secret":"gen1p85md2qnq0d59qll3fbcoa"}
 
 
 java -jar Client-jar-with-dependencies.jar -r -u kangnwh -rp 8001 -rh localhost -s abc

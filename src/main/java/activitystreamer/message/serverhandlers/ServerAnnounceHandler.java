@@ -26,7 +26,7 @@ public class ServerAnnounceHandler extends MessageHandler {
 		Control.log.debug("Announcement received from {}" , connection.getSocket().getRemoteSocketAddress());
 		String id = json.get("id").getAsString();
 		int load = json.get("load").getAsInt();
-		String host = json.get("host").getAsString();
+		String host = json.get("hostname").getAsString();
 		int port = json.get("port").getAsInt();
 
 		if (!connection.isAuthedServer()) {

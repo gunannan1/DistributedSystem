@@ -166,7 +166,7 @@ public class MessageGenerator {
 		json.addProperty("command", MessageType.SERVER_ANNOUNCE.name());
 		json.addProperty("id", id);
 		json.addProperty("load", load);
-		json.addProperty("host", host);
+		json.addProperty("hostname", host);
 		json.addProperty("port", port);
 
 		return json.toString();

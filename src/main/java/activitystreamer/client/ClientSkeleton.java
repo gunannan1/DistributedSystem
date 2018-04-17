@@ -121,6 +121,7 @@ public class ClientSkeleton extends Thread {
 		try {
 //			sendLogoutMsg();
 			s.close();
+			textFrame.dispose();
 
 		} catch (IOException e) {
 			e.printStackTrace();

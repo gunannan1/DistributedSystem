@@ -351,7 +351,7 @@ public class Control extends Thread {
 				minLoadServerId = id;
 			}
 		}
-		if (this.getClientLoads() - minLoad > 2) {
+		if (this.getClientLoads() - minLoad >=2) {
 			return minLoadServerId;
 		}
 		return null;

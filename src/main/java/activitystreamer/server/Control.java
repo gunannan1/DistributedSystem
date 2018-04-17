@@ -1,5 +1,6 @@
 package activitystreamer.server;
 
+import activitystreamer.client.UILogAppender;
 import activitystreamer.message.Activity;
 import activitystreamer.message.MessageGenerator;
 import activitystreamer.message.MessageHandler;
@@ -368,12 +369,10 @@ public class Control extends Thread {
 	//TODO UI information refresh
 	private void startUI(){
 		serverTextFrame = new ServerTextFrame();
+		UILogAppender.setTextArea(serverTextFrame.getLogArea());
 		new UIRefresher().start();
 	}
 
-	public void refreshConnectionInfo(){
-
-	}
 
 	public void refreshLoginInfo(){
 		String html = "<table class='table table-bordered'> <thead>%s</thead><tbody>%S</tbody>";
@@ -424,7 +423,6 @@ public class Control extends Thread {
 		if(serverTextFrame != null) {
 			refreshRegisterInfo();
 			refreshServerInfo();
-			refreshConnectionInfo();
 			refreshLoginInfo();
 		}
 	}

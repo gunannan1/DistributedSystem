@@ -21,7 +21,7 @@ public class ServerTextFrame extends JFrame implements ActionListener {
 	private JEditorPane registeredUserArea;
 	private JEditorPane loginUserArea;
 	private JEditorPane serverArea;
-	private JEditorPane logText;
+	private JTextArea logText;
 	private JButton sendButton;
 	private JButton disconnectButton;
 	private JSONParser parser = new JSONParser();
@@ -34,15 +34,19 @@ public class ServerTextFrame extends JFrame implements ActionListener {
 	public ServerTextFrame() {
 		setTitle(String.format("Server-%s:%d", Settings.getLocalHostname(),Settings.getLocalPort()));
 		JPanel mainPanel = new JPanel();
-		mainPanel.setLayout(new GridLayout(2, 2));
+		mainPanel.setLayout(new GridLayout(2, 1));
 
-		registeredUserArea = addHtmlPanel(mainPanel, "Users Registered at this server");
+		JPanel upPanel = new JPanel();
+		upPanel.setLayout(new GridLayout(1,3));
+		mainPanel.add(upPanel);
 
-		loginUserArea = addHtmlPanel(mainPanel, "Users Logged in this server");
+		registeredUserArea = addHtmlPanel(upPanel, "Users Registered at this server");
 
-		serverArea = addHtmlPanel(mainPanel, "Servers connected to this server");
+		loginUserArea = addHtmlPanel(upPanel, "Users Logged in this server");
 
-		logText = addHtmlPanel(mainPanel, "Logging");
+		serverArea = addHtmlPanel(upPanel, "Servers connected to this server");
+
+		logText = addLogPanel(mainPanel);
 
 		add(mainPanel);
 
@@ -50,6 +54,26 @@ public class ServerTextFrame extends JFrame implements ActionListener {
 		setSize(640, 384);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
+	}
+
+	public JTextArea addLogPanel(JPanel mainPanel) {
+		JTextArea textArea;
+		JPanel logPanel = new JPanel();
+		logPanel.setLayout(new BorderLayout());
+		Border lineBorder = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.lightGray),"Log Output");
+		logPanel.setBorder(lineBorder);
+		logPanel.setName("Log");
+
+		textArea = new JTextArea();
+		textArea.setLineWrap(false);
+		textArea.setFont(new Font(Font.DIALOG,Font.PLAIN,10));
+		JScrollPane scrollPane = new JScrollPane(textArea);
+		logPanel.add(scrollPane,BorderLayout.CENTER);
+		scrollPane.setAutoscrolls(true);
+		mainPanel.add(logPanel);
+
+		return textArea;
+
 	}
 
 	public JEditorPane addHtmlPanel(JPanel mainPanel, String title) {
@@ -93,6 +117,9 @@ public class ServerTextFrame extends JFrame implements ActionListener {
 	//show error message
 	public void showErrorMsg(String error) {
 		JOptionPane.showMessageDialog(null, error, "Error", JOptionPane.INFORMATION_MESSAGE);
+	}
+	public JTextArea getLogArea(){
+		return logText;
 	}
 
 	public void actionPerformed(ActionEvent e) {

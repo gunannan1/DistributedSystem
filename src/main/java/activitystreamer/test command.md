@@ -2,7 +2,14 @@
 {"command":"REGISTER","username":"ningk2","secret":"abc"}
 {"command":"REGISTER","username":"ningk3","secret":"abc"}
 
+{"command":"REGISTER","username":"ningk3"}
+
 {"command":"LOGIN","username":"kangnwh","secret":"abc"}
+{"command":"LOGIN","username":"anonymous"}
+
+{"command":"LOGIN","username":"ningk1","secret":"abc"}
+{"command":"LOGIN","username":"ningk2","secret":"abc"}
+{"command":"LOGIN","username":"ningk3","secret":"abc"}
 
 
 ".table th, .table td {padding: 0.75rem;  vertical-align: top;  border-top: 1px solid #dee2e6;}"

@@ -266,8 +266,8 @@ public class Control extends Thread {
 		while (!term) {
 			// do something with 5 second intervals in between
 			try {
-				Thread.sleep(Settings.getActivityInterval());
 				sendServerAnnounce();
+				Thread.sleep(Settings.getActivityInterval());
 			} catch (InterruptedException e) {
 				log.info("received an interrupt, system is shutting down");
 				break;
@@ -351,7 +351,7 @@ public class Control extends Thread {
 				minLoadServerId = id;
 			}
 		}
-		if (this.getClientLoads() - minLoad >= 2) {
+		if (this.getClientLoads() - minLoad > 2) {
 			return minLoadServerId;
 		}
 		return null;

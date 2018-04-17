@@ -158,17 +158,17 @@ In order to ensure the uniqueness of username, servers need to communicate with 
 
 Note:
 
-- A server will immediately reply LOCK_DENIED to the 'from' server once it receives one LOCK_DENIED from connected servers.
+- A server will reply LOCK_DENIED to the 'from' server once it receives one LOCK_DENIED from connected servers.
 - A server only reply LOCK_ALLOW to the 'from' server after it receives LOCK_ALLOW from **ALL** connected servers.
 
 #### Login Validation
 
-The login process is almost the same with register process except it uses "ENQUIRY" messages. And the reply logic is just opposite.
+The login process is almost the same with register process except it the logic is opposite. 
 
 Note:
 
-- A server will immediately reply USER_FOUND to the 'from' server once it receives one USER_FOUND  from connected servers.
-- A server only reply USER_NOT_FOUND to the 'from' server after it receives USER_NOT_FOUND from **ALL** connected servers.
+- A server will reply LOCK_DENIED (which means user is found) to the 'from' server once it receives one LOCK_DENIED  from connected servers.
+- A server only reply LOCK_ALLOWED (which means user is not found) to the 'from' server after it receives LOCK_ALLOWED from **ALL** connected servers.
 
 
 

@@ -24,6 +24,7 @@ public class Control extends Thread {
 
 	private static boolean term = false;
 	private static Listener listener; // why static
+	private UIRefresher uiRefresher;
 	private static ArrayList<Connection> connections;
 	private HashMap<String, User> userList; // <String, user Class>,
 	private HashMap<MessageType, MessageHandler> handlerMap;
@@ -298,6 +299,7 @@ public class Control extends Thread {
 	public final void setTerm(boolean t) {
 		term = t;
 		listener.setTerm(true);
+		uiRefresher.interrupt();
 	}
 
 	public final ArrayList<Connection> getConnections() {
@@ -377,7 +379,8 @@ public class Control extends Thread {
 	private void startUI() {
 		serverTextFrame = new ServerTextFrame();
 		UILogAppender.setTextArea(serverTextFrame.getLogArea());
-		new UIRefresher().start();
+		uiRefresher = new UIRefresher();
+		uiRefresher.start();
 	}
 
 
@@ -435,6 +438,7 @@ public class Control extends Thread {
 	}
 
 	private class UIRefresher extends Thread {
+
 		@Override
 		public void run() {
 			while (true && !term) {

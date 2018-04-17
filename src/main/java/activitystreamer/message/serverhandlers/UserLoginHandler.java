@@ -4,6 +4,7 @@ import activitystreamer.message.MessageHandler;
 import activitystreamer.server.Connection;
 import activitystreamer.server.Control;
 import activitystreamer.server.User;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.util.HashMap;
@@ -39,7 +40,8 @@ public class UserLoginHandler extends MessageHandler {
 		Control.log.info("login message is received");
 
 		String username = json.get("username").getAsString();
-		String secret = json.get("secret").getAsString();
+		JsonElement secrrtJson = json.get("secret");
+		String secret = secrrtJson == null ? null:secrrtJson.getAsString();
 
 		//1. Check if anoymous user
 		if (username.equals("anonymous")) {
@@ -53,7 +55,7 @@ public class UserLoginHandler extends MessageHandler {
 			connection.setAuthed(true);
 			connection.setUser(new User(username, ""));
 			connection.sendLoginSuccMsg(String.format("login successfully as user '%s '", username));
-			Control.log.info("login successfully as user '{}'", username);
+			Control.log.info("user '{}' login successfully", username);
 			return true;
 
 		}

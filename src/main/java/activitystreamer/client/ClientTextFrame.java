@@ -1,6 +1,8 @@
 package activitystreamer.client;
 
 import activitystreamer.message.Activity;
+import activitystreamer.client.UILogAppender;
+
 import com.google.gson.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,6 +16,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.net.Socket;
+
 
 @SuppressWarnings("serial")
 public class ClientTextFrame extends JFrame implements ActionListener {
@@ -80,7 +83,7 @@ public class ClientTextFrame extends JFrame implements ActionListener {
 		this.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				ClientSkeleton.getInstance().disconnect();
+				ClientSkeleton.getInstance().sendLogoutMsg();
 			}
 		});
 	}

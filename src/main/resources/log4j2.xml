@@ -16,6 +16,9 @@
             <appender-ref ref="Console" level="debug"/>
             <appender-ref ref="uiAppender" level="debug"/>
         </Logger>
+        <Logger name="clientLogger" level="debug" additivity="false">
+            <appender-ref ref="Console" level="debug"/>
+        </Logger>
         <Root level="debug">
             <AppenderRef ref="Console" />
         </Root>

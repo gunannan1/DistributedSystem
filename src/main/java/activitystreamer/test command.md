@@ -2,6 +2,7 @@
 {"command":"REGISTER","username":"ningk2","secret":"abc"}
 {"command":"REGISTER","username":"ningk3","secret":"abc"}
 
+{"command":"LOGIN","username":"kangnwh","secret":"abc"}
 
 
 ".table th, .table td {padding: 0.75rem;  vertical-align: top;  border-top: 1px solid #dee2e6;}"
@@ -25,4 +26,5 @@ java -jar Client-jar-with-dependencies.jar -l -u kangnwh -rp 8003 -rh localhost 
 
 java -jar Client-jar-with-dependencies.jar -r -u kangnwh -rp 8002 -rh localhost -s abc
 
-java -jar Client-jar-with-dependencies.jar -r -u kangnwh1 -rp 8002 -rh localhost -s abc
+java -jar Client-jar-with-dependencies.jar -r -u kangnwh1 -rp 8001 -rh localhost -s abc
+java -jar Client-jar-with-dependencies.jar -l -u kangnwh1 -rp 8001 -rh localhost -s abc

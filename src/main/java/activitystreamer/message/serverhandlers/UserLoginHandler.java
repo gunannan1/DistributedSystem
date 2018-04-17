@@ -85,12 +85,16 @@ public class UserLoginHandler extends MessageHandler {
 			return true;
 		}
 
-		//3. check if any remote servers
+		// 4. check if any remote servers
 		 if (control.getServerLoads(null) > 0) {
 			Control.log.info("Remote servers exist, will check with other servers for user '{}' ", username);
+
 			BroadcastResult loginResult = new BroadcastResult(connection,control.getServerLoads(connection));
 			UserLoginHandler.enquiryRequestHashmap.put(username, loginResult);
-			//TODO need testing
+
+			connection.setUser(new User(username,secret));
+			connection.setAuthed(false);
+
 			// broadcastToAll lock request and then waiting for lock_allow & lock_denied, this register process will be handled by LockAllowedHandler & LockDeniedHandler
 			control.broadcastEnquiry(control.getIdentifier(),new User(username,secret),connection);
 			return true;

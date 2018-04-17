@@ -26,7 +26,7 @@ public class Control extends Thread {
 	private static ArrayList<Connection> connections;
 	private HashMap<String, User> userList; // <String, user Class>,
 	private HashMap<MessageType, MessageHandler> handlerMap;
-//	private ServerTextFrame serverTextFrame;
+	private ServerTextFrame serverTextFrame;
 	private String identifier;
 	private HashMap<String,ServerState> serverStateList;
 
@@ -68,8 +68,11 @@ public class Control extends Thread {
 		// start a listener
 		try {
 			listener = new Listener();
-//			serverTextFrame = new ServerTextFrame();
 			identifier = Settings.getLocalHostname() + Settings.getLocalPort();
+
+			// Show UI for testing
+			startUI();
+
 		} catch (IOException e1) {
 			log.fatal("failed to startup a listening thread: " + e1);
 			System.exit(-1);
@@ -133,7 +136,7 @@ public class Control extends Thread {
 	 * Return true if the connection should close.
 	 */
 	public synchronized boolean process(Connection con, String msg) {
-		Control.log.debug("received message [{}] from server [{}]",msg,Settings.socketAddress(con.getSocket()));
+		Control.log.debug("received message [{}] from [{}]",msg,Settings.socketAddress(con.getSocket()));
 		JsonParser parser = new JsonParser();
 		boolean isSucc = false ;
 		try {
@@ -145,6 +148,8 @@ public class Control extends Thread {
 			} else {
 				log.error("Cannot find message handler for message type '{}'", m.name());
 			}
+			// refresh UI
+			refreshUI();
 		} catch (IllegalStateException e) {
 			String info = String.format("Invalid message '%s'", msg);
 			log.error(info);
@@ -256,34 +261,34 @@ public class Control extends Thread {
 		log.info("using activity interval of " + Settings.getActivityInterval() + " milliseconds");
 		while (!term) {
 			// do something with 5 second intervals in between
-			// TODO boradcast SERVER_ANNOUNCE
 			try {
 				Thread.sleep(Settings.getActivityInterval());
+				sendServerAnnounce();
 			} catch (InterruptedException e) {
 				log.info("received an interrupt, system is shutting down");
 				break;
-			}
-			if (!term) {
-//				log.debug("doing activity");
-				term = doActivity();
 			}
 		}
 		log.info("closing " + connections.size() + " connections");
 		// clean up
 		for (Connection connection : connections) {
-			connection.closeCon();
+				connection.closeCon();
 		}
 		listener.setTerm(true);
 		//TODO close All other threads.
 	}
 
-	public boolean doActivity() {
+	private void sendServerAnnounce(){
 		for(Connection c:connections){
 			if(c.isAuthedServer()){
 				c.sendAnnounceMsg(Settings.getServerId(),this.getClientLoads(),
 						Settings.getLocalHostname(),Settings.getLocalPort());
 			}
 		}
+	}
+
+	public boolean doActivity() {
+
 		return false;
 	}
 
@@ -361,29 +366,67 @@ public class Control extends Thread {
 	}
 
 	//TODO UI information refresh
-	public void refreshUnauthCon(){
+	private void startUI(){
+		serverTextFrame = new ServerTextFrame();
+		new UIRefresher().start();
+	}
+
+	public void refreshConnectionInfo(){
 
 	}
 
-	public void refreshUserInfo(){
+	public void refreshLoginInfo(){
 		String html = "<table class='table table-bordered'> <thead>%s</thead><tbody>%S</tbody>";
 		StringJoiner sj = new StringJoiner("");
-//		sj.add(User.tableHeader());
+
+		for(Connection c: connections){
+			if(c.isAuthedClient()) {
+				sj.add(c.getUser().toString());
+			}
+		}
+		this.serverTextFrame.setLoginUserArea(String.format(html,User.tableHeader(),sj.toString()));
+	}
+
+	private void refreshRegisterInfo(){
+		String html = "<table class='table table-bordered'> <thead>%s</thead><tbody>%S</tbody>";
+		StringJoiner sj = new StringJoiner("");
+
 		for(Map.Entry<String,User>e:userList.entrySet()){
 			sj.add(e.getValue().toString());
 		}
-//		serverTextFrame.setUserAreaText(String.format(html,User.tableHeader(),sj.toString()));
+		this.serverTextFrame.setRegisteredArea(String.format(html,User.tableHeader(),sj.toString()));
 
 	}
 
-	public void refreshServerInfo(){
+	private void refreshServerInfo(){
+		String html = "<table class='table table-bordered'> <thead>%s</thead><tbody>%S</tbody>";
+		String header = "<tr>\n" +
+		"      <th scope=\"row\">#</th>\n" +
+				"      <td>IP</td>\n" +
+				"      <td>Port</td>\n" +
+				"    </tr>";
+		StringJoiner sj = new StringJoiner("");
+
+		for(Connection c: connections){
+			if(c.isAuthedServer()) {
+				sj.add(String.format(" <tr>\n" +
+						"      <th scope=\"row\">*</th>\n" +
+						"      <td>%s</td>\n" +
+						"      <td>%s</td>\n" +
+						"    </tr>",c.getSocket().getRemoteSocketAddress(),c.getSocket().getPort()));
+			}
+		}
+		this.serverTextFrame.setServerArea(String.format(html,header,sj.toString()));
 
 	}
 
-	public void refreshUI(){
-		refreshServerInfo();
-		refreshUnauthCon();
-		refreshUserInfo();
+	private void refreshUI(){
+		if(serverTextFrame != null) {
+			refreshRegisterInfo();
+			refreshServerInfo();
+			refreshConnectionInfo();
+			refreshLoginInfo();
+		}
 	}
 
 	private class UIRefresher extends Thread{

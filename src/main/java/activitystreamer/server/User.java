@@ -38,9 +38,9 @@ public class User {
 				"      <th scope=\"row\">*</th>\n" +
 				"      <td>%s</td>\n" +
 				"      <td>%s</td>\n" +
-				"      <td>%s</td>\n" +
 //				"      <td>%s</td>\n" +
-				"    </tr>",username,secret,isRegistered);
+//				"      <td>%s</td>\n" +
+				"    </tr>",username,secret);
 	}
 
 	public static String tableHeader(){
@@ -48,7 +48,7 @@ public class User {
 				"      <th scope=\"col\">#</th>\n" +
 				"      <th scope=\"col\">Username</th>\n" +
 				"      <th scope=\"col\">Secret</th>\n" +
-				"      <th scope=\"col\">Is Register</th>\n" +
+//				"      <th scope=\"col\">Is Register</th>\n" +
 //				"      <th scope=\"col\">Is Connected</th>\n" +
 				"    </tr>\n" ;
 	}

@@ -117,7 +117,7 @@ public class ServerTextFrame extends JFrame implements ActionListener {
 	}
 
 	public void setRegisteredArea(String str) {
-		registeredUserArea.setText(str);
+		if(registeredUserArea!=null) registeredUserArea.setText(str);
 	}
 
 	public void setServerArea(String str) {

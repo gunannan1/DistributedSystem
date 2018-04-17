@@ -66,7 +66,10 @@ public class ActivityRequestHandler extends MessageHandler {
 			return false;
 		}
 
-		Activity activity = new Activity(json.get("activity").getAsString());
+		JsonObject actJson = json.get("activity").getAsJsonObject();
+
+		Activity activity=new Activity(actJson.get("text").getAsString());
+		activity.setAuthenticated_user(username);
 
 		for (Connection c : this.control.getConnections()) {
 			if (c.isAuthedServer() || c.isAuthedClient()) {

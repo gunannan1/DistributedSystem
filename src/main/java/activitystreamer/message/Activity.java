@@ -11,20 +11,29 @@ import com.google.gson.JsonObject;
  */
 
 public class Activity {
-	private String activity;
+	private String text;
+	private String authenticated_user;
 
-	public Activity(String activity){
-		this.activity = activity;
+	public Activity(String text){
+		this.text = text;
+		authenticated_user="";
 	}
 
+	public void setAuthenticated_user(String authenticated_user) {
+		this.authenticated_user = authenticated_user;
+	}
 
-	public String toJsonString()
+	public JsonObject toJson()
 	{
-		return new Gson().toJson(this, JsonObject.class);
+		JsonObject json = new JsonObject();
+		json.addProperty("text",text);
+		json.addProperty("authenticated_user",authenticated_user);
+		return json;
 	}
 
 	@Override
 	public String toString() {
-		return this.activity;
+		String jsonStr = "{\"text\":\"%s\",\"authenticated_user\":\"%s\"}";
+		return String.format(jsonStr,text,authenticated_user);
 	}
 }

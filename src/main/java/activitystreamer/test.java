@@ -1,6 +1,7 @@
 package activitystreamer;
 
 import activitystreamer.client.UILogAppender;
+import activitystreamer.message.Activity;
 import activitystreamer.server.ServerTextFrame;
 import com.google.gson.JsonObject;
 
@@ -16,9 +17,10 @@ public class test {
 	public static void main(String[] argv) {
 
 		JsonObject json = new JsonObject();
-		json.addProperty("A","Abc");
-		String a = json.get("B").getAsString();
-		System.out.print(a);
+		json.addProperty("command","ACTIVITY_MESSAGE");
+		Activity a = new Activity("hello");
+		json.add("activity",a.toJson());
+		System.out.print(json.toString());
 
 	}
 

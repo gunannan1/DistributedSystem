@@ -40,8 +40,8 @@ public class UserLoginHandler extends MessageHandler {
 		Control.log.info("login message is received");
 
 		String username = json.get("username").getAsString();
-		JsonElement secrrtJson = json.get("secret");
-		String secret = secrrtJson == null ? null:secrrtJson.getAsString();
+		JsonElement secretJson = json.get("secret");
+		String secret = secretJson == null ? null:secretJson.getAsString();
 
 		//1. Check if anoymous user
 		if (username.equals("anonymous")) {

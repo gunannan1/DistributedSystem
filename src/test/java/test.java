@@ -1,5 +1,3 @@
-package activitystreamer;
-
 import activitystreamer.client.UILogAppender;
 import activitystreamer.message.Activity;
 import activitystreamer.server.ServerTextFrame;

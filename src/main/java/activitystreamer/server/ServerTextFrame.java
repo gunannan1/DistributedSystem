@@ -1,5 +1,6 @@
 package activitystreamer.server;
 
+import activitystreamer.client.ClientSkeleton;
 import activitystreamer.util.Settings;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.parser.JSONParser;
@@ -12,6 +13,8 @@ import javax.swing.text.html.StyleSheet;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.net.Socket;
 
 
@@ -54,6 +57,13 @@ public class ServerTextFrame extends JFrame implements ActionListener {
 		setSize(640, 384);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
+
+		this.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				Control.getInstance().setTerm(true);
+			}
+		});
 	}
 
 	public JTextArea addLogPanel(JPanel mainPanel) {

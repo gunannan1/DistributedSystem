@@ -25,6 +25,7 @@ public class Connection extends Thread {
 	private boolean term=false;
 	private boolean isAuthed = false;
 	private User user;
+	private boolean isMain = false;
 	
 	Connection(Socket socket, Boolean isServer) throws IOException{
 		in = new DataInputStream(socket.getInputStream());
@@ -61,6 +62,11 @@ public class Connection extends Thread {
 				term=true;
 				inreader.close();
 				out.close();
+				if(isMain){
+					Control.log.info("Connection to upstream server breaks, shutdown all services to clients and downstream servers");
+					Control.getInstance().setTerm(true);
+					Control.getInstance().refreshUI();
+				}
 			} catch (IOException e) {
 				// already closed?
 				Control.log.error("received exception closing the connection "+Settings.socketAddress(socket)+": "+e);
@@ -78,7 +84,7 @@ public class Connection extends Thread {
 			}
 			Control.log.debug("connection closed to "+Settings.socketAddress(socket));
 			Control.getInstance().connectionClosed(this);
-			in.close();
+			closeCon();
 		} catch (IOException e) {
 			Control.log.error("connection "+Settings.socketAddress(socket)+" closed with exception: "+e);
 			Control.getInstance().connectionClosed(this);
@@ -112,6 +118,14 @@ public class Connection extends Thread {
 		if(isServer){
 			this.user = null;
 		}
+	}
+
+	public boolean isMain() {
+		return isMain;
+	}
+
+	public void setMain(boolean main) {
+		isMain = main;
 	}
 
 	public boolean isAuthedClient(){

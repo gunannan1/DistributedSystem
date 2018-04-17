@@ -10,7 +10,7 @@ import org.apache.logging.log4j.Logger;
 import activitystreamer.util.Settings;
 
 public class Listener extends Thread{
-	private static final Logger log = LogManager.getLogger();
+	private static final Logger log = Control.log;
 	private ServerSocket serverSocket=null;
 	private boolean term = false;
 	private int portnum;
@@ -34,11 +34,15 @@ public class Listener extends Thread{
 				term=true;
 			}
 		}
+		try {
+			serverSocket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void setTerm(boolean term) {
 		this.term = term;
-		if(term) interrupt();
 	}
 
 	public String getSocketAdr(){

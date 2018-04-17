@@ -29,7 +29,7 @@ public class ClientSkeleton extends Thread {
 //	private String serverId;
 
 
-	public static ClientSkeleton getInstance() throws IOException {
+	public static ClientSkeleton getInstance(){
 		if (clientSolution == null) {
 			clientSolution = new ClientSkeleton();
 			clientSolution.initMessageHandlers();

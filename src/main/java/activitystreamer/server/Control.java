@@ -29,7 +29,7 @@ public class Control extends Thread {
 	private HashMap<MessageType, MessageHandler> handlerMap;
 	private ServerTextFrame serverTextFrame;
 	private String identifier;
-	private HashMap<String,ServerState> serverStateList;
+	private HashMap<String, ServerState> serverStateList;
 
 	protected static Control control = null;
 
@@ -53,7 +53,7 @@ public class Control extends Thread {
 		identifier = null;
 
 		// initialize the serverStateList
-		serverStateList=new HashMap<>();
+		serverStateList = new HashMap<>();
 
 		// connect to another remote server if remote host is provided, or just start listener to provide services
 		if (Settings.getRemoteHostname() != null) {
@@ -73,7 +73,6 @@ public class Control extends Thread {
 
 			// Show UI for testing
 			startUI();
-
 		} catch (IOException e1) {
 			log.fatal("failed to startup a listening thread: " + e1);
 			System.exit(-1);
@@ -84,14 +83,16 @@ public class Control extends Thread {
 	public void initiateConnection() {
 		// make a connection to another server if remote hostname is supplied
 		try {
+			startListener();
 			Socket s = new Socket(Settings.getRemoteHostname(), Settings.getRemotePort());
 			Connection c = outgoingConnection(s);
 			c.setServer(true);
 			c.setAuthed(true);
+			c.setMain(true);
 			// Authen itself to remote server
 			String serverRegister = MessageGenerator.generateAuthen(Settings.getSecret());
 			c.writeMsg(serverRegister);
-			startListener();
+
 			identifier = Settings.getLocalHostname() + Settings.getLocalPort();
 		} catch (IOException e) {
 			log.error("failed to make connection to " + Settings.getRemoteHostname() + ":" + Settings.getRemotePort() + " :" + e);
@@ -137,9 +138,9 @@ public class Control extends Thread {
 	 * Return true if the connection should close.
 	 */
 	public synchronized boolean process(Connection con, String msg) {
-		Control.log.debug("received message [{}] from [{}]",msg,Settings.socketAddress(con.getSocket()));
+		Control.log.debug("received message [{}] from [{}]", msg, Settings.socketAddress(con.getSocket()));
 		JsonParser parser = new JsonParser();
-		boolean isSucc = false ;
+		boolean isSucc = false;
 		try {
 			JsonObject json = parser.parse(msg).getAsJsonObject();
 			MessageType m = MessageType.valueOf(json.get("command").getAsString());
@@ -162,12 +163,13 @@ public class Control extends Thread {
 		return isSucc;
 	}
 
+
 	/*
 	 * The connection has been closed by the other party.
 	 */
 	public synchronized void connectionClosed(Connection con) {
-		if (!term){
-			log.info("Remove connection {} from list",con.getSocket().getRemoteSocketAddress());
+		if (!term) {
+			log.info("Remove connection {} from list", con.getSocket().getRemoteSocketAddress());
 			connections.remove(con);
 		}
 	}
@@ -196,9 +198,9 @@ public class Control extends Thread {
 	}
 
 	//TODO handle boradcast task
-	public synchronized void broadcastToServers(String msg,Connection from) {
-		for(Connection c:connections){
-			if(c != from && c.isAuthedServer()) {
+	public synchronized void broadcastToServers(String msg, Connection from) {
+		for (Connection c : connections) {
+			if (c != from && c.isAuthedServer()) {
 				c.writeMsg(msg);
 			}
 		}
@@ -214,22 +216,21 @@ public class Control extends Thread {
 //	}
 
 	// broadcastToAll lock request
-	public  void broadcastLockRequest(String serverId,User u,Connection from) {
-		String lockRequest = MessageGenerator.generateLockRequest(u.getUsername(),u.getSecret(),serverId);
-		broadcastToServers(lockRequest,from);
+	public void broadcastLockRequest(String serverId, User u, Connection from) {
+		String lockRequest = MessageGenerator.generateLockRequest(u.getUsername(), u.getSecret(), serverId);
+		broadcastToServers(lockRequest, from);
 
 	}
 
-	public  void broadcastActivity(Activity a,Connection from) {
+	public void broadcastActivity(Activity a, Connection from) {
 
 	}
 
-	public  void broadcastEnquiry(String serverId,User u,Connection from) {
-		String enquiryRequest = MessageGenerator.generateUserEnqueryRequest(u.getUsername(),u.getSecret(),serverId);
-		broadcastToServers(enquiryRequest,from);
+	public void broadcastEnquiry(String serverId, User u, Connection from) {
+		String enquiryRequest = MessageGenerator.generateUserEnqueryRequest(u.getUsername(), u.getSecret(), serverId);
+		broadcastToServers(enquiryRequest, from);
 
 	}
-
 
 
 	//TODO check user exists
@@ -239,20 +240,20 @@ public class Control extends Thread {
 
 	//TODO add user
 	public synchronized boolean addUser(User user) {
-		if(!checkUserExists(user.getUsername())){
-			userList.put(user.getUsername(),user);
+		if (!checkUserExists(user.getUsername())) {
+			userList.put(user.getUsername(), user);
 			return true;
-		}else{
-			log.info("User '{}' exists, reject register.",user.getUsername());
+		} else {
+			log.info("User '{}' exists, reject register.", user.getUsername());
 			return false;
 		}
 	}
 
-	public User authUser(String username, String secret){
-		User u =  userList.get(username);
-		if (u !=null && u.getSecret().equals(secret)){
+	public User authUser(String username, String secret) {
+		User u = userList.get(username);
+		if (u != null && u.getSecret().equals(secret)) {
 			return u;
-		}else{
+		} else {
 			return null;
 		}
 	}
@@ -273,17 +274,17 @@ public class Control extends Thread {
 		log.info("closing " + connections.size() + " connections");
 		// clean up
 		for (Connection connection : connections) {
-				connection.closeCon();
+			connection.closeCon();
 		}
 		listener.setTerm(true);
 		//TODO close All other threads.
 	}
 
-	private void sendServerAnnounce(){
-		for(Connection c:connections){
-			if(c.isAuthedServer()){
-				c.sendAnnounceMsg(Settings.getServerId(),this.getClientLoads(),
-						Settings.getLocalHostname(),Settings.getLocalPort());
+	private void sendServerAnnounce() {
+		for (Connection c : connections) {
+			if (c.isAuthedServer()) {
+				c.sendAnnounceMsg(Settings.getServerId(), this.getClientLoads(),
+						Settings.getLocalHostname(), Settings.getLocalPort());
 			}
 		}
 	}
@@ -295,6 +296,7 @@ public class Control extends Thread {
 
 	public final void setTerm(boolean t) {
 		term = t;
+		listener.setTerm(true);
 	}
 
 	public final ArrayList<Connection> getConnections() {
@@ -304,8 +306,8 @@ public class Control extends Thread {
 
 	public int getClientLoads() {
 		int load = 0;
-		for(Connection c:connections){
-			if(c.isAuthedClient()){
+		for (Connection c : connections) {
+			if (c.isAuthedClient()) {
 				load++;
 			}
 		}
@@ -314,8 +316,8 @@ public class Control extends Thread {
 
 	public int getServerLoads(Connection exclude) {
 		int load = 0;
-		for(Connection c:connections){
-			if(exclude !=c && c.isAuthedServer()){
+		for (Connection c : connections) {
+			if (exclude != c && c.isAuthedServer()) {
 				load++;
 			}
 		}
@@ -323,12 +325,11 @@ public class Control extends Thread {
 	}
 
 
-	public void maintainServerState(String id,String host,int load,int port){
-		if(serverStateList.containsKey(id)){
+	public void maintainServerState(String id, String host, int load, int port) {
+		if (serverStateList.containsKey(id)) {
 			serverStateList.get(id).setLoad(load);
-		}
-		else {
-			serverStateList.put(id,new ServerState(port,load,host,id));
+		} else {
+			serverStateList.put(id, new ServerState(port, load, host, id));
 		}
 	}
 
@@ -338,22 +339,22 @@ public class Control extends Thread {
 
 	//if any other server's loads are at less than the own server, return the id of server which has least loads
 	//else return null
-	public String findRedirectServer(){
-		int minLoad=this.getClientLoads();
-		String minLoadServerId=null;
-		for(String id:serverStateList.keySet()){
-			if(serverStateList.get(id).getLoad()<minLoad){
-				minLoad=serverStateList.get(id).getLoad();
-				minLoadServerId=id;
+	public String findRedirectServer() {
+		int minLoad = this.getClientLoads();
+		String minLoadServerId = null;
+		for (String id : serverStateList.keySet()) {
+			if (serverStateList.get(id).getLoad() < minLoad) {
+				minLoad = serverStateList.get(id).getLoad();
+				minLoadServerId = id;
 			}
 		}
-		if(this.getClientLoads()-minLoad>=2){
+		if (this.getClientLoads() - minLoad >= 2) {
 			return minLoadServerId;
 		}
 		return null;
 	}
 
-	public void doRedirect(Connection connection,String id,String username){
+	public void doRedirect(Connection connection, String id, String username) {
 		connection.sendRedirectMsg(this.getServerStateList().get(id).getHost(),
 				this.getServerStateList().get(id).getPort());
 		Control.log.info(" user '{}' needs redirect", username);
@@ -362,82 +363,83 @@ public class Control extends Thread {
 		UserLoginHandler.enquiryRequestHashmap.remove(username);
 	}
 
-	public String getIdentifier(){
+	public String getIdentifier() {
 		return identifier;
 	}
 
 	//TODO UI information refresh
-	private void startUI(){
+	private void startUI() {
 		serverTextFrame = new ServerTextFrame();
 		UILogAppender.setTextArea(serverTextFrame.getLogArea());
 		new UIRefresher().start();
 	}
 
 
-	public void refreshLoginInfo(){
+	public void refreshLoginInfo() {
 		String html = "<table class='table table-bordered'> <thead>%s</thead><tbody>%S</tbody>";
 		StringJoiner sj = new StringJoiner("");
 
-		for(Connection c: connections){
-			if(c.isAuthedClient()) {
+		for (Connection c : connections) {
+			if (c.isAuthedClient()) {
 				sj.add(c.getUser().toString());
 			}
 		}
-		this.serverTextFrame.setLoginUserArea(String.format(html,User.tableHeader(),sj.toString()));
+		this.serverTextFrame.setLoginUserArea(String.format(html, User.tableHeader(), sj.toString()));
 	}
 
-	private void refreshRegisterInfo(){
+	private void refreshRegisterInfo() {
 		String html = "<table class='table table-bordered'> <thead>%s</thead><tbody>%S</tbody>";
 		StringJoiner sj = new StringJoiner("");
 
-		for(Map.Entry<String,User>e:userList.entrySet()){
+		for (Map.Entry<String, User> e : userList.entrySet()) {
 			sj.add(e.getValue().toString());
 		}
-		this.serverTextFrame.setRegisteredArea(String.format(html,User.tableHeader(),sj.toString()));
+		this.serverTextFrame.setRegisteredArea(String.format(html, User.tableHeader(), sj.toString()));
 
 	}
 
-	private void refreshServerInfo(){
+	private void refreshServerInfo() {
 		String html = "<table class='table table-bordered'> <thead>%s</thead><tbody>%S</tbody>";
 		String header = "<tr>\n" +
-		"      <th scope=\"row\">#</th>\n" +
+				"      <th scope=\"row\">#</th>\n" +
 				"      <td>IP</td>\n" +
 				"      <td>Port</td>\n" +
 				"    </tr>";
 		StringJoiner sj = new StringJoiner("");
 
-		for(Connection c: connections){
-			if(c.isAuthedServer()) {
+		for (Connection c : connections) {
+			if (c.isAuthedServer()) {
 				sj.add(String.format(" <tr>\n" +
 						"      <th scope=\"row\">*</th>\n" +
 						"      <td>%s</td>\n" +
 						"      <td>%s</td>\n" +
-						"    </tr>",c.getSocket().getRemoteSocketAddress(),c.getSocket().getPort()));
+						"    </tr>", c.getSocket().getRemoteSocketAddress(), c.getSocket().getPort()));
 			}
 		}
-		this.serverTextFrame.setServerArea(String.format(html,header,sj.toString()));
+		this.serverTextFrame.setServerArea(String.format(html, header, sj.toString()));
 
 	}
 
-	private void refreshUI(){
-		if(serverTextFrame != null) {
+	public void refreshUI() {
+		if (serverTextFrame != null) {
 			refreshRegisterInfo();
 			refreshServerInfo();
 			refreshLoginInfo();
 		}
 	}
 
-	private class UIRefresher extends Thread{
+	private class UIRefresher extends Thread {
 		@Override
 		public void run() {
-			refreshUI();
-			try {
-				sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+			while (true && !term) {
+				refreshUI();
+				try {
+					sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 
 		}
-
 	}
 }

@@ -37,7 +37,7 @@ public class UserNotFoundHandler extends MessageHandler {
 	@Override
 	public boolean processMessage(JsonObject json,Connection connection) {
 		//TODO need future work
-		Control.log.info("USER_NOT_FOUND message is received.");
+		Control.log.info("USER_NOT_FOUND message is received frmo {}.",connection.getSocket().getRemoteSocketAddress());
 		User u = null;
 		String username = null;
 		String secret = null;
@@ -70,10 +70,13 @@ public class UserNotFoundHandler extends MessageHandler {
 			return true;
 		}
 
+
+
 		// here means this server receives LOCK ALLOWED from all other servers
 		// if owner is the server itself
 		if (owner.equals(control.getIdentifier())) {
 			try {
+				Control.log.info("LOCK ALLOWEDs from all servers are received, send LOGIN_FAILED to the client");
 				String info = String.format("User '%s' does not exist in this system", username);
 				Control.log.info(info);
 				Connection c = l.getFrom();
@@ -89,6 +92,7 @@ public class UserNotFoundHandler extends MessageHandler {
 		}
 
 		// if not owner, send USER_NOT_FOUND to "from" server
+		Control.log.info("USER_NOT_FOUNDs from all servers are received, send USER_NOT_FOUND to the server who sends ENQUIRY_REQUEST");
 		try {
 			l.getFrom().sendUserNotFoundMsg(username, secret, owner);
 			return true;

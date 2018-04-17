@@ -7,7 +7,7 @@ import activitystreamer.server.User;
 import com.google.gson.JsonObject;
 
 /**
- * RegisterMessage
+ * UserFoundHandler
  * <p>
  * Author Ning Kang
  * Date 9/4/18
@@ -31,8 +31,8 @@ public class UserFoundHandler extends MessageHandler {
 	 */
 	@Override
 	public boolean processMessage(JsonObject json,Connection connection) {
-		//TODO need future work
-		Control.log.info("USER_FOUND message is recieved");
+
+		Control.log.info("USER_FOUND message is received from {}",connection.getSocket().getRemoteSocketAddress());
 		String username = null;
 		String secret = null;
 		String owner = null;
@@ -52,14 +52,15 @@ public class UserFoundHandler extends MessageHandler {
 		BroadcastResult l = UserLoginHandler.enquiryRequestHashmap.get(username);
 		if (l == null) {
 			// this should not happen
-			Control.log.error("No enquiry request received for user '%s'", username);
-			return false;
+			Control.log.error("No enquiry request received or request is processed for user '%s'", username);
+			return true;
 		}
 
 
 		// whether owner is the server itself
 		if (owner.equals(control.getIdentifier())) {
 			try {
+				Control.log.info("USER_FOUND received, allow the login request from user {}",username);
 				String info = String.format("User '%s' login successfully.", username);
 				Connection c = l.getFrom();
 				c.setAuthed(true);
@@ -67,18 +68,20 @@ public class UserFoundHandler extends MessageHandler {
 
 				//check redirect
 				if(this.control.findRedirectServer()!=null){
-					this.control.doRedirect(l.getFrom(),this.control.findRedirectServer(),username);
+					String redirectServer = this.control.findRedirectServer();
+					Control.log.info("Redirection is triggered, redirect user to server {}",redirectServer);
+					this.control.doRedirect(l.getFrom(),redirectServer, username);
 				}
 				return true;
 			} catch (Exception e) {
-				Control.log.info("The client sending login request was disconnected");
+				Control.log.info("The client who sent login request was disconnected");
 				return true; // do not close any connection as closing connection should be handled in other way
 			}
 		}
 
 		// if not owner, send USER_FOUND to "from" server
 		try {
-
+			Control.log.info("Send USER_FOUND back to the server who sent ENQUIRY_REQUEST");
 			l.getFrom().sendUserFoundMsg(username, secret, owner);
 			return true;
 

@@ -7,7 +7,7 @@ import activitystreamer.server.User;
 import com.google.gson.JsonObject;
 
 /**
- * RegisterMessage
+ * UserEnquiryHandler
  * <p>
  * Author Ning Kang
  * Date 9/4/18
@@ -32,8 +32,8 @@ public class UserEnquiryHandler extends MessageHandler {
 	 */
 	@Override
 	public boolean processMessage(JsonObject json,Connection connection) {
-		//TODO need future work
-		Control.log.info("USER_ENQUIRY message is recieved");
+
+		Control.log.info("USER_ENQUIRY message is received from {}",connection.getSocket().getRemoteSocketAddress());
 		User u = null;
 		String username = null;
 		String secret = null;

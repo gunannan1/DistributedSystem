@@ -6,7 +6,7 @@ import activitystreamer.server.Control;
 import com.google.gson.JsonObject;
 
 /**
- * RegisterMessage
+ * ServerAuthenSuccHandler
  * <p>
  * Author Ning Kang
  * Date 9/4/18

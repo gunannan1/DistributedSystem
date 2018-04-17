@@ -24,8 +24,9 @@ public class ServerInvalidHandler extends MessageHandler {
 	@Override
 	public boolean processMessage(JsonObject json,Connection connection) {
 		// TODO need future work
-		ClientSkeleton.log.info("Invalid message received from you");
+		Control.log.info("Invalid message received from {}",connection.getSocket().getRemoteSocketAddress());
 		Control.log.info(json.get("info"));
+		Control.log.info("Close connection with {}",connection.getSocket().getRemoteSocketAddress());
 		connection.closeCon();
 		this.control.connectionClosed(connection);
 		// return false to close related connection and thread

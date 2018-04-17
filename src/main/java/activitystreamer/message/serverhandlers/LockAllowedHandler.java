@@ -35,7 +35,7 @@ public class LockAllowedHandler extends MessageHandler {
 	@Override
 	public boolean processMessage(JsonObject json,Connection connection) {
 		//TODO need future work
-		Control.log.info("Lock allowed is received");
+		Control.log.info("Lock allowed is received from {}",connection.getSocket().getRemoteSocketAddress());
 		User u = null;
 		String username = null;
 		String secret = null;
@@ -68,9 +68,12 @@ public class LockAllowedHandler extends MessageHandler {
 			return true;
 		}
 
+
+
 		// here means this server receives LOCK ALLOWED from all other servers
 		// if owner is the server itself
 		if (owner.equals(control.getIdentifier())) {
+			Control.log.info("LOCK ALLOWEDs from all servers are received, send REGISTER_SUCCESS to the client");
 			control.addUser(u);
 			try {
 				Control.log.info("User '{}' registered successfully.", username);
@@ -83,6 +86,7 @@ public class LockAllowedHandler extends MessageHandler {
 			}
 		}
 
+		Control.log.info("LOCK ALLOWEDs from all servers are received, send LOCK_ALLOW to the server who sends LOCK_REQUEST");
 		// if not owner, send lockAllow to "from" server
 		try {
 			l.getFrom().sendLockAllowedMsg(username, secret, owner);

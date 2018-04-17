@@ -25,7 +25,7 @@ public class ServerAuthenRequestHandler extends MessageHandler {
 	public boolean processMessage(JsonObject json,Connection connection) {
 		//TODO need future work
 		String secret = json.get("secret").getAsString();
-		Control.log.debug("process authentication for server with secret {}", secret);
+		Control.log.info("process authentication for server{} with secret {}", connection.getSocket().getRemoteSocketAddress(), secret);
 
 		if(connection.isAuthedServer()){
 			connection.sendInvalidMsg("Already authenticated");
@@ -60,6 +60,7 @@ public class ServerAuthenRequestHandler extends MessageHandler {
 			return false;
 		}
 
+		Control.log.info("Auth successfully, accept new server {}",connection.getSocket().getRemoteSocketAddress());
 		connection.setAuthed(true);
 		connection.setServer(true);
 		return true;

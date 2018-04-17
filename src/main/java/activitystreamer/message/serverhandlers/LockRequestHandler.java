@@ -33,7 +33,7 @@ public class LockRequestHandler extends MessageHandler {
 	@Override
 	public boolean processMessage(JsonObject json,Connection connection) {
 		//TODO need future work
-		Control.log.info("Lock request recieved");
+		Control.log.info("Lock request received from {}",connection.getSocket().getRemoteSocketAddress());
 		User u = null;
 		String username = null;
 		String secret = null;

@@ -24,7 +24,7 @@ public class ActivityBroadcastHandler extends MessageHandler {
 	@Override
 	public boolean processMessage(JsonObject json,Connection connection) {
 		//TODO need future work
-		Control.log.info("Activity broadcast message received");
+		Control.log.info("Activity broadcast message received from {}", connection.getSocket().getRemoteSocketAddress());
 
 		if(!connection.isAuthedServer()){
 			connection.sendInvalidMsg("Received from an unauthenticated server");
@@ -42,7 +42,7 @@ public class ActivityBroadcastHandler extends MessageHandler {
 			return false;
 		}
 
-		Control.log.info("Broadcast received message");
+		Control.log.info("Broadcast received activity message");
 		for(Connection c:this.control.getConnections()){
 			if((c.isAuthedServer()||c.isAuthedClient())&&c!=connection){
 				c.sendActivityBroadcastMsg(json.toString());

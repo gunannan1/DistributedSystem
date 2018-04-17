@@ -41,7 +41,7 @@ public class UserRegisterHandler extends MessageHandler {
 	 */
 	@Override
 	public boolean processMessage(JsonObject json, Connection connection) {
-		Control.log.info("Register message is received ");
+		Control.log.info("Register message is received from {}",connection.getSocket().getRemoteSocketAddress());
 		User newuser = null;
 		String username = null;
 		String secret = null;
@@ -90,8 +90,10 @@ public class UserRegisterHandler extends MessageHandler {
 		}
 
 		// register successfully if no above condision
-		Control.log.info("No additional server connected, register successfully for user:{} ", username);
+		Control.log.info("No additional server connected, send REGISTER_SUCC for user:{} ", username);
 		connection.sendRegisterSuccMsg(username);
+
+		Control.log.info("Add user {} into local register user list", username);
 		this.control.addUser(newuser);
 		connection.setUser(newuser);
 

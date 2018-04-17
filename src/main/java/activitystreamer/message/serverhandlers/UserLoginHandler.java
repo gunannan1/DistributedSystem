@@ -36,8 +36,7 @@ public class UserLoginHandler extends MessageHandler {
 	@Override
 	public boolean processMessage(JsonObject json, Connection connection) {
 
-
-		Control.log.info("login message is received");
+		Control.log.info("login message is received from {}",connection.getSocket().getRemoteSocketAddress());
 
 		String username = json.get("username").getAsString();
 		JsonElement secretJson = json.get("secret");
@@ -51,7 +50,11 @@ public class UserLoginHandler extends MessageHandler {
 
 			//check redirect
 			if(this.control.findRedirectServer()!=null){
-				this.control.doRedirect(connection,this.control.findRedirectServer(),username);
+				String redirectServer = this.control.findRedirectServer();
+				Control.log.info("Redirection is triggered, redirect user to server {}",redirectServer);
+				this.control.doRedirect(connection,redirectServer, username);
+
+//				this.control.doRedirect(connection,this.control.findRedirectServer(),username);
 				return true;
 			}
 
@@ -64,6 +67,7 @@ public class UserLoginHandler extends MessageHandler {
 		if (username.isEmpty() || secret.isEmpty()){
 			Control.log.info("Information missing for loging, username='{}' secret='{}'",username,secret);
 			connection.sendInvalidMsg("Invalid login message " + json.toString());
+			Control.log.info("Close connection with {}",connection.getSocket().getRemoteSocketAddress());
 			connection.closeCon();
 			this.control.connectionClosed(connection);
 			return false;
@@ -79,7 +83,9 @@ public class UserLoginHandler extends MessageHandler {
 
 			//check redirect
 			if(this.control.findRedirectServer()!=null){
-				this.control.doRedirect(connection,this.control.findRedirectServer(),username);
+				String redirectServer = this.control.findRedirectServer();
+				Control.log.info("Redirection is triggered, redirect user to server {}",redirectServer);
+				this.control.doRedirect(connection,redirectServer,username);
 				return true;
 			}
 			Control.log.info("login successfully as user '{}'", username);

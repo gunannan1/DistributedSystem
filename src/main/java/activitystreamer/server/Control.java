@@ -14,10 +14,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.StringJoiner;
+import java.util.*;
 
 public class Control extends Thread {
 	public static final Logger log = LogManager.getLogger("serverLogger");
@@ -56,6 +53,10 @@ public class Control extends Thread {
 		// initialize the serverStateList
 		serverStateList = new HashMap<>();
 
+		// initialize the request list for register and login
+		UserRegisterHandler.registerLockHashMap = new HashMap<>();
+		UserLoginHandler.enquiryRequestHashmap = new HashMap<>();
+
 		// connect to another remote server if remote host is provided, or just start listener to provide services
 		if (Settings.getRemoteHostname() != null) {
 			// if remote server host provided, connect to it and then wait for response to start listener.
@@ -91,7 +92,7 @@ public class Control extends Thread {
 			c.setAuthed(true);
 			c.setMain(true);
 			// Authen itself to remote server
-			String serverRegister = MessageGenerator.generateAuthen(Settings.getSecret());
+			String serverRegister = MessageGenerator.authen(Settings.getSecret());
 			c.writeMsg(serverRegister);
 
 			identifier = Settings.getLocalHostname() + Settings.getLocalPort();
@@ -124,9 +125,9 @@ public class Control extends Thread {
 		this.handlerMap.put(MessageType.ACTIVITY_BROADCAST, new ActivityBroadcastHandler(this));
 
 		// Messages for Login
-		this.handlerMap.put(MessageType.USER_ENQUIRY, new UserEnquiryHandler(this));
-		this.handlerMap.put(MessageType.USER_FOUND, new UserFoundHandler(this));
-		this.handlerMap.put(MessageType.USER_NOT_FOUND, new UserNotFoundHandler(this));
+//		this.handlerMap.put(MessageType.USER_ENQUIRY, new UserEnquiryHandler(this));
+//		this.handlerMap.put(MessageType.USER_FOUND, new UserFoundHandler(this));
+//		this.handlerMap.put(MessageType.USER_NOT_FOUND, new UserNotFoundHandler(this));
 
 		// Messages for Register
 		this.handlerMap.put(MessageType.LOCK_REQUEST, new LockRequestHandler(this));
@@ -158,7 +159,7 @@ public class Control extends Thread {
 			String info = String.format("Invalid message '%s'", msg);
 			log.error(info);
 			isSucc = false;
-			String invalidMsg = MessageGenerator.generateInvalid(info);
+			String invalidMsg = MessageGenerator.invalid(info);
 			con.writeMsg(invalidMsg);
 
 		}
@@ -218,8 +219,8 @@ public class Control extends Thread {
 //	}
 
 	// broadcastToAll lock request
-	public void broadcastLockRequest(String serverId, User u, Connection from) {
-		String lockRequest = MessageGenerator.generateLockRequest(u.getUsername(), u.getSecret(), serverId);
+	public void broadcastLockRequest(User u, Connection from) {
+		String lockRequest = MessageGenerator.lockRequest(u.getUsername(), u.getSecret());
 		broadcastToServers(lockRequest, from);
 
 	}
@@ -229,20 +230,20 @@ public class Control extends Thread {
 	}
 
 	public void broadcastEnquiry(String serverId, User u, Connection from) {
-		String enquiryRequest = MessageGenerator.generateUserEnqueryRequest(u.getUsername(), u.getSecret(), serverId);
+		String enquiryRequest = MessageGenerator.lockRequest(u.getUsername(), u.getSecret());
 		broadcastToServers(enquiryRequest, from);
 
 	}
 
 
 	//TODO check user exists
-	public synchronized boolean checkUserExists(String username) {
-		return userList.containsKey(username);
+	public synchronized User checkUserExists(String username) {
+		return userList.get(username);
 	}
 
 	//TODO add user
 	public synchronized boolean addUser(User user) {
-		if (!checkUserExists(user.getUsername())) {
+		if (checkUserExists(user.getUsername())==null) {
 			userList.put(user.getUsername(), user);
 			return true;
 		} else {
@@ -384,8 +385,8 @@ public class Control extends Thread {
 	}
 
 
-	public void refreshLoginInfo() {
-		String html = "<table class='table table-bordered'> <thead>%s</thead><tbody>%S</tbody>";
+	private void refreshLoginInfo() {
+		String html = "<table class='table table-bordered'> <thead>%s</thead><tbody>%s</tbody>";
 		StringJoiner sj = new StringJoiner("");
 
 		for (Connection c : connections) {
@@ -393,6 +394,7 @@ public class Control extends Thread {
 				sj.add(c.getUser().toString());
 			}
 		}
+
 		this.serverTextFrame.setLoginUserArea(String.format(html, User.tableHeader(), sj.toString()));
 	}
 
@@ -408,25 +410,36 @@ public class Control extends Thread {
 	}
 
 	private void refreshServerInfo() {
-		String html = "<table class='table table-bordered'> <thead>%s</thead><tbody>%S</tbody>";
-		String header = "<tr>\n" +
-				"      <th scope=\"row\">#</th>\n" +
-				"      <td>IP</td>\n" +
-				"      <td>Port</td>\n" +
-				"    </tr>";
-		StringJoiner sj = new StringJoiner("");
+		String html = "<div>%s</div>";
+		StringJoiner sj = new StringJoiner("</br>");
 
 		for (Connection c : connections) {
 			if (c.isAuthedServer()) {
-				sj.add(String.format(" <tr>\n" +
-						"      <th scope=\"row\">*</th>\n" +
-						"      <td>%s</td>\n" +
-						"      <td>%s</td>\n" +
-						"    </tr>", c.getSocket().getRemoteSocketAddress(), c.getSocket().getPort()));
+				sj.add(c.getSocket().getRemoteSocketAddress().toString());
 			}
 		}
-		this.serverTextFrame.setServerArea(String.format(html, header, sj.toString()));
+		this.serverTextFrame.setServerArea(String.format(html, sj.toString()));
 
+
+	}
+	private void refreshLoadInfo(){
+		String html = "<table class='table table-bordered'> <thead>%s</thead><tbody>%S</tbody></table><p>Update Time:%s</p>";
+		String header = "<tr>\n" +
+				"      <td>IP</td>\n" +
+				"      <td>Port</td>\n" +
+				"      <td>Load</td>\n" +
+				"    </tr>";
+		StringJoiner sj = new StringJoiner("");
+		for (Map.Entry<String,ServerState> ss : serverStateList.entrySet()) {
+			ServerState server = ss.getValue();
+			sj.add(String.format(" <tr>\n" +
+					"      <td>%s</td>\n" +
+					"      <td>%s</td>\n" +
+					"      <td>%s</td>\n" +
+					"    </tr>",server.getHost(),server.getPort(),server.getLoad() ));
+		}
+		String now = Calendar.getInstance().getTime().toString();
+		this.serverTextFrame.setLoadArea(String.format(html, header, sj.toString(),now));
 	}
 
 	public void refreshUI() {
@@ -434,19 +447,33 @@ public class Control extends Thread {
 			refreshRegisterInfo();
 			refreshServerInfo();
 			refreshLoginInfo();
+			refreshLoadInfo();
 		}
 	}
 
-	private class UIRefresher extends Thread {
+	public void closeAll(){
+		listener.interrupt();
+		uiRefresher.interrupt();
+		term = true;
 
+	}
+
+	private class UIRefresher extends Thread {
+		private boolean isRun;
+		UIRefresher(){
+			isRun = true;
+		}
+		public void setTerm(){
+			isRun = false;
+		}
 		@Override
 		public void run() {
-			while (!term) {
+			while (isRun) {
 				refreshUI();
 				try {
 					sleep(1000);
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					log.info("refresh ui thread ends");
 				}
 			}
 

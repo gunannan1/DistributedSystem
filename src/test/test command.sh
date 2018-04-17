@@ -1,6 +1,6 @@
 # Telnet commands
 {"command":"REGISTER","username":"ningk1","secret":"abc"}
-{"command":"REGISTER","username":"ningk2","secret":"abc"}
+{"command":"REGISTER","username":"asdfasdfasdfa","secret":"abc"}
 {"command":"REGISTER","username":"ningk3","secret":"abc"}
 
 {"command":"REGISTER","username":"ningk3"}

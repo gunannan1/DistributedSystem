@@ -31,51 +31,52 @@ public class LockRequestHandler extends MessageHandler {
 	 * @return
 	 */
 	@Override
-	public boolean processMessage(JsonObject json,Connection connection) {
+	public boolean processMessage(JsonObject json, Connection connection) {
 		//TODO need future work
-		Control.log.info("Lock request received from {}",connection.getSocket().getRemoteSocketAddress());
-		User u = null;
+		Control.log.info("Lock request received from {}", connection.getSocket().getRemoteSocketAddress());
+		User newUser = null;
 		String username = null;
 		String secret = null;
-		String owner = null;
 
 		// Validate message
-		try{
+		try {
 			username = json.get("username").getAsString();
 			secret = json.get("secret").getAsString();
-			owner = json.get("owner").getAsString();
-		}catch (NullPointerException e){
-			String error = String.format("Lock request command missing information username='%s' secret='%s' owner='%s'", username, secret,owner);
+
+		} catch (NullPointerException e) {
+			String error = String.format("Lock request command missing information username='%s' secret='%s'", username, secret);
 			failHandler(error, connection);
 			return false;
 		}
-		u = new User(username,secret);
+		newUser = new User(username, secret);
 
 		// check locally
-		if(control.checkUserExists(username)){
-			Control.log.info("User exists in this server, reply lock denied request");
-			connection.sendLockDeniedMsg(username,secret,owner);
+		User localUser = control.checkUserExists(username);
+		if (localUser != null) {
+			Control.log.info("User exists in this server, reply lock denied (user found) request with secret in this server");
+			connection.sendLockDeniedMsg(username, localUser.getSecret());
 			return true;
 		}
 
 
 		// Check remotely if server load > 0 exclude the sending server
-		Control.log.info("User '{}' does not exist in this server",username);
-		if(control.getServerLoads(connection) > 0) {
+		Control.log.info("User '{}' does not exist in this server", username);
+		if (control.getServerLoads(connection) > 0) {
 			Control.log.info("More server found, check with other servers(exclude the sending server)");
 			// add this requst to local requst hashmap
-			BroadcastResult lockResult = new BroadcastResult(connection,control.getServerLoads(connection));
+			BroadcastResult lockResult = new BroadcastResult(connection, control.getServerLoads(connection), newUser);
 			UserRegisterHandler.registerLockHashMap.put(username, lockResult);
-			control.broadcastLockRequest(owner, u, connection);
+			control.broadcastLockRequest(newUser, connection);
 
-		}else{
+		} else {
 			Control.log.info("No other servers in this system(exclude the sending server), reply lockAllow message back");
-			connection.sendLockAllowedMsg(username,secret,owner);
+			connection.sendLockAllowedMsg(username, secret);
 			return true;
 		}
 
 		return true;
 	}
+
 	private void failHandler(String error, Connection connection) {
 		Control.log.info(error);
 		connection.sendInvalidMsg(error);

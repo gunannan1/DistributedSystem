@@ -38,6 +38,7 @@ public class UserLoginHandler extends MessageHandler {
 
 		Control.log.info("login message is received from {}",connection.getSocket().getRemoteSocketAddress());
 
+		User newUser = null;
 		String username = json.get("username").getAsString();
 		JsonElement secretJson = json.get("secret");
 		String secret = secretJson == null ? null:secretJson.getAsString();
@@ -53,8 +54,6 @@ public class UserLoginHandler extends MessageHandler {
 				String redirectServer = this.control.findRedirectServer();
 				Control.log.info("Redirection is triggered, redirect user to server {}",redirectServer);
 				this.control.doRedirect(connection,redirectServer, username);
-
-//				this.control.doRedirect(connection,this.control.findRedirectServer(),username);
 				return true;
 			}
 
@@ -73,12 +72,12 @@ public class UserLoginHandler extends MessageHandler {
 			return false;
 		}
 
-
+		newUser = new User(username,secret);
 		// 3. Check if user exists locally
-		User u = this.control.authUser(username, secret);
-		if (u != null) {
+		User localUser = this.control.authUser(username, secret);
+		if (localUser != null) {
 			connection.setAuthed(true);
-			connection.setUser(u);
+			connection.setUser(localUser);
 			connection.sendLoginSuccMsg(String.format("login successfully as user '%s '", username));
 
 			//check redirect
@@ -96,14 +95,14 @@ public class UserLoginHandler extends MessageHandler {
 		 if (control.getServerLoads(null) > 0) {
 			Control.log.info("Remote servers exist, will check with other servers for user '{}' ", username);
 
-			BroadcastResult loginResult = new BroadcastResult(connection,control.getServerLoads(connection));
+			BroadcastResult loginResult = new BroadcastResult(connection,control.getServerLoads(connection),newUser);
 			UserLoginHandler.enquiryRequestHashmap.put(username, loginResult);
 
-			connection.setUser(new User(username,secret));
+			connection.setUser(newUser);
 			connection.setAuthed(false);
 
 			// broadcastToAll lock request and then waiting for lock_allow & lock_denied, this register process will be handled by LockAllowedHandler & LockDeniedHandler
-			control.broadcastEnquiry(control.getIdentifier(),new User(username,secret),connection);
+			control.broadcastEnquiry(control.getIdentifier(),newUser,connection);
 			return true;
 		}
 

@@ -9,7 +9,7 @@ import com.google.gson.JsonObject;
 import java.util.HashMap;
 
 /**
- * RegisterMessage
+ * UserRegisterHandler
  * <p>
  * Author Ning Kang
  * Date 9/4/18
@@ -28,12 +28,12 @@ public class UserRegisterHandler extends MessageHandler {
 	 * Check user exists and register
 	 * 1. Validate message
 	 * 2. Check if user exists locally
-	 * 		YES: send register failed msg and return false
-	 * 		NO: 2.1 check if username under register process( in the register list but not approved)
-	 * 			YES: send register failed msg and return false
-	 * 			NO:  2.1.1 check if any remote servers exists
-	 * 				YES: broadcastToAll
-	 * 				NO: register succ
+	 * YES: send register failed msg and return false
+	 * NO: 2.1 check if username under register process( in the register list but not approved)
+	 * YES: send register failed msg and return false
+	 * NO:  2.1.1 check if any remote servers exists
+	 * YES: broadcastToAll
+	 * NO: register succ
 	 *
 	 * @param json       message
 	 * @param connection connection that received this message
@@ -41,17 +41,17 @@ public class UserRegisterHandler extends MessageHandler {
 	 */
 	@Override
 	public boolean processMessage(JsonObject json, Connection connection) {
-		Control.log.info("Register message is received from {}",connection.getSocket().getRemoteSocketAddress());
-		User newuser = null;
+		Control.log.info("Register message is received from {}", connection.getSocket().getRemoteSocketAddress());
+		User newUser = null;
 		String username = null;
 		String secret = null;
 
 		// 1. Validate message
-		try{
-		 username = json.get("username").getAsString();
-		 secret = json.get("secret").getAsString();
+		try {
+			username = json.get("username").getAsString();
+			secret = json.get("secret").getAsString();
 
-		}catch (NullPointerException e){
+		} catch (NullPointerException e) {
 			String error = String.format("User register command missing information username='%s' secret='%s'", username, secret);
 			connection.sendInvalidMsg(error);
 			failHandler(error, connection);
@@ -59,10 +59,11 @@ public class UserRegisterHandler extends MessageHandler {
 		}
 
 		Control.log.info("process register for user {}", username);
-		newuser = new User(username, secret);
+		newUser = new User(username, secret);
 
 		//2. Check if user exists locally
-		if (this.control.checkUserExists(newuser.getUsername())) {
+		User localUser = this.control.checkUserExists(username);
+		if (localUser != null) {
 			String error = String.format("User '%s' exists in this server'", username);
 			connection.sendRegisterFailedMsg(error);
 			failHandler(error, connection);
@@ -71,7 +72,7 @@ public class UserRegisterHandler extends MessageHandler {
 		}
 
 		// 2.1 check if username under register process( in the register list but not approved)
-		if (UserRegisterHandler.registerLockHashMap.containsKey(newuser.getUsername())) {
+		if (UserRegisterHandler.registerLockHashMap.containsKey(newUser.getUsername())) {
 			String error = String.format("User '%s' is under register processing'", username);
 			connection.sendRegisterFailedMsg(error);
 			failHandler(error, connection);
@@ -81,11 +82,11 @@ public class UserRegisterHandler extends MessageHandler {
 		// 2.1.1 check if any remote servers exists
 		if (this.control.getServerLoads(null) > 0) {
 			Control.log.info("Remote servers exist, need to get confirmation from remote servers for user register '{}' ", username);
-			BroadcastResult lockResult = new BroadcastResult(connection,control.getServerLoads(null));
-			UserRegisterHandler.registerLockHashMap.put(newuser.getUsername(), lockResult);
+			BroadcastResult lockResult = new BroadcastResult(connection, control.getServerLoads(null),newUser);
+			UserRegisterHandler.registerLockHashMap.put(newUser.getUsername(), lockResult);
 			//TODO need testing
 			// broadcastToAll lock request and then waiting for lock_allow & lock_denied, this register process will be handled by LockAllowedHandler & LockDeniedHandler
-			control.broadcastLockRequest(control.getIdentifier(),newuser,connection);
+			control.broadcastLockRequest(newUser, connection);
 			return true;
 		}
 
@@ -94,8 +95,8 @@ public class UserRegisterHandler extends MessageHandler {
 		connection.sendRegisterSuccMsg(username);
 
 		Control.log.info("Add user {} into local register user list", username);
-		this.control.addUser(newuser);
-		connection.setUser(newuser);
+		this.control.addUser(newUser);
+		connection.setUser(newUser);
 
 		return true;
 

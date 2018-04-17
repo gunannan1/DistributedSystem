@@ -6,7 +6,6 @@ import activitystreamer.message.MessageHandler;
 import activitystreamer.message.MessageType;
 import activitystreamer.message.clienthandlers.*;
 import activitystreamer.util.Settings;
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.apache.logging.log4j.LogManager;
@@ -181,19 +180,19 @@ public class ClientSkeleton extends Thread {
 
 	public void sendRegisterMsg() {
 		log.info("send register to server with user={} secret={}",Settings.getUsername(), Settings.getSecret());
-		String registerStr = MessageGenerator.generateRegister(Settings.getUsername(),Settings.getSecret());
+		String registerStr = MessageGenerator.register(Settings.getUsername(),Settings.getSecret());
 		this.writeMsg(registerStr);
 	}
 
 	public void sendLoginMsg() {
 		log.info("send login to server with user={} secret={}",Settings.getUsername(), Settings.getSecret());
-		String loginStr = MessageGenerator.generateLogin(Settings.getUsername(),Settings.getSecret());
+		String loginStr = MessageGenerator.login(Settings.getUsername(),Settings.getSecret());
 		this.writeMsg(loginStr);
 	}
 
 	public void sendAnonymousLoginMsg() {
 		log.info("send register to server with user={} secret=N/A","anonymous");
-		String anonymouStr = MessageGenerator.generateAnonymousLogin(Settings.getUsername());
+		String anonymouStr = MessageGenerator.anonymousLogin(Settings.getUsername());
 		this.writeMsg(anonymouStr);
 	}
 
@@ -204,7 +203,7 @@ public class ClientSkeleton extends Thread {
 	}
 	public void sendInvalidMsg(String info) {
 		log.info("send invalid message to server with info={}",info);
-		String invalidStr = MessageGenerator.generateInvalid(info);
+		String invalidStr = MessageGenerator.invalid(info);
 		this.writeMsg(invalidStr);
 	}
 

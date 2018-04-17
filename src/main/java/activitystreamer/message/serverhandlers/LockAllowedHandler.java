@@ -39,16 +39,14 @@ public class LockAllowedHandler extends MessageHandler {
 		User u = null;
 		String username = null;
 		String secret = null;
-		String owner = null;
 
 		// Validate message
 		try{
 			username = json.get("username").getAsString();
 			secret = json.get("secret").getAsString();
-			owner = json.get("owner").getAsString();
 			u = new User(username,secret);
 		}catch (NullPointerException e){
-			String error = String.format("Lock allowed command missing information username='%s' secret='%s' owner='%s", username, secret,owner);
+			String error = String.format("Lock allowed command missing information username='%s' secret='%s'", username, secret);
 			failHandler(error, connection);
 			return false;
 		}
@@ -58,27 +56,40 @@ public class LockAllowedHandler extends MessageHandler {
 
 		// whether the register information in pending list
 		if(l == null){
+			// just ignore to align with Aaron's server
 			Control.log.info("No register information received for user '{}' or the register information is processed already, ignore this message", username);
 			return true;
 		}
 
 		// whether all servers allowed
-		if( !l.addAllow()) {
+		l.addAllow();
+		if( l.getResult() == BroadcastResult.LOCK_STATUS.PENDING) {
 			Control.log.info("Although LOCK ALLOWED is received, not all servers reply, continue waiting future information...");
 			return true;
 		}
 
 
 
-		// here means this server receives LOCK ALLOWED from all other servers
+		// here means this server receives LOCK ALLOWED (user not found) from all other servers
 		// if owner is the server itself
-		if (owner.equals(control.getIdentifier())) {
+		if (!l.getFrom().isAuthedServer()) {
 			Control.log.info("LOCK ALLOWEDs from all servers are received, send REGISTER_SUCCESS to the client");
-			control.addUser(u);
 			try {
-				Control.log.info("User '{}' registered successfully.", username);
-				l.getFrom().sendRegisterSuccMsg(username);
-				UserRegisterHandler.registerLockHashMap.remove(username);
+				if(UserLoginHandler.enquiryRequestHashmap.containsKey(username)){
+					Control.log.info("User '{}' login failed, username does not exists.", username);
+					l.getFrom().sendLoginFailedMsg(String.format("No user with username '%s' exists in this system", username));
+					UserLoginHandler.enquiryRequestHashmap.remove(username);
+				}
+				// If it is a register request
+				if(UserRegisterHandler.registerLockHashMap.containsKey(username)){
+					control.addUser(u);
+					Control.log.info("User '{}' registered successfully.", username);
+					l.getFrom().sendRegisterSuccMsg(username);
+					UserRegisterHandler.registerLockHashMap.remove(username);
+				}
+
+				l.getFrom().closeCon();
+				control.connectionClosed(l.getFrom());
 				return true;
 			} catch (Exception e) {
 				Control.log.info("The client sending register request was disconnected");
@@ -89,7 +100,7 @@ public class LockAllowedHandler extends MessageHandler {
 		Control.log.info("LOCK ALLOWEDs from all servers are received, send LOCK_ALLOW to the server who sends LOCK_REQUEST");
 		// if not owner, send lockAllow to "from" server
 		try {
-			l.getFrom().sendLockAllowedMsg(username, secret, owner);
+			l.getFrom().sendLockAllowedMsg(username, secret);
 			return true;
 
 		} catch (Exception e) {

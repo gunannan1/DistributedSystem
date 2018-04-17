@@ -15,87 +15,57 @@ import org.apache.logging.log4j.Logger;
 public class MessageGenerator {
 	protected static final Logger log = LogManager.getLogger();
 
-	public static String generateInvalid(String info) {
+	public static String invalid(String info) {
 		return generate(MessageType.INVALID_MESSAGE, info);
 	}
 
-	public static String generateAuthFail(String info) {
+	public static String authFail(String info) {
 		return generate(MessageType.AUTHENTICATION_FAIL, info);
 	}
 
-	public static String generateRegisterFail(String username) {
+	public static String registerFail(String username) {
 		return generate(MessageType.REGISTER_FAILED, String.format("%s is already registered with the system",username));
 	}
 
-	public static String generateLoginFail(String info) {
+	public static String loginFail(String info) {
 		return generate(MessageType.LOGIN_FAILED, info);
 	}
 
-	public static String generateRegisterSucc(String username) {
+	public static String registerSucc(String username) {
 		return generate(MessageType.REGISTER_SUCCESS, String.format("register success for %s",username));
 	}
 
-	public static String generateLoginSucc(String info) {
+	public static String loginSucc(String info) {
 		return generate(MessageType.LOGIN_SUCCESS, info);
 	}
 
-	public static String generateAuthen(String secret) {
+	public static String authen(String secret) {
 		return generate(MessageType.AUTHENTICATE, secret);
 	}
 
 	
 	// LOCK Message types
-	public static String generateLockRequest(String username, String secret,String serverIdentifier) {
-		return generate(MessageType.LOCK_REQUEST,username,secret,serverIdentifier);
+	public static String lockRequest(String username, String secret) {
+		return generate(MessageType.LOCK_REQUEST,username,secret);
 	}
-	public static String generateLockDenied(String username, String secret,String serverIdentifier) {
-		return generate(MessageType.LOCK_DENIED,username,secret,serverIdentifier);
+	public static String lockDenied(String username, String secret) {
+		return generate(MessageType.LOCK_DENIED,username,secret);
 	}
-	public static String generateLockAllowed(String username, String secret,String serverIdentifier) {
-		return generate(MessageType.LOCK_ALLOWED,username,secret,serverIdentifier);
-	}
-
-	// User enquiry types
-	public static String generateUserEnqueryRequest(String username, String secret,String serverIdentifier) {
-		return generate(MessageType.USER_ENQUIRY,username,secret,serverIdentifier);
-	}
-	public static String generateUserFound(String username, String secret,String serverIdentifier) {
-		return generate(MessageType.USER_FOUND,username,secret,serverIdentifier);
-	}
-	public static String generateUserNotFound(String username, String secret,String serverIdentifier) {
-		return generate(MessageType.USER_NOT_FOUND,username,secret,serverIdentifier);
+	public static String lockAllowed(String username, String secret) {
+		return generate(MessageType.LOCK_ALLOWED,username,secret);
 	}
 
-	public static String generateRegister(String username, String secret) {
+	public static String register(String username, String secret) {
 		return generate(MessageType.REGISTER, username, secret);
 	}
 
-	public static String generateLogin( String username, String secret) {
+	public static String login(String username, String secret) {
 		return generate(MessageType.LOGIN, username, secret);
 	}
 
-	public static String generateAnonymousLogin( String username) {
+	public static String anonymousLogin(String username) {
 		return generate(MessageType.LOGIN, username);
 	}
-
-
-	private static String generate(MessageType messageType, String username,String secret, String owner){
-		JsonObject json = new JsonObject();
-		json.addProperty("command", messageType.name());
-		json.addProperty("username", username);
-		json.addProperty("secret", secret);
-		json.addProperty( "owner" , owner);
-		return json.toString();
-	}
-
-//	public static String generateActivityMsg(Activity act,String username,String secret){
-//		JsonObject json = new JsonObject();
-//		json.addProperty("command", MessageType.ACTIVITY_MESSAGE.name());
-//		json.addProperty("username", username);
-//		json.addProperty("secret", secret);
-//		json.addProperty( "activity" ,act.toJsonString());
-//		return json.toString();
-//	}
 
 	private static String generate(MessageType messageType, String infoOrSecret) {
 		JsonObject json = new JsonObject();
@@ -130,10 +100,20 @@ public class MessageGenerator {
 		switch (messageType) {
 			case REGISTER:
 			case LOGIN:
+			case LOCK_DENIED:
+
+			case LOCK_REQUEST:
 				json.addProperty("command", messageType.name());
 				json.addProperty("username", username);
 				json.addProperty("secret", secret);
 				return json.toString();
+			case LOCK_ALLOWED:
+				json.addProperty("command", messageType.name());
+				json.addProperty("username", username);
+				json.addProperty("secret", secret);
+				json.addProperty("server",Settings.getServerId());
+				return json.toString();
+
 			default:
 				log.error("Invalid message type '{}' with parameter username='{}', secret='{}' ", messageType, username, secret);
 

@@ -3,6 +3,7 @@ package activitystreamer.message.serverhandlers;
 import activitystreamer.message.MessageHandler;
 import activitystreamer.server.Connection;
 import activitystreamer.server.Control;
+import activitystreamer.server.User;
 import com.google.gson.JsonObject;
 
 /**
@@ -34,32 +35,63 @@ public class LockDeniedHandler extends MessageHandler {
 		Control.log.info("Lock Denied message is recieved");
 		String username = null;
 		String secret = null;
-		String owner = null;
 
 		// Validate message
 		try{
 			username = json.get("username").getAsString();
 			secret = json.get("secret").getAsString();
-			owner = json.get("owner").getAsString();
 		}catch (NullPointerException e){
-			String error = String.format("Lock denied command missing information username='%s' secret='%s' owner='%s", username, secret,owner);
+			String error = String.format("Lock denied command missing information username='%s' secret='%s'", username, secret);
 			failHandler(error, connection);
 			return false;
 		}
 
 
-		BroadcastResult l = UserRegisterHandler.registerLockHashMap.get(username);
-		if (l == null) {
-			// this should not happen
-			Control.log.error("No register information received for user '%s'", username);
-			return false;
+		BroadcastResult lockRequest = UserRegisterHandler.registerLockHashMap.get(username);
+		BroadcastResult loginRequest = UserLoginHandler.enquiryRequestHashmap.get(username);
+		BroadcastResult l = lockRequest == null ? loginRequest:lockRequest;
+		if (l == null ) {
+			// just ignore to align with Aaron's server
+			Control.log.error("No register information received for user '{}'", username);
+			return true;
 		}
 
+		// whether all servers allowed
+		l.addDeny();
+		if( l.getResult() == BroadcastResult.LOCK_STATUS.PENDING) {
+			Control.log.info("LOCK DEINED (user found) is received, not all servers reply, continue waiting future information...");
+			return true;
+		}
 
-		// whether owner is the server itself
-		if (owner.equals(control.getIdentifier())) {
+		// whether owner is the server itself, if the 'from' connection is not a server, then it is the user who sends register request
+		if (!l.getFrom().isAuthedServer()) {
 			try {
-				l.getFrom().sendRegisterFailedMsg(username);
+				// If it is a login enquiry
+				if(loginRequest != null){
+					User originUser = l.getUser();
+					if(originUser.getSecret().equals(secret)) {
+						Control.log.info("User {} login successfully.", username);
+						l.getFrom().sendLoginSuccMsg(String.format("login successfully as user '%s'", username));
+						l.getFrom().setAuthed(true);
+
+					}else{
+						Control.log.info("User {} login failed due to unmatched secret.", username);
+						Control.log.info("Connection will be closed.");
+						l.getFrom().sendLoginFailedMsg(String.format("secret does not match '%s'",originUser.getSecret()));
+						l.getFrom().closeCon();
+						control.connectionClosed(l.getFrom());
+					}
+					UserLoginHandler.enquiryRequestHashmap.remove(username);
+				}
+				// If it is a register request
+				if(lockRequest != null){
+					Control.log.info("User {} register failed, username exists in this system.", username);
+					Control.log.info("Connection will be closed.");
+					l.getFrom().sendRegisterFailedMsg(username);
+					l.getFrom().closeCon();
+					control.connectionClosed(l.getFrom());
+					UserRegisterHandler.registerLockHashMap.remove(username);
+				}
 				return true;
 			} catch (Exception e) {
 				Control.log.info("The client sending register request is disconnected");
@@ -70,7 +102,7 @@ public class LockDeniedHandler extends MessageHandler {
 		// if not owner, send lockDenied to "from" server
 		try {
 
-			l.getFrom().sendLockDeniedMsg(username, secret, owner);
+			l.getFrom().sendLockDeniedMsg(username, secret);
 			return true;
 
 		} catch (Exception e) {

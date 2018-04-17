@@ -24,6 +24,7 @@ public class ServerTextFrame extends JFrame implements ActionListener {
 	private JEditorPane registeredUserArea;
 	private JEditorPane loginUserArea;
 	private JEditorPane serverArea;
+	private JEditorPane loadArea;
 	private JTextArea logText;
 	private JButton sendButton;
 	private JButton disconnectButton;
@@ -40,28 +41,28 @@ public class ServerTextFrame extends JFrame implements ActionListener {
 		mainPanel.setLayout(new GridLayout(2, 1));
 
 		JPanel upPanel = new JPanel();
-		upPanel.setLayout(new GridLayout(1,3));
+		upPanel.setLayout(new GridLayout(2,2));
 		mainPanel.add(upPanel);
 
 		registeredUserArea = addHtmlPanel(upPanel, "Users Registered at this server");
-
 		loginUserArea = addHtmlPanel(upPanel, "Users Logged in this server");
-
 		serverArea = addHtmlPanel(upPanel, "Servers connected to this server");
+//		serverArea.setFont(new Font(Font.DIALOG,Font.PLAIN,10));
+		loadArea = addHtmlPanel(upPanel,"Server Loads");
+//		loadArea.setFont(new Font(Font.DIALOG,Font.PLAIN,10));
 
 		logText = addLogPanel(mainPanel);
 
 		add(mainPanel);
-
 		setLocationRelativeTo(null);
-		setSize(640, 384);
+		setSize(640, 640);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 
 		this.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				Control.getInstance().setTerm(true);
+				Control.getInstance().closeAll();
 			}
 		});
 	}
@@ -122,6 +123,9 @@ public class ServerTextFrame extends JFrame implements ActionListener {
 
 	public void setServerArea(String str) {
 		this.serverArea.setText(str);
+	}
+	public void setLoadArea(String str) {
+		this.loadArea.setText(str);
 	}
 
 	//show error message

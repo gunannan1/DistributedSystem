@@ -141,37 +141,37 @@ public class Connection extends Thread {
 	// TODO implement send methods for different types of messages
 	public void sendInvalidMsg(String info){
 		Control.log.debug("send invalid message to server with info={}",info);
-		String invalidStr = MessageGenerator.generateInvalid(info);
+		String invalidStr = MessageGenerator.invalid(info);
 		this.writeMsg(invalidStr);
 	}
 
 	//TODO for client
 	public void sendLoginSuccMsg(String info){
 		Control.log.debug("send login succ message to client with info='{}'",info);
-		String loginSuccStr = MessageGenerator.generateLoginSucc(info);
+		String loginSuccStr = MessageGenerator.loginSucc(info);
 		this.writeMsg(loginSuccStr);
 	}
 	public void sendLoginFailedMsg(String info){
 		Control.log.debug("send login failed message to client with info='{}'",info);
-		String loginFailedStr = MessageGenerator.generateLoginFail(info);
+		String loginFailedStr = MessageGenerator.loginFail(info);
 		this.writeMsg(loginFailedStr);
 	}
 
 	public void sendRegisterSuccMsg(String username){
-		String registerSucc = MessageGenerator.generateRegisterSucc(username);
+		String registerSucc = MessageGenerator.registerSucc(username);
 		this.writeMsg(registerSucc);
 	}
 	public void sendRegisterFailedMsg(String username){
-		String registerFail = MessageGenerator.generateRegisterFail(username);
+		String registerFail = MessageGenerator.registerFail(username);
 		this.writeMsg(registerFail);
 	}
 	public void sendAuthMsg(String secret){
-		String authenticate=MessageGenerator.generateAuthen(Settings.getSecret());
+		String authenticate=MessageGenerator.authen(Settings.getSecret());
 		this.writeMsg(authenticate);
 	}
 
 	public void sendAuthFailedMsg(String info){
-		String authFail = MessageGenerator.generateAuthFail(info);
+		String authFail = MessageGenerator.authFail(info);
 		this.writeMsg(authFail);
 	}
 
@@ -192,24 +192,24 @@ public class Connection extends Thread {
 //	public void sendLockRequestMsg(){}
 
 	// User register messages
-	public void sendLockAllowedMsg(String username,String secret, String owner) {
-		String message = MessageGenerator.generateLockAllowed(username, secret, owner);
+	public void sendLockAllowedMsg(String username,String secret) {
+		String message = MessageGenerator.lockAllowed(username, secret);
 		this.writeMsg(message);
 	}
-	public void sendLockDeniedMsg(String username,String secret, String owner){
-		String message = MessageGenerator.generateLockDenied(username,secret,owner);
+	public void sendLockDeniedMsg(String username,String secret){
+		String message = MessageGenerator.lockDenied(username,secret);
 		this.writeMsg(message);
 	}
 
 	// User login messages
-	public void sendUserNotFoundMsg(String username,String secret, String owner) {
-		String message = MessageGenerator.generateUserNotFound(username, secret, owner);
-		this.writeMsg(message);
-	}
-	public void sendUserFoundMsg(String username,String secret, String owner){
-		String message = MessageGenerator.generateUserFound(username,secret,owner);
-		this.writeMsg(message);
-	}
+//	public void sendUserNotFoundMsg(String username,String secret, String owner) {
+//		String message = MessageGenerator.generateUserNotFound(username, secret, owner);
+//		this.writeMsg(message);
+//	}
+//	public void sendUserFoundMsg(String username,String secret, String owner){
+//		String message = MessageGenerator.generateUserFound(username,secret,owner);
+//		this.writeMsg(message);
+//	}
 
 	public void sendRedirectMsg(String hostname, int port){
 		String message=MessageGenerator.generateRedirect(hostname,port);

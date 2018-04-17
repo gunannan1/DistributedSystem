@@ -1,4 +1,11 @@
 # Meeting Minutes
+##### Date: 16 Apr 2018
+
+##### Duration: 2 hours
+
+##### Attentance: Yirun Pan, Ning Kang, Nannan Gu, Wenyi Zhao
+
+# Full Self-Working version on 17 Apr at 19:00 clock
 
 
 ##### Date: 16 Apr 2018

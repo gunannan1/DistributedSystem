@@ -16,9 +16,11 @@ public class ServerAnnounceHandler extends MessageHandler {
 
 	private final Control control;
 
+
 	public ServerAnnounceHandler(Control control) {
 		this.control = control;
 	}
+
 
 	@Override
 	public boolean processMessage(JsonObject json,Connection connection) {

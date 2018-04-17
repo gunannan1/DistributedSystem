@@ -441,7 +441,7 @@ public class Control extends Thread {
 
 		@Override
 		public void run() {
-			while (true && !term) {
+			while (!term) {
 				refreshUI();
 				try {
 					sleep(1000);

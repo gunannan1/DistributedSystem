@@ -14,7 +14,7 @@
     <Loggers>
         <Logger name="serverLogger" level="debug" additivity="false">
             <appender-ref ref="Console" level="debug"/>
-            <appender-ref ref="uiAppender" level="debug"/>
+            <appender-ref ref="uiAppender" level="info"/>
         </Logger>
         <Logger name="clientLogger" level="debug" additivity="false">
             <appender-ref ref="Console" level="debug"/>

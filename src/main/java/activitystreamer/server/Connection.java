@@ -180,6 +180,10 @@ public class Connection extends Thread {
 		this.writeMsg(announce);
 	}
 
+	public void sendActivityBroadcastMsg(String msg){
+//		String activityBroadcast = MessageGenerator.generateActBroadcast(act);
+		this.writeMsg(msg);
+	}
 	public void sendActivityBroadcastMsg(Activity act){
 		String activityBroadcast = MessageGenerator.generateActBroadcast(act);
 		this.writeMsg(activityBroadcast);

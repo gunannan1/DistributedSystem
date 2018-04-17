@@ -24,7 +24,7 @@ public class ServerAnnounceHandler extends MessageHandler {
 	public boolean processMessage(JsonObject json, Connection connection) {
 		//TODO need future work
 
-		Control.log.info("Announce recieved from " + connection.getSocket().getRemoteSocketAddress());
+//		Control.log.info("Announce recieved from " + connection.getSocket().getRemoteSocketAddress());
 		String id = json.get("id").getAsString();
 		int load = json.get("load").getAsInt();
 		String host = json.get("host").getAsString();

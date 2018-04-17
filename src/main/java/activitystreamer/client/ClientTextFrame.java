@@ -3,6 +3,7 @@ package activitystreamer.client;
 import activitystreamer.message.Activity;
 import activitystreamer.client.UILogAppender;
 
+import activitystreamer.util.Settings;
 import com.google.gson.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,7 +36,7 @@ public class ClientTextFrame extends JFrame implements ActionListener {
 
 	public ClientTextFrame() {
 
-		setTitle(String.format("Client-%s", ClientSkeleton.getInstance().getLocalAddress()));
+		setTitle(String.format("Client-%s (%s)", ClientSkeleton.getInstance().getLocalAddress(), Settings.getUsername()));
 
 		JPanel mainPanel = new JPanel();
 		mainPanel.setLayout(new GridLayout(1, 3));

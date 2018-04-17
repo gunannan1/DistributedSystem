@@ -63,9 +63,11 @@ public class Connection extends Thread {
 				inreader.close();
 				out.close();
 				if(isMain){
-					Control.log.info("Connection to upstream server breaks, shutdown all services to clients and downstream servers");
+					String info = String.format("Connection to upstream server breaks, shutdown all services to clients and downstream servers");
+					Control.log.info(info);
 					Control.getInstance().setTerm(true);
 					Control.getInstance().refreshUI();
+					Control.getInstance().getServerTextFrame().showErrorMsg(info);
 				}
 			} catch (IOException e) {
 				// already closed?

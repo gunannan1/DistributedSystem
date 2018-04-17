@@ -96,6 +96,7 @@ public class Control extends Thread {
 			identifier = Settings.getLocalHostname() + Settings.getLocalPort();
 		} catch (IOException e) {
 			log.error("failed to make connection to " + Settings.getRemoteHostname() + ":" + Settings.getRemotePort() + " :" + e);
+			listener.setTerm(true);
 			System.exit(-1);
 		}
 
@@ -368,6 +369,11 @@ public class Control extends Thread {
 	}
 
 	//TODO UI information refresh
+
+	public ServerTextFrame getServerTextFrame() {
+		return serverTextFrame;
+	}
+
 	private void startUI() {
 		serverTextFrame = new ServerTextFrame();
 		UILogAppender.setTextArea(serverTextFrame.getLogArea());

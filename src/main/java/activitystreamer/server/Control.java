@@ -119,7 +119,6 @@ public class Control extends Thread {
 		// Message from Servers
 		this.handlerMap.put(MessageType.AUTHENTICATE, new ServerAuthenRequestHandler(this));
 		this.handlerMap.put(MessageType.AUTHENTICATION_FAIL, new ServerAuthenFailedHandler(this));
-//		this.handlerMap.put(MessageType.AUTHENTICATE_SUCCESS, new ServerAuthenSuccHandler(this));
 
 		this.handlerMap.put(MessageType.SERVER_ANNOUNCE, new ServerAnnounceHandler(this));
 		this.handlerMap.put(MessageType.ACTIVITY_BROADCAST, new ActivityBroadcastHandler(this));

@@ -1,6 +1,6 @@
 package activitystreamer.server;
 
-import activitystreamer.client.UILogAppender;
+import activitystreamer.UILogAppender;
 import activitystreamer.message.Activity;
 import activitystreamer.message.MessageGenerator;
 import activitystreamer.message.MessageHandler;

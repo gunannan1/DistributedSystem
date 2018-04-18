@@ -1,4 +1,4 @@
-package activitystreamer.client;
+package activitystreamer;
 
 
 import org.apache.logging.log4j.core.Filter;

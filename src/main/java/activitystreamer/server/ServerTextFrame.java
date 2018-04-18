@@ -125,6 +125,7 @@ public class ServerTextFrame extends JFrame implements ActionListener {
 		this.serverArea.setText(str);
 	}
 	public void setLoadArea(String str) {
+		if(str != null)
 		this.loadArea.setText(str);
 	}
 

@@ -66,8 +66,20 @@ public class LockDeniedHandler extends MessageHandler {
 		// whether owner is the server itself, if the 'from' connection is not a server, then it is the user who sends register request
 		if (!l.getFrom().isAuthedServer()) {
 			try {
+
+				// If it is a register request
+				if(lockRequest != null){
+					Control.log.info("User {} register failed, username exists in this system.", username);
+					Control.log.info("Connection will be closed.");
+					l.getFrom().sendRegisterFailedMsg(username);
+					l.getFrom().closeCon();
+					control.connectionClosed(l.getFrom());
+					UserRegisterHandler.registerLockHashMap.remove(username);
+				}
+
 				// If it is a login enquiry
-				if(loginRequest != null){
+				// loginRequest must not be null if code runs here
+				if(l.getResult() == BroadcastResult.LOCK_STATUS.USER_FOUND){
 					User originUser = l.getUser();
 					if(originUser.getSecret().equals(secret)) {
 						Control.log.info("User {} login successfully.", username);
@@ -82,15 +94,12 @@ public class LockDeniedHandler extends MessageHandler {
 						control.connectionClosed(l.getFrom());
 					}
 					UserLoginHandler.enquiryRequestHashmap.remove(username);
-				}
-				// If it is a register request
-				if(lockRequest != null){
-					Control.log.info("User {} register failed, username exists in this system.", username);
+				}else {
+					Control.log.info("User {} does not exist in this system.", username);
 					Control.log.info("Connection will be closed.");
-					l.getFrom().sendRegisterFailedMsg(username);
+					l.getFrom().sendLoginFailedMsg(String.format("User '%s' does not exist '%s'",username));
 					l.getFrom().closeCon();
 					control.connectionClosed(l.getFrom());
-					UserRegisterHandler.registerLockHashMap.remove(username);
 				}
 				return true;
 			} catch (Exception e) {
@@ -103,6 +112,7 @@ public class LockDeniedHandler extends MessageHandler {
 		try {
 
 			l.getFrom().sendLockDeniedMsg(username, secret);
+			UserRegisterHandler.registerLockHashMap.remove(username);
 			return true;
 
 		} catch (Exception e) {

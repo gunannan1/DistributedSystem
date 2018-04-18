@@ -52,7 +52,9 @@ public class LockAllowedHandler extends MessageHandler {
 		}
 
 
-		BroadcastResult l = UserRegisterHandler.registerLockHashMap.get(username);
+		BroadcastResult lockRequest = UserRegisterHandler.registerLockHashMap.get(username);
+		BroadcastResult loginRequest = UserLoginHandler.enquiryRequestHashmap.get(username);
+		BroadcastResult l = lockRequest == null ? loginRequest:lockRequest;
 
 		// whether the register information in pending list
 		if(l == null){
@@ -70,21 +72,25 @@ public class LockAllowedHandler extends MessageHandler {
 
 
 
-		// here means this server receives LOCK ALLOWED (user not found) from all other servers
+		// here means this server receives LOCK responses (user not found) from all other servers
 		// if owner is the server itself
 		if (!l.getFrom().isAuthedServer()) {
 			Control.log.info("LOCK ALLOWEDs from all servers are received, send REGISTER_SUCCESS to the client");
 			try {
-				if(UserLoginHandler.enquiryRequestHashmap.containsKey(username)){
+				if(loginRequest != null){
 					Control.log.info("User '{}' login failed, username does not exists.", username);
 					l.getFrom().sendLoginFailedMsg(String.format("No user with username '%s' exists in this system", username));
 					UserLoginHandler.enquiryRequestHashmap.remove(username);
 				}
 				// If it is a register request
-				if(UserRegisterHandler.registerLockHashMap.containsKey(username)){
+				if(lockRequest != null && l.getResult() == BroadcastResult.LOCK_STATUS.USER_NOT_FOUND){
 					control.addUser(u);
 					Control.log.info("User '{}' registered successfully.", username);
 					l.getFrom().sendRegisterSuccMsg(username);
+					UserRegisterHandler.registerLockHashMap.remove(username);
+				}else{
+					Control.log.info("User '{}' exists in this system, register failed.", username);
+					l.getFrom().sendRegisterFailedMsg(username);
 					UserRegisterHandler.registerLockHashMap.remove(username);
 				}
 
@@ -101,6 +107,7 @@ public class LockAllowedHandler extends MessageHandler {
 		// if not owner, send lockAllow to "from" server
 		try {
 			l.getFrom().sendLockAllowedMsg(username, secret);
+			UserRegisterHandler.registerLockHashMap.remove(username);
 			return true;
 
 		} catch (Exception e) {

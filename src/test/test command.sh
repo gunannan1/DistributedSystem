@@ -62,7 +62,7 @@ java -jar Client-jar-with-dependencies.jar -l -u ningk -rp 8003 -rh localhost -s
 java -jar Client-jar-with-dependencies.jar -l -u yirupan -rp 8001 -rh localhost -s secret1
 
 # Login user named 'nannangu' at server 8004 (instead of 8002 which this id registers at)
-java -jar Client-jar-with-dependencies.jar -l -u nannangu -rp 8004 -rh localhost -s secret1
+java -jar Client-jar-with-dependencies.jar -l -u kangnwh -rp 8004 -rh localhost -s secret1
 
 # Login user named 'wenyizhao' at server 8002 (instead of 8005 which this id registers at)
 java -jar Client-jar-with-dependencies.jar -l -u wenyizhao -rp 8002 -rh localhost -s secret1

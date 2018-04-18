@@ -4,9 +4,18 @@
 {"command":"REGISTER","username":"ningk3","secret":"abc"}
 
 {"command":"REGISTER","username":"ningk3"}
+{"command":"REGISTER","username":"ningk3","secret":null}
 
-{"command":"LOGIN","username":"kangnwh","secret":"abc"}
+
+{"command":"LOGIN","username":"anonymous","secret":"abc"}
 {"command":"LOGIN","username":"anonymous"}
+{"command":"LOGIN","username":"anonymous","secret":""}
+{"command":"LOGIN","username":"anonymous","secret":null}
+
+{"command":"LOGIN","username":"kadddddngnwh"}
+
+{"command":"LOGIN","secret":"abc"}
+
 
 {"command":"LOGIN","username":"ningk1","secret":"abc"}
 {"command":"LOGIN","username":"ningk2","secret":"abc"}

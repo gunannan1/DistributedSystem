@@ -110,10 +110,8 @@ public class Client {
 		if (cmd.hasOption("r")) {
 			ClientSkeleton c = ClientSkeleton.getInstance();
 			c.sendRegisterMsg();
-		}else if(cmd.hasOption('l')){
-			ClientSkeleton c = ClientSkeleton.getInstance();
-			c.sendLoginMsg();
 		}
+
 		//anonymous login
 		if (cmd.hasOption("a")) {
 			Settings.setUsername("anonymous");
@@ -121,6 +119,13 @@ public class Client {
 			ClientSkeleton c = ClientSkeleton.getInstance();
 			c.sendAnonymousLoginMsg();
 		}
+
+		if(cmd.hasOption('l')){
+			ClientSkeleton c = ClientSkeleton.getInstance();
+			c.sendLoginMsg();
+		}
+
+
 	}
 
 

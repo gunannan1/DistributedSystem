@@ -39,40 +39,53 @@ public class UserLoginHandler extends MessageHandler {
 		Control.log.info("login message is received from {}",connection.getSocket().getRemoteSocketAddress());
 
 		User newUser = null;
-		String username = json.get("username").getAsString();
-		JsonElement secretJson = json.get("secret");
-		String secret = secretJson == null ? null:secretJson.getAsString();
+		String username = null;
+		String secret = null;
 
-		//1. Check if anoymous user
-		if (username.equals("anonymous")) {
-			connection.setAuthed(true);
-			connection.setUser(new User(username, ""));
-			connection.sendLoginSuccMsg(String.format("login successfully as user '%s '", username));
 
-			//check redirect
-			if(this.control.findRedirectServer()!=null){
-				String redirectServer = this.control.findRedirectServer();
-				Control.log.info("Redirection is triggered, redirect user to server {}",redirectServer);
-				this.control.doRedirect(connection,redirectServer, username);
+		// 1. check if both username & secret exist
+		try {
+			username = json.get("username").getAsString();
+
+			//2.check anonymous login
+			if (username.equals("anonymous")) {
+				connection.setAuthed(true);
+				connection.setUser(new User(username, ""));
+				connection.sendLoginSuccMsg(String.format("login successfully as user '%s '", username));
+
+				//check redirect
+				if(this.control.findRedirectServer()!=null){
+					String redirectServer = this.control.findRedirectServer();
+					Control.log.info("Redirection is triggered, redirect user to server {}",redirectServer);
+					this.control.doRedirect(connection,redirectServer, username);
+					return true;
+				}
+
+				Control.log.info("user '{}' login successfully", username);
 				return true;
 			}
-
-			Control.log.info("user '{}' login successfully", username);
-			return true;
-
+			secret = json.get("secret").getAsString();
 		}
-
-		// 2. check if both username & secret exist
-		if (username.isEmpty() || secret.isEmpty()){
-			Control.log.info("Information missing for loging, username='{}' secret='{}'",username,secret);
-			connection.sendInvalidMsg("Invalid login message " + json.toString());
-			Control.log.info("Close connection with {}",connection.getSocket().getRemoteSocketAddress());
+		catch (NullPointerException e) {
+			String error = String.format("Information missing for login, username='%s' secret='%s'",username,secret);
+			Control.log.info(error);
+			connection.sendInvalidMsg(error);
+			connection.closeCon();
+			this.control.connectionClosed(connection);
+			return false;
+		}
+		catch (UnsupportedOperationException e) {
+			String error = String.format("Information missing for login, username='%s' secret='%s'",username,secret);
+			Control.log.info(error);
+			connection.sendInvalidMsg(error);
 			connection.closeCon();
 			this.control.connectionClosed(connection);
 			return false;
 		}
 
 		newUser = new User(username,secret);
+
+
 		// 3. Check if user exists locally
 		User localUser = this.control.authUser(username, secret);
 		if (localUser != null) {
@@ -108,6 +121,8 @@ public class UserLoginHandler extends MessageHandler {
 
 		// Should not run to here
 		Control.log.error("Wired things happened in class UserLoginHandler");
+		connection.closeCon();
+		this.control.connectionClosed(connection);
 		return false;
 
 	}

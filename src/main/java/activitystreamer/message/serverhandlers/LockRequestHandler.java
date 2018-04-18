@@ -43,7 +43,12 @@ public class LockRequestHandler extends MessageHandler {
 			username = json.get("username").getAsString();
 			secret = json.get("secret").getAsString();
 
-		} catch (UnsupportedOperationException e) {
+		}
+		catch (NullPointerException e) {
+			String error = String.format("Lock request command missing information username='%s' secret='%s'", username, secret);
+			failHandler(error, connection);
+			return false;
+		}catch (UnsupportedOperationException e) {
 			String error = String.format("Lock request command missing information username='%s' secret='%s'", username, secret);
 			failHandler(error, connection);
 			return false;

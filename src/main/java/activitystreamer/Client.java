@@ -98,14 +98,18 @@ public class Client {
 		if (cmd.hasOption("s")) {
 			Settings.setSecret(cmd.getOptionValue("s"));
 		}
+//		else if(cmd.hasOption("r")){
+//			log.error("no secret provided,please check your command");
+//			System.exit(-1);
+//		}
+
+
 
 		//Register
 
 		if (cmd.hasOption("r")) {
-
 			ClientSkeleton c = ClientSkeleton.getInstance();
 			c.sendRegisterMsg();
-
 		}else if(cmd.hasOption('l')){
 			ClientSkeleton c = ClientSkeleton.getInstance();
 			c.sendLoginMsg();

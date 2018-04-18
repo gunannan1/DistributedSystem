@@ -1,7 +1,6 @@
 package activitystreamer.client;
 
 import activitystreamer.message.Activity;
-import activitystreamer.client.UILogAppender;
 
 import activitystreamer.util.Settings;
 import com.google.gson.*;

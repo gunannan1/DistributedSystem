@@ -1,6 +1,4 @@
-import activitystreamer.client.UILogAppender;
 import activitystreamer.message.Activity;
-import activitystreamer.server.ServerTextFrame;
 import com.google.gson.JsonObject;
 
 /**

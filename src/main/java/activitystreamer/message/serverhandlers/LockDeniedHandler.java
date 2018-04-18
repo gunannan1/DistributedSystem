@@ -40,7 +40,7 @@ public class LockDeniedHandler extends MessageHandler {
 		try{
 			username = json.get("username").getAsString();
 			secret = json.get("secret").getAsString();
-		}catch (NullPointerException e){
+		}catch (UnsupportedOperationException e){
 			String error = String.format("Lock denied command missing information username='%s' secret='%s'", username, secret);
 			failHandler(error, connection);
 			return false;

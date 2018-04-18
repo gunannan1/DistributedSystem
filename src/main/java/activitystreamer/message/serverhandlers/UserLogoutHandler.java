@@ -22,7 +22,7 @@ public class UserLogoutHandler extends MessageHandler {
 
 	@Override
 	public boolean processMessage(JsonObject json,Connection connection) {
-		Control.log.info("Logout request from {} is recieved.",connection.getSocket().getRemoteSocketAddress());
+		Control.log.info("Logout request from {} is received.",connection.getSocket().getRemoteSocketAddress());
 		Control.log.info("User {} logout, close connection.",connection.getUser().getUsername());
 		connection.closeCon();
 		control.connectionClosed(connection);

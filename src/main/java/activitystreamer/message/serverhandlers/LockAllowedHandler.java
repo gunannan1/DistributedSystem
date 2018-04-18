@@ -45,7 +45,7 @@ public class LockAllowedHandler extends MessageHandler {
 			username = json.get("username").getAsString();
 			secret = json.get("secret").getAsString();
 			u = new User(username,secret);
-		}catch (NullPointerException e){
+		}catch (UnsupportedOperationException e){
 			String error = String.format("Lock allowed command missing information username='%s' secret='%s'", username, secret);
 			failHandler(error, connection);
 			return false;
@@ -69,8 +69,6 @@ public class LockAllowedHandler extends MessageHandler {
 			Control.log.info("Although LOCK ALLOWED is received, not all servers reply, continue waiting future information...");
 			return true;
 		}
-
-
 
 		// here means this server receives LOCK responses (user not found) from all other servers
 		// if owner is the server itself

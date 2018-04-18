@@ -51,8 +51,15 @@ public class UserRegisterHandler extends MessageHandler {
 			username = json.get("username").getAsString();
 			secret = json.get("secret").getAsString();
 
-		} catch (NullPointerException e) {
+		} catch (UnsupportedOperationException e) {
 			String error = String.format("User register command missing information username='%s' secret='%s'", username, secret);
+			connection.sendInvalidMsg(error);
+			failHandler(error, connection);
+			return false;
+		}
+
+		if(username.equals("anonymous")){
+			String error = String.format("Invalid username 'anonymous' or you forget input your username");
 			connection.sendInvalidMsg(error);
 			failHandler(error, connection);
 			return false;

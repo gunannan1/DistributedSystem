@@ -13,6 +13,14 @@
 {"command":"LOGIN","username":"ningk3","secret":"abc"}
 
 
+{"command":"AUTHENTICATE","secret":"gen1p85md2qnq0d59qll3fbcoa"}
+{"command":"LOCK_REQUEST","username":"adsfasdfasdf","secret":"asd1234asdf"}
+{"command":"LOCK_ALLOWED","username":"adsfasdfasdf","secret":"asd1234asdf"}
+
+{"command":"AUTHENTICATE","secret":"gen1p85md2qnq0d59qll3fbcoa"}
+{"command":"LOCK_ALLOWED","username":"adsfasdfasdf","secret":"asd1234asdf","server":"asdfasdfqwefawe"}
+
+
 #### test case - user register with multi servers
 # start the very first server
 java -jar Server-jar-with-dependencies.jar -lh localhost -lp 8001 -s abc

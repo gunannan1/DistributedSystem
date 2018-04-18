@@ -111,7 +111,7 @@ public class MessageGenerator {
 				json.addProperty("command", messageType.name());
 				json.addProperty("username", username);
 				json.addProperty("secret", secret);
-				json.addProperty("server",Settings.getServerId());
+//				json.addProperty("server",Settings.getServerId());
 				return json.toString();
 
 			default:

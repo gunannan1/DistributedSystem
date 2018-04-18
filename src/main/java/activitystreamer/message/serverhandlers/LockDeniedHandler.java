@@ -102,7 +102,7 @@ public class LockDeniedHandler extends MessageHandler {
 				}else {
 					Control.log.info("User {} does not exist in this system.", username);
 					Control.log.info("Connection will be closed.");
-					l.getFrom().sendLoginFailedMsg(String.format("User '%s' does not exist '%s'",username));
+					l.getFrom().sendLoginFailedMsg(String.format("User '%s' does not exist",username));
 					l.getFrom().closeCon();
 					control.connectionClosed(l.getFrom());
 				}

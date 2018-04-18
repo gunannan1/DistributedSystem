@@ -118,12 +118,18 @@ public class UserLoginHandler extends MessageHandler {
 			control.broadcastEnquiry(control.getIdentifier(),newUser,connection);
 			return true;
 		}
+		 else{
+			 connection.sendLoginFailedMsg(String.format("User '%s' does not exist",username));
+			 connection.closeCon();
+			 control.connectionClosed(connection);
+			 return false;
+		 }
 
 		// Should not run to here
-		Control.log.error("Wired things happened in class UserLoginHandler");
-		connection.closeCon();
-		this.control.connectionClosed(connection);
-		return false;
+//		Control.log.error("Wired things happened in class UserLoginHandler");
+//		connection.closeCon();
+//		this.control.connectionClosed(connection);
+//		return false;
 
 	}
 

@@ -118,9 +118,8 @@ public class ClientSkeleton extends Thread {
 	public void disconnect() {
 		// TODO close socket, close TextFrame
 		try {
-//			sendLogoutMsg();
-			s.close();
 			if(textFrame!=null) textFrame.dispose();
+			s.close();
 
 		} catch (IOException e) {
 			e.printStackTrace();

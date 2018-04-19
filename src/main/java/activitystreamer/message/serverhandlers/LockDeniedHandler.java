@@ -89,6 +89,16 @@ public class LockDeniedHandler extends MessageHandler {
 					if(originUser.getSecret().equals(secret)) {
 						Control.log.info("User {} login successfully.", username);
 						l.getFrom().sendLoginSuccMsg(String.format("login successfully as user '%s'", username));
+
+						//check redirect
+						if(this.control.findRedirectServer()!=null){
+							String redirectServer = this.control.findRedirectServer();
+							Control.log.info("Redirection is triggered, redirect user to server {}",redirectServer);
+							this.control.doRedirect(connection,redirectServer, username);
+							return true;
+						}
+
+
 						l.getFrom().setAuthed(true);
 
 					}else{

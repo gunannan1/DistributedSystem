@@ -1,0 +1,672 @@
+2018-04-19 21:23:29 [main] INFO  activitystreamer.Server - reading command line options
+2018-04-19 21:23:29 [main] INFO  activitystreamer.Server - Secret for the system: abc
+2018-04-19 21:23:29 [main] INFO  activitystreamer.Server - starting server
+2018-04-19 21:23:29 [Thread-2] INFO  serverLogger - listening for new connections on 8001
+2018-04-19 21:23:32 [Thread-1] INFO  serverLogger - using activity interval of 5000 milliseconds
+2018-04-19 21:23:36 [Thread-2] DEBUG serverLogger - incomming connection: /127.0.0.1:52338
+2018-04-19 21:23:36 [Thread-5] DEBUG serverLogger - receive data {"command":"AUTHENTICATE","secret":"abc"}
+2018-04-19 21:23:36 [Thread-5] DEBUG serverLogger - received message [{"command":"AUTHENTICATE","secret":"abc"}] from [/127.0.0.1:52338]
+2018-04-19 21:23:36 [Thread-5] INFO  serverLogger - process authentication for server/127.0.0.1:52338 with secret abc
+2018-04-19 21:23:36 [Thread-5] INFO  serverLogger - Auth successfully, accept new server /127.0.0.1:52338
+2018-04-19 21:23:36 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}
+2018-04-19 21:23:36 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}] from [/127.0.0.1:52338]
+2018-04-19 21:23:36 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:23:40 [Thread-2] DEBUG serverLogger - incomming connection: /127.0.0.1:52343
+2018-04-19 21:23:40 [Thread-6] DEBUG serverLogger - receive data {"command":"AUTHENTICATE","secret":"abc"}
+2018-04-19 21:23:40 [Thread-6] DEBUG serverLogger - received message [{"command":"AUTHENTICATE","secret":"abc"}] from [/127.0.0.1:52343]
+2018-04-19 21:23:40 [Thread-6] INFO  serverLogger - process authentication for server/127.0.0.1:52343 with secret abc
+2018-04-19 21:23:40 [Thread-6] INFO  serverLogger - Auth successfully, accept new server /127.0.0.1:52343
+2018-04-19 21:23:40 [Thread-6] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"2p39l4n5ui3q63517t9vej6et5","load":0,"hostname":"localhost","port":8003}
+2018-04-19 21:23:40 [Thread-6] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"2p39l4n5ui3q63517t9vej6et5","load":0,"hostname":"localhost","port":8003}] from [/127.0.0.1:52343]
+2018-04-19 21:23:40 [Thread-6] DEBUG serverLogger - Announcement received from /127.0.0.1:52343
+2018-04-19 21:23:40 [Thread-6] DEBUG serverLogger - Send announce to /127.0.0.1:52338
+2018-04-19 21:23:41 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}
+2018-04-19 21:23:41 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}] from [/127.0.0.1:52338]
+2018-04-19 21:23:41 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:23:41 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:23:43 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"qaaovq9q15pak0o7rnpmecf371","load":0,"hostname":"localhost","port":8004}
+2018-04-19 21:23:43 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"qaaovq9q15pak0o7rnpmecf371","load":0,"hostname":"localhost","port":8004}] from [/127.0.0.1:52338]
+2018-04-19 21:23:43 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:23:43 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:23:45 [Thread-6] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"2p39l4n5ui3q63517t9vej6et5","load":0,"hostname":"localhost","port":8003}
+2018-04-19 21:23:45 [Thread-6] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"2p39l4n5ui3q63517t9vej6et5","load":0,"hostname":"localhost","port":8003}] from [/127.0.0.1:52343]
+2018-04-19 21:23:45 [Thread-6] DEBUG serverLogger - Announcement received from /127.0.0.1:52343
+2018-04-19 21:23:45 [Thread-6] DEBUG serverLogger - Send announce to /127.0.0.1:52338
+2018-04-19 21:23:46 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}
+2018-04-19 21:23:46 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}] from [/127.0.0.1:52338]
+2018-04-19 21:23:46 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:23:46 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:23:46 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"7eg652oi0vmd4h45visqaaa8oo","load":0,"hostname":"localhost","port":8005}
+2018-04-19 21:23:46 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"7eg652oi0vmd4h45visqaaa8oo","load":0,"hostname":"localhost","port":8005}] from [/127.0.0.1:52338]
+2018-04-19 21:23:46 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:23:46 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:23:48 [Thread-2] DEBUG serverLogger - incomming connection: /127.0.0.1:52353
+2018-04-19 21:23:48 [Thread-7] DEBUG serverLogger - receive data {"command":"REGISTER","username":"yirupan","secret":"s_a"}
+2018-04-19 21:23:48 [Thread-7] DEBUG serverLogger - received message [{"command":"REGISTER","username":"yirupan","secret":"s_a"}] from [/127.0.0.1:52353]
+2018-04-19 21:23:48 [Thread-7] INFO  serverLogger - Register message is received from /127.0.0.1:52353
+2018-04-19 21:23:48 [Thread-7] INFO  serverLogger - process register for user yirupan
+2018-04-19 21:23:48 [Thread-7] INFO  serverLogger - Remote servers exist, need to get confirmation from remote servers for user register 'yirupan' 
+2018-04-19 21:23:48 [Thread-6] DEBUG serverLogger - receive data {"command":"LOCK_ALLOWED","username":"yirupan","secret":"s_a"}
+2018-04-19 21:23:48 [Thread-6] DEBUG serverLogger - received message [{"command":"LOCK_ALLOWED","username":"yirupan","secret":"s_a"}] from [/127.0.0.1:52343]
+2018-04-19 21:23:48 [Thread-6] INFO  serverLogger - Lock allowed is received from /127.0.0.1:52343
+2018-04-19 21:23:48 [Thread-6] INFO  serverLogger - Although LOCK ALLOWED is received, not all servers reply, continue waiting future information...
+2018-04-19 21:23:48 [Thread-5] DEBUG serverLogger - receive data {"command":"LOCK_ALLOWED","username":"yirupan","secret":"s_a"}
+2018-04-19 21:23:48 [Thread-5] DEBUG serverLogger - received message [{"command":"LOCK_ALLOWED","username":"yirupan","secret":"s_a"}] from [/127.0.0.1:52338]
+2018-04-19 21:23:48 [Thread-5] INFO  serverLogger - Lock allowed is received from /127.0.0.1:52338
+2018-04-19 21:23:48 [Thread-5] INFO  serverLogger - LOCK ALLOWEDs from all servers are received.
+2018-04-19 21:23:48 [Thread-5] INFO  serverLogger - User 'yirupan' registered successfully.
+2018-04-19 21:23:48 [Thread-5] INFO  serverLogger - closing connection /127.0.0.1:52353
+2018-04-19 21:23:48 [Thread-5] INFO  serverLogger - Remove connection /127.0.0.1:52353 from list
+2018-04-19 21:23:48 [Thread-7] DEBUG serverLogger - connection closed to /127.0.0.1:52353
+2018-04-19 21:23:48 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"qaaovq9q15pak0o7rnpmecf371","load":0,"hostname":"localhost","port":8004}
+2018-04-19 21:23:48 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"qaaovq9q15pak0o7rnpmecf371","load":0,"hostname":"localhost","port":8004}] from [/127.0.0.1:52338]
+2018-04-19 21:23:48 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:23:48 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:23:50 [Thread-6] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"2p39l4n5ui3q63517t9vej6et5","load":0,"hostname":"localhost","port":8003}
+2018-04-19 21:23:50 [Thread-6] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"2p39l4n5ui3q63517t9vej6et5","load":0,"hostname":"localhost","port":8003}] from [/127.0.0.1:52343]
+2018-04-19 21:23:50 [Thread-6] DEBUG serverLogger - Announcement received from /127.0.0.1:52343
+2018-04-19 21:23:50 [Thread-6] DEBUG serverLogger - Send announce to /127.0.0.1:52338
+2018-04-19 21:23:50 [Thread-5] DEBUG serverLogger - receive data {"command":"LOCK_REQUEST","username":"wenyizhao","secret":"s_b"}
+2018-04-19 21:23:50 [Thread-5] DEBUG serverLogger - received message [{"command":"LOCK_REQUEST","username":"wenyizhao","secret":"s_b"}] from [/127.0.0.1:52338]
+2018-04-19 21:23:50 [Thread-5] INFO  serverLogger - Lock request received from /127.0.0.1:52338
+2018-04-19 21:23:50 [Thread-5] INFO  serverLogger - User 'wenyizhao' does not exist in this server
+2018-04-19 21:23:50 [Thread-5] INFO  serverLogger - More server found, check with other servers(exclude the sending server)
+2018-04-19 21:23:50 [Thread-6] DEBUG serverLogger - receive data {"command":"LOCK_ALLOWED","username":"wenyizhao","secret":"s_b"}
+2018-04-19 21:23:50 [Thread-6] DEBUG serverLogger - received message [{"command":"LOCK_ALLOWED","username":"wenyizhao","secret":"s_b"}] from [/127.0.0.1:52343]
+2018-04-19 21:23:50 [Thread-6] INFO  serverLogger - Lock allowed is received from /127.0.0.1:52343
+2018-04-19 21:23:50 [Thread-6] INFO  serverLogger - LOCK ALLOWEDs from all servers are received, send LOCK_ALLOW to the server who sends LOCK_REQUEST
+2018-04-19 21:23:51 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"endrsb1qjo712efjkgvathugln","load":0,"hostname":"localhost","port":8006}
+2018-04-19 21:23:51 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"endrsb1qjo712efjkgvathugln","load":0,"hostname":"localhost","port":8006}] from [/127.0.0.1:52338]
+2018-04-19 21:23:51 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:23:51 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:23:51 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}
+2018-04-19 21:23:51 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}] from [/127.0.0.1:52338]
+2018-04-19 21:23:51 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:23:51 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:23:51 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"7eg652oi0vmd4h45visqaaa8oo","load":0,"hostname":"localhost","port":8005}
+2018-04-19 21:23:51 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"7eg652oi0vmd4h45visqaaa8oo","load":0,"hostname":"localhost","port":8005}] from [/127.0.0.1:52338]
+2018-04-19 21:23:51 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:23:51 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:23:53 [Thread-5] DEBUG serverLogger - receive data {"command":"LOCK_REQUEST","username":"nanangu","secret":"s_c"}
+2018-04-19 21:23:53 [Thread-5] DEBUG serverLogger - received message [{"command":"LOCK_REQUEST","username":"nanangu","secret":"s_c"}] from [/127.0.0.1:52338]
+2018-04-19 21:23:53 [Thread-5] INFO  serverLogger - Lock request received from /127.0.0.1:52338
+2018-04-19 21:23:53 [Thread-5] INFO  serverLogger - User 'nanangu' does not exist in this server
+2018-04-19 21:23:53 [Thread-5] INFO  serverLogger - More server found, check with other servers(exclude the sending server)
+2018-04-19 21:23:53 [Thread-6] DEBUG serverLogger - receive data {"command":"LOCK_ALLOWED","username":"nanangu","secret":"s_c"}
+2018-04-19 21:23:53 [Thread-6] DEBUG serverLogger - received message [{"command":"LOCK_ALLOWED","username":"nanangu","secret":"s_c"}] from [/127.0.0.1:52343]
+2018-04-19 21:23:53 [Thread-6] INFO  serverLogger - Lock allowed is received from /127.0.0.1:52343
+2018-04-19 21:23:53 [Thread-6] INFO  serverLogger - LOCK ALLOWEDs from all servers are received, send LOCK_ALLOW to the server who sends LOCK_REQUEST
+2018-04-19 21:23:53 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"qaaovq9q15pak0o7rnpmecf371","load":0,"hostname":"localhost","port":8004}
+2018-04-19 21:23:53 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"qaaovq9q15pak0o7rnpmecf371","load":0,"hostname":"localhost","port":8004}] from [/127.0.0.1:52338]
+2018-04-19 21:23:53 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:23:53 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:23:55 [Thread-6] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"2p39l4n5ui3q63517t9vej6et5","load":0,"hostname":"localhost","port":8003}
+2018-04-19 21:23:55 [Thread-6] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"2p39l4n5ui3q63517t9vej6et5","load":0,"hostname":"localhost","port":8003}] from [/127.0.0.1:52343]
+2018-04-19 21:23:55 [Thread-6] DEBUG serverLogger - Announcement received from /127.0.0.1:52343
+2018-04-19 21:23:55 [Thread-6] DEBUG serverLogger - Send announce to /127.0.0.1:52338
+2018-04-19 21:23:55 [Thread-6] DEBUG serverLogger - receive data {"command":"LOCK_REQUEST","username":"ningk","secret":"s_d"}
+2018-04-19 21:23:55 [Thread-6] DEBUG serverLogger - received message [{"command":"LOCK_REQUEST","username":"ningk","secret":"s_d"}] from [/127.0.0.1:52343]
+2018-04-19 21:23:55 [Thread-6] INFO  serverLogger - Lock request received from /127.0.0.1:52343
+2018-04-19 21:23:55 [Thread-6] INFO  serverLogger - User 'ningk' does not exist in this server
+2018-04-19 21:23:55 [Thread-6] INFO  serverLogger - More server found, check with other servers(exclude the sending server)
+2018-04-19 21:23:55 [Thread-5] DEBUG serverLogger - receive data {"command":"LOCK_ALLOWED","username":"ningk","secret":"s_d"}
+2018-04-19 21:23:55 [Thread-5] DEBUG serverLogger - received message [{"command":"LOCK_ALLOWED","username":"ningk","secret":"s_d"}] from [/127.0.0.1:52338]
+2018-04-19 21:23:55 [Thread-5] INFO  serverLogger - Lock allowed is received from /127.0.0.1:52338
+2018-04-19 21:23:55 [Thread-5] INFO  serverLogger - LOCK ALLOWEDs from all servers are received, send LOCK_ALLOW to the server who sends LOCK_REQUEST
+2018-04-19 21:23:56 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"endrsb1qjo712efjkgvathugln","load":0,"hostname":"localhost","port":8006}
+2018-04-19 21:23:56 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"endrsb1qjo712efjkgvathugln","load":0,"hostname":"localhost","port":8006}] from [/127.0.0.1:52338]
+2018-04-19 21:23:56 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:23:56 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:23:56 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}
+2018-04-19 21:23:56 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}] from [/127.0.0.1:52338]
+2018-04-19 21:23:56 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:23:56 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:23:56 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"7eg652oi0vmd4h45visqaaa8oo","load":0,"hostname":"localhost","port":8005}
+2018-04-19 21:23:56 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"7eg652oi0vmd4h45visqaaa8oo","load":0,"hostname":"localhost","port":8005}] from [/127.0.0.1:52338]
+2018-04-19 21:23:56 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:23:56 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:23:58 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"qaaovq9q15pak0o7rnpmecf371","load":0,"hostname":"localhost","port":8004}
+2018-04-19 21:23:58 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"qaaovq9q15pak0o7rnpmecf371","load":0,"hostname":"localhost","port":8004}] from [/127.0.0.1:52338]
+2018-04-19 21:23:58 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:23:58 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:24:00 [Thread-2] DEBUG serverLogger - incomming connection: /127.0.0.1:52369
+2018-04-19 21:24:00 [Thread-6] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"2p39l4n5ui3q63517t9vej6et5","load":0,"hostname":"localhost","port":8003}
+2018-04-19 21:24:00 [Thread-6] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"2p39l4n5ui3q63517t9vej6et5","load":0,"hostname":"localhost","port":8003}] from [/127.0.0.1:52343]
+2018-04-19 21:24:00 [Thread-6] DEBUG serverLogger - Announcement received from /127.0.0.1:52343
+2018-04-19 21:24:00 [Thread-6] DEBUG serverLogger - Send announce to /127.0.0.1:52338
+2018-04-19 21:24:00 [Thread-2] DEBUG serverLogger - incomming connection: /127.0.0.1:52370
+2018-04-19 21:24:00 [Thread-2] DEBUG serverLogger - incomming connection: /127.0.0.1:52371
+2018-04-19 21:24:00 [Thread-9] DEBUG serverLogger - receive data {"command":"LOGIN","username":"nanangu","secret":"s_c"}
+2018-04-19 21:24:00 [Thread-9] DEBUG serverLogger - received message [{"command":"LOGIN","username":"nanangu","secret":"s_c"}] from [/127.0.0.1:52370]
+2018-04-19 21:24:00 [Thread-9] INFO  serverLogger - login message is received from /127.0.0.1:52370
+2018-04-19 21:24:00 [Thread-9] INFO  serverLogger - Remote servers exist, will check with other servers for user 'nanangu' 
+2018-04-19 21:24:00 [Thread-6] DEBUG serverLogger - receive data {"command":"LOCK_ALLOWED","username":"nanangu","secret":"s_c"}
+2018-04-19 21:24:00 [Thread-6] DEBUG serverLogger - received message [{"command":"LOCK_ALLOWED","username":"nanangu","secret":"s_c"}] from [/127.0.0.1:52343]
+2018-04-19 21:24:00 [Thread-6] INFO  serverLogger - Lock allowed is received from /127.0.0.1:52343
+2018-04-19 21:24:00 [Thread-6] INFO  serverLogger - Although LOCK ALLOWED is received, not all servers reply, continue waiting future information...
+2018-04-19 21:24:00 [Thread-5] DEBUG serverLogger - receive data {"command":"LOCK_DENIED","username":"nanangu","secret":"s_c"}
+2018-04-19 21:24:00 [Thread-5] DEBUG serverLogger - received message [{"command":"LOCK_DENIED","username":"nanangu","secret":"s_c"}] from [/127.0.0.1:52338]
+2018-04-19 21:24:00 [Thread-5] INFO  serverLogger - Lock Denied message is recieved
+2018-04-19 21:24:00 [Thread-5] INFO  serverLogger - User nanangu login successfully.
+2018-04-19 21:24:00 [Thread-5] DEBUG serverLogger - send login succ message to client with info='login successfully as user 'nanangu''
+2018-04-19 21:24:00 [Thread-8] DEBUG serverLogger - receive data {"command":"LOGIN","username":"wenyizhao","secret":"s_b"}
+2018-04-19 21:24:00 [Thread-8] DEBUG serverLogger - received message [{"command":"LOGIN","username":"wenyizhao","secret":"s_b"}] from [/127.0.0.1:52369]
+2018-04-19 21:24:00 [Thread-8] INFO  serverLogger - login message is received from /127.0.0.1:52369
+2018-04-19 21:24:00 [Thread-8] INFO  serverLogger - Remote servers exist, will check with other servers for user 'wenyizhao' 
+2018-04-19 21:24:00 [Thread-5] DEBUG serverLogger - receive data {"command":"LOCK_DENIED","username":"wenyizhao","secret":"s_b"}
+2018-04-19 21:24:00 [Thread-6] DEBUG serverLogger - receive data {"command":"LOCK_ALLOWED","username":"wenyizhao","secret":"s_b"}
+2018-04-19 21:24:00 [Thread-6] DEBUG serverLogger - received message [{"command":"LOCK_ALLOWED","username":"wenyizhao","secret":"s_b"}] from [/127.0.0.1:52343]
+2018-04-19 21:24:00 [Thread-6] INFO  serverLogger - Lock allowed is received from /127.0.0.1:52343
+2018-04-19 21:24:00 [Thread-6] INFO  serverLogger - Although LOCK ALLOWED is received, not all servers reply, continue waiting future information...
+2018-04-19 21:24:00 [Thread-5] DEBUG serverLogger - received message [{"command":"LOCK_DENIED","username":"wenyizhao","secret":"s_b"}] from [/127.0.0.1:52338]
+2018-04-19 21:24:00 [Thread-5] INFO  serverLogger - Lock Denied message is recieved
+2018-04-19 21:24:00 [Thread-5] INFO  serverLogger - User wenyizhao login successfully.
+2018-04-19 21:24:00 [Thread-5] DEBUG serverLogger - send login succ message to client with info='login successfully as user 'wenyizhao''
+2018-04-19 21:24:00 [Thread-5] INFO  serverLogger - Redirection is triggered, redirect user to server 7eg652oi0vmd4h45visqaaa8oo
+2018-04-19 21:24:00 [Thread-5] INFO  serverLogger -  user 'wenyizhao' needs redirect
+2018-04-19 21:24:00 [Thread-5] INFO  serverLogger - closing connection /127.0.0.1:52369
+2018-04-19 21:24:00 [Thread-10] DEBUG serverLogger - receive data {"command":"LOGIN","username":"yirupan","secret":"s_a"}
+2018-04-19 21:24:05 [Thread-6] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"2p39l4n5ui3q63517t9vej6et5","load":0,"hostname":"localhost","port":8003}
+2018-04-19 21:24:06 [Thread-8] DEBUG serverLogger - connection closed to /127.0.0.1:52369
+2018-04-19 21:24:06 [Thread-5] INFO  serverLogger - Remove connection /127.0.0.1:52369 from list
+2018-04-19 21:24:06 [Thread-5] DEBUG serverLogger - receive data {"command":"LOCK_REQUEST","username":"ningk","secret":"s_d"}
+2018-04-19 21:24:06 [Thread-5] DEBUG serverLogger - received message [{"command":"LOCK_REQUEST","username":"ningk","secret":"s_d"}] from [/127.0.0.1:52338]
+2018-04-19 21:24:06 [Thread-5] INFO  serverLogger - Lock request received from /127.0.0.1:52338
+2018-04-19 21:24:06 [Thread-5] INFO  serverLogger - User 'ningk' does not exist in this server
+2018-04-19 21:24:06 [Thread-5] INFO  serverLogger - More server found, check with other servers(exclude the sending server)
+2018-04-19 21:24:06 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"endrsb1qjo712efjkgvathugln","load":0,"hostname":"localhost","port":8006}
+2018-04-19 21:24:06 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"endrsb1qjo712efjkgvathugln","load":0,"hostname":"localhost","port":8006}] from [/127.0.0.1:52338]
+2018-04-19 21:24:06 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:24:06 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:24:06 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}
+2018-04-19 21:24:06 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}] from [/127.0.0.1:52338]
+2018-04-19 21:24:06 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:24:06 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:24:06 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"7eg652oi0vmd4h45visqaaa8oo","load":0,"hostname":"localhost","port":8005}
+2018-04-19 21:24:06 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"7eg652oi0vmd4h45visqaaa8oo","load":0,"hostname":"localhost","port":8005}] from [/127.0.0.1:52338]
+2018-04-19 21:24:06 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:24:06 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:24:06 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"qaaovq9q15pak0o7rnpmecf371","load":0,"hostname":"localhost","port":8004}
+2018-04-19 21:24:06 [Thread-6] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"2p39l4n5ui3q63517t9vej6et5","load":0,"hostname":"localhost","port":8003}] from [/127.0.0.1:52343]
+2018-04-19 21:24:06 [Thread-6] DEBUG serverLogger - Announcement received from /127.0.0.1:52343
+2018-04-19 21:24:06 [Thread-6] DEBUG serverLogger - Send announce to /127.0.0.1:52338
+2018-04-19 21:24:06 [Thread-6] DEBUG serverLogger - receive data {"command":"LOCK_DENIED","username":"ningk","secret":"s_d"}
+2018-04-19 21:24:06 [Thread-10] DEBUG serverLogger - received message [{"command":"LOGIN","username":"yirupan","secret":"s_a"}] from [/127.0.0.1:52371]
+2018-04-19 21:24:06 [Thread-10] INFO  serverLogger - login message is received from /127.0.0.1:52371
+2018-04-19 21:24:06 [Thread-10] DEBUG serverLogger - send login succ message to client with info='login successfully as user 'yirupan ''
+2018-04-19 21:24:06 [Thread-10] INFO  serverLogger - Redirection is triggered, redirect user to server 7eg652oi0vmd4h45visqaaa8oo
+2018-04-19 21:24:06 [Thread-10] INFO  serverLogger -  user 'yirupan' needs redirect
+2018-04-19 21:24:06 [Thread-10] INFO  serverLogger - closing connection /127.0.0.1:52371
+2018-04-19 21:24:06 [Thread-10] INFO  serverLogger - Remove connection /127.0.0.1:52371 from list
+2018-04-19 21:24:06 [Thread-6] DEBUG serverLogger - received message [{"command":"LOCK_DENIED","username":"ningk","secret":"s_d"}] from [/127.0.0.1:52343]
+2018-04-19 21:24:06 [Thread-10] ERROR serverLogger - connection /127.0.0.1:52371 closed with exception: java.io.IOException: Stream closed
+2018-04-19 21:24:06 [Thread-6] INFO  serverLogger - Lock Denied message is recieved
+2018-04-19 21:24:06 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"qaaovq9q15pak0o7rnpmecf371","load":0,"hostname":"localhost","port":8004}] from [/127.0.0.1:52338]
+2018-04-19 21:24:06 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:24:06 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:24:06 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"endrsb1qjo712efjkgvathugln","load":0,"hostname":"localhost","port":8006}
+2018-04-19 21:24:06 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"endrsb1qjo712efjkgvathugln","load":0,"hostname":"localhost","port":8006}] from [/127.0.0.1:52338]
+2018-04-19 21:24:06 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:24:06 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:24:06 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}
+2018-04-19 21:24:06 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}] from [/127.0.0.1:52338]
+2018-04-19 21:24:06 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:24:06 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:24:06 [Thread-10] INFO  serverLogger - Remove connection /127.0.0.1:52371 from list
+2018-04-19 21:24:07 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"7eg652oi0vmd4h45visqaaa8oo","load":1,"hostname":"localhost","port":8005}
+2018-04-19 21:24:07 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"7eg652oi0vmd4h45visqaaa8oo","load":1,"hostname":"localhost","port":8005}] from [/127.0.0.1:52338]
+2018-04-19 21:24:07 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:24:07 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:24:08 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"qaaovq9q15pak0o7rnpmecf371","load":1,"hostname":"localhost","port":8004}
+2018-04-19 21:24:08 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"qaaovq9q15pak0o7rnpmecf371","load":1,"hostname":"localhost","port":8004}] from [/127.0.0.1:52338]
+2018-04-19 21:24:08 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:24:08 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:24:10 [Thread-6] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"2p39l4n5ui3q63517t9vej6et5","load":0,"hostname":"localhost","port":8003}
+2018-04-19 21:24:10 [Thread-6] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"2p39l4n5ui3q63517t9vej6et5","load":0,"hostname":"localhost","port":8003}] from [/127.0.0.1:52343]
+2018-04-19 21:24:10 [Thread-6] DEBUG serverLogger - Announcement received from /127.0.0.1:52343
+2018-04-19 21:24:10 [Thread-6] DEBUG serverLogger - Send announce to /127.0.0.1:52338
+2018-04-19 21:24:11 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"endrsb1qjo712efjkgvathugln","load":0,"hostname":"localhost","port":8006}
+2018-04-19 21:24:11 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"endrsb1qjo712efjkgvathugln","load":0,"hostname":"localhost","port":8006}] from [/127.0.0.1:52338]
+2018-04-19 21:24:11 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:24:11 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:24:11 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}
+2018-04-19 21:24:11 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}] from [/127.0.0.1:52338]
+2018-04-19 21:24:11 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:24:11 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:24:11 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"7eg652oi0vmd4h45visqaaa8oo","load":1,"hostname":"localhost","port":8005}
+2018-04-19 21:24:11 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"7eg652oi0vmd4h45visqaaa8oo","load":1,"hostname":"localhost","port":8005}] from [/127.0.0.1:52338]
+2018-04-19 21:24:11 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:24:11 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:24:13 [Thread-5] DEBUG serverLogger - receive data {"command":"LOCK_REQUEST","username":"yirupan","secret":"s_a"}
+2018-04-19 21:24:13 [Thread-5] DEBUG serverLogger - received message [{"command":"LOCK_REQUEST","username":"yirupan","secret":"s_a"}] from [/127.0.0.1:52338]
+2018-04-19 21:24:13 [Thread-5] INFO  serverLogger - Lock request received from /127.0.0.1:52338
+2018-04-19 21:24:13 [Thread-5] INFO  serverLogger - User exists in this server, reply lock denied (user found) request with secret in this server
+2018-04-19 21:24:13 [Thread-5] DEBUG serverLogger - receive data {"command":"LOCK_REQUEST","username":"yirupan","secret":"s_a"}
+2018-04-19 21:24:13 [Thread-5] DEBUG serverLogger - received message [{"command":"LOCK_REQUEST","username":"yirupan","secret":"s_a"}] from [/127.0.0.1:52338]
+2018-04-19 21:24:13 [Thread-5] INFO  serverLogger - Lock request received from /127.0.0.1:52338
+2018-04-19 21:24:13 [Thread-5] INFO  serverLogger - User exists in this server, reply lock denied (user found) request with secret in this server
+2018-04-19 21:24:13 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"qaaovq9q15pak0o7rnpmecf371","load":1,"hostname":"localhost","port":8004}
+2018-04-19 21:24:13 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"qaaovq9q15pak0o7rnpmecf371","load":1,"hostname":"localhost","port":8004}] from [/127.0.0.1:52338]
+2018-04-19 21:24:13 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:24:13 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:24:15 [Thread-6] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"2p39l4n5ui3q63517t9vej6et5","load":0,"hostname":"localhost","port":8003}
+2018-04-19 21:24:15 [Thread-6] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"2p39l4n5ui3q63517t9vej6et5","load":0,"hostname":"localhost","port":8003}] from [/127.0.0.1:52343]
+2018-04-19 21:24:15 [Thread-6] DEBUG serverLogger - Announcement received from /127.0.0.1:52343
+2018-04-19 21:24:15 [Thread-6] DEBUG serverLogger - Send announce to /127.0.0.1:52338
+2018-04-19 21:24:16 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"endrsb1qjo712efjkgvathugln","load":1,"hostname":"localhost","port":8006}
+2018-04-19 21:24:16 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"endrsb1qjo712efjkgvathugln","load":1,"hostname":"localhost","port":8006}] from [/127.0.0.1:52338]
+2018-04-19 21:24:16 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:24:16 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:24:16 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}
+2018-04-19 21:24:16 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}] from [/127.0.0.1:52338]
+2018-04-19 21:24:16 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:24:16 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:24:16 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"7eg652oi0vmd4h45visqaaa8oo","load":1,"hostname":"localhost","port":8005}
+2018-04-19 21:24:16 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"7eg652oi0vmd4h45visqaaa8oo","load":1,"hostname":"localhost","port":8005}] from [/127.0.0.1:52338]
+2018-04-19 21:24:16 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:24:16 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:24:18 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"qaaovq9q15pak0o7rnpmecf371","load":1,"hostname":"localhost","port":8004}
+2018-04-19 21:24:18 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"qaaovq9q15pak0o7rnpmecf371","load":1,"hostname":"localhost","port":8004}] from [/127.0.0.1:52338]
+2018-04-19 21:24:18 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:24:18 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:24:20 [Thread-6] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"2p39l4n5ui3q63517t9vej6et5","load":0,"hostname":"localhost","port":8003}
+2018-04-19 21:24:20 [Thread-6] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"2p39l4n5ui3q63517t9vej6et5","load":0,"hostname":"localhost","port":8003}] from [/127.0.0.1:52343]
+2018-04-19 21:24:20 [Thread-6] DEBUG serverLogger - Announcement received from /127.0.0.1:52343
+2018-04-19 21:24:20 [Thread-6] DEBUG serverLogger - Send announce to /127.0.0.1:52338
+2018-04-19 21:24:21 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"endrsb1qjo712efjkgvathugln","load":1,"hostname":"localhost","port":8006}
+2018-04-19 21:24:21 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"endrsb1qjo712efjkgvathugln","load":1,"hostname":"localhost","port":8006}] from [/127.0.0.1:52338]
+2018-04-19 21:24:21 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:24:21 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:24:21 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}
+2018-04-19 21:24:21 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}] from [/127.0.0.1:52338]
+2018-04-19 21:24:21 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:24:21 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:24:21 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"7eg652oi0vmd4h45visqaaa8oo","load":1,"hostname":"localhost","port":8005}
+2018-04-19 21:24:21 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"7eg652oi0vmd4h45visqaaa8oo","load":1,"hostname":"localhost","port":8005}] from [/127.0.0.1:52338]
+2018-04-19 21:24:21 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:24:21 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:24:23 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"qaaovq9q15pak0o7rnpmecf371","load":1,"hostname":"localhost","port":8004}
+2018-04-19 21:24:23 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"qaaovq9q15pak0o7rnpmecf371","load":1,"hostname":"localhost","port":8004}] from [/127.0.0.1:52338]
+2018-04-19 21:24:23 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:24:23 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:24:25 [Thread-6] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"2p39l4n5ui3q63517t9vej6et5","load":0,"hostname":"localhost","port":8003}
+2018-04-19 21:24:25 [Thread-6] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"2p39l4n5ui3q63517t9vej6et5","load":0,"hostname":"localhost","port":8003}] from [/127.0.0.1:52343]
+2018-04-19 21:24:25 [Thread-6] DEBUG serverLogger - Announcement received from /127.0.0.1:52343
+2018-04-19 21:24:25 [Thread-6] DEBUG serverLogger - Send announce to /127.0.0.1:52338
+2018-04-19 21:24:26 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"endrsb1qjo712efjkgvathugln","load":1,"hostname":"localhost","port":8006}
+2018-04-19 21:24:26 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"endrsb1qjo712efjkgvathugln","load":1,"hostname":"localhost","port":8006}] from [/127.0.0.1:52338]
+2018-04-19 21:24:26 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:24:26 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:24:26 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}
+2018-04-19 21:24:26 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}] from [/127.0.0.1:52338]
+2018-04-19 21:24:26 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:24:26 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:24:26 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"7eg652oi0vmd4h45visqaaa8oo","load":1,"hostname":"localhost","port":8005}
+2018-04-19 21:24:26 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"7eg652oi0vmd4h45visqaaa8oo","load":1,"hostname":"localhost","port":8005}] from [/127.0.0.1:52338]
+2018-04-19 21:24:26 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:24:26 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:24:28 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"qaaovq9q15pak0o7rnpmecf371","load":1,"hostname":"localhost","port":8004}
+2018-04-19 21:24:28 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"qaaovq9q15pak0o7rnpmecf371","load":1,"hostname":"localhost","port":8004}] from [/127.0.0.1:52338]
+2018-04-19 21:24:28 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:24:28 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:24:30 [Thread-6] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"2p39l4n5ui3q63517t9vej6et5","load":0,"hostname":"localhost","port":8003}
+2018-04-19 21:24:30 [Thread-6] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"2p39l4n5ui3q63517t9vej6et5","load":0,"hostname":"localhost","port":8003}] from [/127.0.0.1:52343]
+2018-04-19 21:24:30 [Thread-6] DEBUG serverLogger - Announcement received from /127.0.0.1:52343
+2018-04-19 21:24:30 [Thread-6] DEBUG serverLogger - Send announce to /127.0.0.1:52338
+2018-04-19 21:24:31 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"endrsb1qjo712efjkgvathugln","load":1,"hostname":"localhost","port":8006}
+2018-04-19 21:24:31 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"endrsb1qjo712efjkgvathugln","load":1,"hostname":"localhost","port":8006}] from [/127.0.0.1:52338]
+2018-04-19 21:24:31 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:24:31 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:24:31 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}
+2018-04-19 21:24:31 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}] from [/127.0.0.1:52338]
+2018-04-19 21:24:31 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:24:31 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:24:31 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"7eg652oi0vmd4h45visqaaa8oo","load":1,"hostname":"localhost","port":8005}
+2018-04-19 21:24:31 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"7eg652oi0vmd4h45visqaaa8oo","load":1,"hostname":"localhost","port":8005}] from [/127.0.0.1:52338]
+2018-04-19 21:24:31 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:24:31 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:24:33 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"qaaovq9q15pak0o7rnpmecf371","load":1,"hostname":"localhost","port":8004}
+2018-04-19 21:24:33 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"qaaovq9q15pak0o7rnpmecf371","load":1,"hostname":"localhost","port":8004}] from [/127.0.0.1:52338]
+2018-04-19 21:24:33 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:24:33 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:24:35 [Thread-6] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"2p39l4n5ui3q63517t9vej6et5","load":0,"hostname":"localhost","port":8003}
+2018-04-19 21:24:35 [Thread-6] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"2p39l4n5ui3q63517t9vej6et5","load":0,"hostname":"localhost","port":8003}] from [/127.0.0.1:52343]
+2018-04-19 21:24:35 [Thread-6] DEBUG serverLogger - Announcement received from /127.0.0.1:52343
+2018-04-19 21:24:35 [Thread-6] DEBUG serverLogger - Send announce to /127.0.0.1:52338
+2018-04-19 21:24:36 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"endrsb1qjo712efjkgvathugln","load":1,"hostname":"localhost","port":8006}
+2018-04-19 21:24:36 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"endrsb1qjo712efjkgvathugln","load":1,"hostname":"localhost","port":8006}] from [/127.0.0.1:52338]
+2018-04-19 21:24:36 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:24:36 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:24:36 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}
+2018-04-19 21:24:36 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}] from [/127.0.0.1:52338]
+2018-04-19 21:24:36 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:24:36 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:24:36 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"7eg652oi0vmd4h45visqaaa8oo","load":1,"hostname":"localhost","port":8005}
+2018-04-19 21:24:36 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"7eg652oi0vmd4h45visqaaa8oo","load":1,"hostname":"localhost","port":8005}] from [/127.0.0.1:52338]
+2018-04-19 21:24:36 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:24:36 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:24:38 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"qaaovq9q15pak0o7rnpmecf371","load":1,"hostname":"localhost","port":8004}
+2018-04-19 21:24:38 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"qaaovq9q15pak0o7rnpmecf371","load":1,"hostname":"localhost","port":8004}] from [/127.0.0.1:52338]
+2018-04-19 21:24:38 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:24:38 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:24:40 [Thread-6] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"2p39l4n5ui3q63517t9vej6et5","load":0,"hostname":"localhost","port":8003}
+2018-04-19 21:24:40 [Thread-6] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"2p39l4n5ui3q63517t9vej6et5","load":0,"hostname":"localhost","port":8003}] from [/127.0.0.1:52343]
+2018-04-19 21:24:40 [Thread-6] DEBUG serverLogger - Announcement received from /127.0.0.1:52343
+2018-04-19 21:24:40 [Thread-6] DEBUG serverLogger - Send announce to /127.0.0.1:52338
+2018-04-19 21:24:41 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"endrsb1qjo712efjkgvathugln","load":1,"hostname":"localhost","port":8006}
+2018-04-19 21:24:41 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"endrsb1qjo712efjkgvathugln","load":1,"hostname":"localhost","port":8006}] from [/127.0.0.1:52338]
+2018-04-19 21:24:41 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:24:41 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:24:41 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}
+2018-04-19 21:24:41 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}] from [/127.0.0.1:52338]
+2018-04-19 21:24:41 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:24:41 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:24:41 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"7eg652oi0vmd4h45visqaaa8oo","load":1,"hostname":"localhost","port":8005}
+2018-04-19 21:24:41 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"7eg652oi0vmd4h45visqaaa8oo","load":1,"hostname":"localhost","port":8005}] from [/127.0.0.1:52338]
+2018-04-19 21:24:41 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:24:41 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:24:43 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"qaaovq9q15pak0o7rnpmecf371","load":1,"hostname":"localhost","port":8004}
+2018-04-19 21:24:43 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"qaaovq9q15pak0o7rnpmecf371","load":1,"hostname":"localhost","port":8004}] from [/127.0.0.1:52338]
+2018-04-19 21:24:43 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:24:43 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:24:45 [Thread-6] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"2p39l4n5ui3q63517t9vej6et5","load":0,"hostname":"localhost","port":8003}
+2018-04-19 21:24:45 [Thread-6] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"2p39l4n5ui3q63517t9vej6et5","load":0,"hostname":"localhost","port":8003}] from [/127.0.0.1:52343]
+2018-04-19 21:24:45 [Thread-6] DEBUG serverLogger - Announcement received from /127.0.0.1:52343
+2018-04-19 21:24:45 [Thread-6] DEBUG serverLogger - Send announce to /127.0.0.1:52338
+2018-04-19 21:24:46 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"endrsb1qjo712efjkgvathugln","load":1,"hostname":"localhost","port":8006}
+2018-04-19 21:24:46 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"endrsb1qjo712efjkgvathugln","load":1,"hostname":"localhost","port":8006}] from [/127.0.0.1:52338]
+2018-04-19 21:24:46 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:24:46 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:24:46 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}
+2018-04-19 21:24:46 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}] from [/127.0.0.1:52338]
+2018-04-19 21:24:46 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:24:46 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:24:46 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"7eg652oi0vmd4h45visqaaa8oo","load":1,"hostname":"localhost","port":8005}
+2018-04-19 21:24:46 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"7eg652oi0vmd4h45visqaaa8oo","load":1,"hostname":"localhost","port":8005}] from [/127.0.0.1:52338]
+2018-04-19 21:24:46 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:24:46 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:24:48 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"qaaovq9q15pak0o7rnpmecf371","load":1,"hostname":"localhost","port":8004}
+2018-04-19 21:24:48 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"qaaovq9q15pak0o7rnpmecf371","load":1,"hostname":"localhost","port":8004}] from [/127.0.0.1:52338]
+2018-04-19 21:24:48 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:24:48 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:24:50 [Thread-6] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"2p39l4n5ui3q63517t9vej6et5","load":0,"hostname":"localhost","port":8003}
+2018-04-19 21:24:50 [Thread-6] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"2p39l4n5ui3q63517t9vej6et5","load":0,"hostname":"localhost","port":8003}] from [/127.0.0.1:52343]
+2018-04-19 21:24:50 [Thread-6] DEBUG serverLogger - Announcement received from /127.0.0.1:52343
+2018-04-19 21:24:50 [Thread-6] DEBUG serverLogger - Send announce to /127.0.0.1:52338
+2018-04-19 21:24:51 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"endrsb1qjo712efjkgvathugln","load":1,"hostname":"localhost","port":8006}
+2018-04-19 21:24:51 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"endrsb1qjo712efjkgvathugln","load":1,"hostname":"localhost","port":8006}] from [/127.0.0.1:52338]
+2018-04-19 21:24:51 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:24:51 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:24:51 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}
+2018-04-19 21:24:51 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}] from [/127.0.0.1:52338]
+2018-04-19 21:24:51 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:24:51 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:24:51 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"7eg652oi0vmd4h45visqaaa8oo","load":1,"hostname":"localhost","port":8005}
+2018-04-19 21:24:51 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"7eg652oi0vmd4h45visqaaa8oo","load":1,"hostname":"localhost","port":8005}] from [/127.0.0.1:52338]
+2018-04-19 21:24:51 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:24:51 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:24:53 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"qaaovq9q15pak0o7rnpmecf371","load":1,"hostname":"localhost","port":8004}
+2018-04-19 21:24:53 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"qaaovq9q15pak0o7rnpmecf371","load":1,"hostname":"localhost","port":8004}] from [/127.0.0.1:52338]
+2018-04-19 21:24:53 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:24:53 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:24:55 [Thread-6] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"2p39l4n5ui3q63517t9vej6et5","load":0,"hostname":"localhost","port":8003}
+2018-04-19 21:24:55 [Thread-6] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"2p39l4n5ui3q63517t9vej6et5","load":0,"hostname":"localhost","port":8003}] from [/127.0.0.1:52343]
+2018-04-19 21:24:55 [Thread-6] DEBUG serverLogger - Announcement received from /127.0.0.1:52343
+2018-04-19 21:24:55 [Thread-6] DEBUG serverLogger - Send announce to /127.0.0.1:52338
+2018-04-19 21:24:56 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"endrsb1qjo712efjkgvathugln","load":1,"hostname":"localhost","port":8006}
+2018-04-19 21:24:56 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"endrsb1qjo712efjkgvathugln","load":1,"hostname":"localhost","port":8006}] from [/127.0.0.1:52338]
+2018-04-19 21:24:56 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:24:56 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:24:56 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}
+2018-04-19 21:24:56 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}] from [/127.0.0.1:52338]
+2018-04-19 21:24:56 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:24:56 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:24:56 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"7eg652oi0vmd4h45visqaaa8oo","load":1,"hostname":"localhost","port":8005}
+2018-04-19 21:24:56 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"7eg652oi0vmd4h45visqaaa8oo","load":1,"hostname":"localhost","port":8005}] from [/127.0.0.1:52338]
+2018-04-19 21:24:56 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:24:56 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:24:58 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"qaaovq9q15pak0o7rnpmecf371","load":1,"hostname":"localhost","port":8004}
+2018-04-19 21:24:58 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"qaaovq9q15pak0o7rnpmecf371","load":1,"hostname":"localhost","port":8004}] from [/127.0.0.1:52338]
+2018-04-19 21:24:58 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:24:58 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:25:00 [Thread-6] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"2p39l4n5ui3q63517t9vej6et5","load":0,"hostname":"localhost","port":8003}
+2018-04-19 21:25:00 [Thread-6] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"2p39l4n5ui3q63517t9vej6et5","load":0,"hostname":"localhost","port":8003}] from [/127.0.0.1:52343]
+2018-04-19 21:25:00 [Thread-6] DEBUG serverLogger - Announcement received from /127.0.0.1:52343
+2018-04-19 21:25:00 [Thread-6] DEBUG serverLogger - Send announce to /127.0.0.1:52338
+2018-04-19 21:25:01 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"endrsb1qjo712efjkgvathugln","load":1,"hostname":"localhost","port":8006}
+2018-04-19 21:25:01 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"endrsb1qjo712efjkgvathugln","load":1,"hostname":"localhost","port":8006}] from [/127.0.0.1:52338]
+2018-04-19 21:25:01 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:25:01 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:25:01 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}
+2018-04-19 21:25:01 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}] from [/127.0.0.1:52338]
+2018-04-19 21:25:01 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:25:01 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:25:01 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"7eg652oi0vmd4h45visqaaa8oo","load":1,"hostname":"localhost","port":8005}
+2018-04-19 21:25:01 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"7eg652oi0vmd4h45visqaaa8oo","load":1,"hostname":"localhost","port":8005}] from [/127.0.0.1:52338]
+2018-04-19 21:25:01 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:25:01 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:25:03 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"qaaovq9q15pak0o7rnpmecf371","load":1,"hostname":"localhost","port":8004}
+2018-04-19 21:25:03 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"qaaovq9q15pak0o7rnpmecf371","load":1,"hostname":"localhost","port":8004}] from [/127.0.0.1:52338]
+2018-04-19 21:25:03 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:25:03 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:25:05 [Thread-6] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"2p39l4n5ui3q63517t9vej6et5","load":0,"hostname":"localhost","port":8003}
+2018-04-19 21:25:05 [Thread-6] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"2p39l4n5ui3q63517t9vej6et5","load":0,"hostname":"localhost","port":8003}] from [/127.0.0.1:52343]
+2018-04-19 21:25:05 [Thread-6] DEBUG serverLogger - Announcement received from /127.0.0.1:52343
+2018-04-19 21:25:05 [Thread-6] DEBUG serverLogger - Send announce to /127.0.0.1:52338
+2018-04-19 21:25:06 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"endrsb1qjo712efjkgvathugln","load":1,"hostname":"localhost","port":8006}
+2018-04-19 21:25:06 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"endrsb1qjo712efjkgvathugln","load":1,"hostname":"localhost","port":8006}] from [/127.0.0.1:52338]
+2018-04-19 21:25:06 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:25:06 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:25:06 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}
+2018-04-19 21:25:06 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}] from [/127.0.0.1:52338]
+2018-04-19 21:25:06 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:25:06 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:25:06 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"7eg652oi0vmd4h45visqaaa8oo","load":1,"hostname":"localhost","port":8005}
+2018-04-19 21:25:06 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"7eg652oi0vmd4h45visqaaa8oo","load":1,"hostname":"localhost","port":8005}] from [/127.0.0.1:52338]
+2018-04-19 21:25:06 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:25:06 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:25:08 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"qaaovq9q15pak0o7rnpmecf371","load":1,"hostname":"localhost","port":8004}
+2018-04-19 21:25:08 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"qaaovq9q15pak0o7rnpmecf371","load":1,"hostname":"localhost","port":8004}] from [/127.0.0.1:52338]
+2018-04-19 21:25:08 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:25:08 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:25:10 [Thread-6] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"2p39l4n5ui3q63517t9vej6et5","load":0,"hostname":"localhost","port":8003}
+2018-04-19 21:25:10 [Thread-6] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"2p39l4n5ui3q63517t9vej6et5","load":0,"hostname":"localhost","port":8003}] from [/127.0.0.1:52343]
+2018-04-19 21:25:10 [Thread-6] DEBUG serverLogger - Announcement received from /127.0.0.1:52343
+2018-04-19 21:25:10 [Thread-6] DEBUG serverLogger - Send announce to /127.0.0.1:52338
+2018-04-19 21:25:11 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"endrsb1qjo712efjkgvathugln","load":1,"hostname":"localhost","port":8006}
+2018-04-19 21:25:11 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"endrsb1qjo712efjkgvathugln","load":1,"hostname":"localhost","port":8006}] from [/127.0.0.1:52338]
+2018-04-19 21:25:11 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:25:11 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:25:11 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}
+2018-04-19 21:25:11 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}] from [/127.0.0.1:52338]
+2018-04-19 21:25:11 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:25:11 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:25:11 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"7eg652oi0vmd4h45visqaaa8oo","load":1,"hostname":"localhost","port":8005}
+2018-04-19 21:25:11 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"7eg652oi0vmd4h45visqaaa8oo","load":1,"hostname":"localhost","port":8005}] from [/127.0.0.1:52338]
+2018-04-19 21:25:11 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:25:11 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:25:13 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"qaaovq9q15pak0o7rnpmecf371","load":1,"hostname":"localhost","port":8004}
+2018-04-19 21:25:13 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"qaaovq9q15pak0o7rnpmecf371","load":1,"hostname":"localhost","port":8004}] from [/127.0.0.1:52338]
+2018-04-19 21:25:13 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:25:13 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:25:15 [Thread-6] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"2p39l4n5ui3q63517t9vej6et5","load":0,"hostname":"localhost","port":8003}
+2018-04-19 21:25:15 [Thread-6] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"2p39l4n5ui3q63517t9vej6et5","load":0,"hostname":"localhost","port":8003}] from [/127.0.0.1:52343]
+2018-04-19 21:25:15 [Thread-6] DEBUG serverLogger - Announcement received from /127.0.0.1:52343
+2018-04-19 21:25:15 [Thread-6] DEBUG serverLogger - Send announce to /127.0.0.1:52338
+2018-04-19 21:25:16 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"endrsb1qjo712efjkgvathugln","load":1,"hostname":"localhost","port":8006}
+2018-04-19 21:25:16 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"endrsb1qjo712efjkgvathugln","load":1,"hostname":"localhost","port":8006}] from [/127.0.0.1:52338]
+2018-04-19 21:25:16 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:25:16 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:25:16 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}
+2018-04-19 21:25:16 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}] from [/127.0.0.1:52338]
+2018-04-19 21:25:16 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:25:16 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:25:16 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"7eg652oi0vmd4h45visqaaa8oo","load":1,"hostname":"localhost","port":8005}
+2018-04-19 21:25:16 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"7eg652oi0vmd4h45visqaaa8oo","load":1,"hostname":"localhost","port":8005}] from [/127.0.0.1:52338]
+2018-04-19 21:25:16 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:25:16 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:25:18 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"qaaovq9q15pak0o7rnpmecf371","load":1,"hostname":"localhost","port":8004}
+2018-04-19 21:25:18 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"qaaovq9q15pak0o7rnpmecf371","load":1,"hostname":"localhost","port":8004}] from [/127.0.0.1:52338]
+2018-04-19 21:25:18 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:25:18 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:25:20 [Thread-6] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"2p39l4n5ui3q63517t9vej6et5","load":0,"hostname":"localhost","port":8003}
+2018-04-19 21:25:20 [Thread-6] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"2p39l4n5ui3q63517t9vej6et5","load":0,"hostname":"localhost","port":8003}] from [/127.0.0.1:52343]
+2018-04-19 21:25:20 [Thread-6] DEBUG serverLogger - Announcement received from /127.0.0.1:52343
+2018-04-19 21:25:20 [Thread-6] DEBUG serverLogger - Send announce to /127.0.0.1:52338
+2018-04-19 21:25:21 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"endrsb1qjo712efjkgvathugln","load":1,"hostname":"localhost","port":8006}
+2018-04-19 21:25:21 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"endrsb1qjo712efjkgvathugln","load":1,"hostname":"localhost","port":8006}] from [/127.0.0.1:52338]
+2018-04-19 21:25:21 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:25:21 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:25:21 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}
+2018-04-19 21:25:21 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}] from [/127.0.0.1:52338]
+2018-04-19 21:25:21 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:25:21 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:25:21 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"7eg652oi0vmd4h45visqaaa8oo","load":1,"hostname":"localhost","port":8005}
+2018-04-19 21:25:21 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"7eg652oi0vmd4h45visqaaa8oo","load":1,"hostname":"localhost","port":8005}] from [/127.0.0.1:52338]
+2018-04-19 21:25:21 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:25:21 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:25:23 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"qaaovq9q15pak0o7rnpmecf371","load":1,"hostname":"localhost","port":8004}
+2018-04-19 21:25:23 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"qaaovq9q15pak0o7rnpmecf371","load":1,"hostname":"localhost","port":8004}] from [/127.0.0.1:52338]
+2018-04-19 21:25:23 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:25:23 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:25:25 [Thread-6] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"2p39l4n5ui3q63517t9vej6et5","load":0,"hostname":"localhost","port":8003}
+2018-04-19 21:25:25 [Thread-6] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"2p39l4n5ui3q63517t9vej6et5","load":0,"hostname":"localhost","port":8003}] from [/127.0.0.1:52343]
+2018-04-19 21:25:25 [Thread-6] DEBUG serverLogger - Announcement received from /127.0.0.1:52343
+2018-04-19 21:25:25 [Thread-6] DEBUG serverLogger - Send announce to /127.0.0.1:52338
+2018-04-19 21:25:26 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"endrsb1qjo712efjkgvathugln","load":1,"hostname":"localhost","port":8006}
+2018-04-19 21:25:26 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"endrsb1qjo712efjkgvathugln","load":1,"hostname":"localhost","port":8006}] from [/127.0.0.1:52338]
+2018-04-19 21:25:26 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:25:26 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:25:26 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}
+2018-04-19 21:25:26 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}] from [/127.0.0.1:52338]
+2018-04-19 21:25:26 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:25:26 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:25:26 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"7eg652oi0vmd4h45visqaaa8oo","load":1,"hostname":"localhost","port":8005}
+2018-04-19 21:25:26 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"7eg652oi0vmd4h45visqaaa8oo","load":1,"hostname":"localhost","port":8005}] from [/127.0.0.1:52338]
+2018-04-19 21:25:26 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:25:26 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:25:28 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"qaaovq9q15pak0o7rnpmecf371","load":1,"hostname":"localhost","port":8004}
+2018-04-19 21:25:28 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"qaaovq9q15pak0o7rnpmecf371","load":1,"hostname":"localhost","port":8004}] from [/127.0.0.1:52338]
+2018-04-19 21:25:28 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:25:28 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:25:30 [Thread-6] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"2p39l4n5ui3q63517t9vej6et5","load":0,"hostname":"localhost","port":8003}
+2018-04-19 21:25:30 [Thread-6] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"2p39l4n5ui3q63517t9vej6et5","load":0,"hostname":"localhost","port":8003}] from [/127.0.0.1:52343]
+2018-04-19 21:25:30 [Thread-6] DEBUG serverLogger - Announcement received from /127.0.0.1:52343
+2018-04-19 21:25:30 [Thread-6] DEBUG serverLogger - Send announce to /127.0.0.1:52338
+2018-04-19 21:25:31 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"endrsb1qjo712efjkgvathugln","load":1,"hostname":"localhost","port":8006}
+2018-04-19 21:25:31 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"endrsb1qjo712efjkgvathugln","load":1,"hostname":"localhost","port":8006}] from [/127.0.0.1:52338]
+2018-04-19 21:25:31 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:25:31 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:25:31 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}
+2018-04-19 21:25:31 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}] from [/127.0.0.1:52338]
+2018-04-19 21:25:31 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:25:31 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:25:31 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"7eg652oi0vmd4h45visqaaa8oo","load":1,"hostname":"localhost","port":8005}
+2018-04-19 21:25:31 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"7eg652oi0vmd4h45visqaaa8oo","load":1,"hostname":"localhost","port":8005}] from [/127.0.0.1:52338]
+2018-04-19 21:25:31 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:25:31 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:25:33 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"qaaovq9q15pak0o7rnpmecf371","load":1,"hostname":"localhost","port":8004}
+2018-04-19 21:25:33 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"qaaovq9q15pak0o7rnpmecf371","load":1,"hostname":"localhost","port":8004}] from [/127.0.0.1:52338]
+2018-04-19 21:25:33 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:25:33 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:25:35 [Thread-6] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"2p39l4n5ui3q63517t9vej6et5","load":0,"hostname":"localhost","port":8003}
+2018-04-19 21:25:35 [Thread-6] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"2p39l4n5ui3q63517t9vej6et5","load":0,"hostname":"localhost","port":8003}] from [/127.0.0.1:52343]
+2018-04-19 21:25:35 [Thread-6] DEBUG serverLogger - Announcement received from /127.0.0.1:52343
+2018-04-19 21:25:35 [Thread-6] DEBUG serverLogger - Send announce to /127.0.0.1:52338
+2018-04-19 21:25:36 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"endrsb1qjo712efjkgvathugln","load":1,"hostname":"localhost","port":8006}
+2018-04-19 21:25:36 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"endrsb1qjo712efjkgvathugln","load":1,"hostname":"localhost","port":8006}] from [/127.0.0.1:52338]
+2018-04-19 21:25:36 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:25:36 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:25:36 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}
+2018-04-19 21:25:36 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}] from [/127.0.0.1:52338]
+2018-04-19 21:25:36 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:25:36 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:25:36 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"7eg652oi0vmd4h45visqaaa8oo","load":1,"hostname":"localhost","port":8005}
+2018-04-19 21:25:36 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"7eg652oi0vmd4h45visqaaa8oo","load":1,"hostname":"localhost","port":8005}] from [/127.0.0.1:52338]
+2018-04-19 21:25:36 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:25:36 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:25:38 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"qaaovq9q15pak0o7rnpmecf371","load":1,"hostname":"localhost","port":8004}
+2018-04-19 21:25:38 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"qaaovq9q15pak0o7rnpmecf371","load":1,"hostname":"localhost","port":8004}] from [/127.0.0.1:52338]
+2018-04-19 21:25:38 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:25:38 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:25:40 [Thread-6] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"2p39l4n5ui3q63517t9vej6et5","load":0,"hostname":"localhost","port":8003}
+2018-04-19 21:25:40 [Thread-6] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"2p39l4n5ui3q63517t9vej6et5","load":0,"hostname":"localhost","port":8003}] from [/127.0.0.1:52343]
+2018-04-19 21:25:40 [Thread-6] DEBUG serverLogger - Announcement received from /127.0.0.1:52343
+2018-04-19 21:25:40 [Thread-6] DEBUG serverLogger - Send announce to /127.0.0.1:52338
+2018-04-19 21:25:41 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"endrsb1qjo712efjkgvathugln","load":1,"hostname":"localhost","port":8006}
+2018-04-19 21:25:41 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"endrsb1qjo712efjkgvathugln","load":1,"hostname":"localhost","port":8006}] from [/127.0.0.1:52338]
+2018-04-19 21:25:41 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:25:41 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:25:41 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}
+2018-04-19 21:25:41 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}] from [/127.0.0.1:52338]
+2018-04-19 21:25:41 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:25:41 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:25:41 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"7eg652oi0vmd4h45visqaaa8oo","load":1,"hostname":"localhost","port":8005}
+2018-04-19 21:25:41 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"7eg652oi0vmd4h45visqaaa8oo","load":1,"hostname":"localhost","port":8005}] from [/127.0.0.1:52338]
+2018-04-19 21:25:41 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:25:41 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:25:43 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"qaaovq9q15pak0o7rnpmecf371","load":1,"hostname":"localhost","port":8004}
+2018-04-19 21:25:43 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"qaaovq9q15pak0o7rnpmecf371","load":1,"hostname":"localhost","port":8004}] from [/127.0.0.1:52338]
+2018-04-19 21:25:43 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:25:43 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:25:45 [Thread-6] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"2p39l4n5ui3q63517t9vej6et5","load":0,"hostname":"localhost","port":8003}
+2018-04-19 21:25:45 [Thread-6] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"2p39l4n5ui3q63517t9vej6et5","load":0,"hostname":"localhost","port":8003}] from [/127.0.0.1:52343]
+2018-04-19 21:25:45 [Thread-6] DEBUG serverLogger - Announcement received from /127.0.0.1:52343
+2018-04-19 21:25:45 [Thread-6] DEBUG serverLogger - Send announce to /127.0.0.1:52338
+2018-04-19 21:25:46 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"endrsb1qjo712efjkgvathugln","load":1,"hostname":"localhost","port":8006}
+2018-04-19 21:25:46 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"endrsb1qjo712efjkgvathugln","load":1,"hostname":"localhost","port":8006}] from [/127.0.0.1:52338]
+2018-04-19 21:25:46 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:25:46 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:25:46 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}
+2018-04-19 21:25:46 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}] from [/127.0.0.1:52338]
+2018-04-19 21:25:46 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:25:46 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:25:46 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"7eg652oi0vmd4h45visqaaa8oo","load":1,"hostname":"localhost","port":8005}
+2018-04-19 21:25:46 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"7eg652oi0vmd4h45visqaaa8oo","load":1,"hostname":"localhost","port":8005}] from [/127.0.0.1:52338]
+2018-04-19 21:25:46 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:25:46 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:25:48 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"qaaovq9q15pak0o7rnpmecf371","load":1,"hostname":"localhost","port":8004}
+2018-04-19 21:25:48 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"qaaovq9q15pak0o7rnpmecf371","load":1,"hostname":"localhost","port":8004}] from [/127.0.0.1:52338]
+2018-04-19 21:25:48 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:25:48 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:25:50 [Thread-6] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"2p39l4n5ui3q63517t9vej6et5","load":0,"hostname":"localhost","port":8003}
+2018-04-19 21:25:50 [Thread-6] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"2p39l4n5ui3q63517t9vej6et5","load":0,"hostname":"localhost","port":8003}] from [/127.0.0.1:52343]
+2018-04-19 21:25:50 [Thread-6] DEBUG serverLogger - Announcement received from /127.0.0.1:52343
+2018-04-19 21:25:50 [Thread-6] DEBUG serverLogger - Send announce to /127.0.0.1:52338
+2018-04-19 21:25:50 [Thread-5] DEBUG serverLogger - receive data {"command":"ACTIVITY_BROADCAST","activity":{"text":"1","authenticated_user":"ningk"}}
+2018-04-19 21:25:50 [Thread-5] DEBUG serverLogger - received message [{"command":"ACTIVITY_BROADCAST","activity":{"text":"1","authenticated_user":"ningk"}}] from [/127.0.0.1:52338]
+2018-04-19 21:25:50 [Thread-5] INFO  serverLogger - Activity broadcast message received from /127.0.0.1:52338
+2018-04-19 21:25:50 [Thread-5] INFO  serverLogger - Broadcast received activity message
+2018-04-19 21:25:51 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"endrsb1qjo712efjkgvathugln","load":1,"hostname":"localhost","port":8006}
+2018-04-19 21:25:51 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"endrsb1qjo712efjkgvathugln","load":1,"hostname":"localhost","port":8006}] from [/127.0.0.1:52338]
+2018-04-19 21:25:51 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:25:51 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:25:51 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}
+2018-04-19 21:25:51 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}] from [/127.0.0.1:52338]
+2018-04-19 21:25:51 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:25:51 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:25:51 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"7eg652oi0vmd4h45visqaaa8oo","load":1,"hostname":"localhost","port":8005}
+2018-04-19 21:25:51 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"7eg652oi0vmd4h45visqaaa8oo","load":1,"hostname":"localhost","port":8005}] from [/127.0.0.1:52338]
+2018-04-19 21:25:51 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:25:51 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:25:53 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"qaaovq9q15pak0o7rnpmecf371","load":1,"hostname":"localhost","port":8004}
+2018-04-19 21:25:53 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"qaaovq9q15pak0o7rnpmecf371","load":1,"hostname":"localhost","port":8004}] from [/127.0.0.1:52338]
+2018-04-19 21:25:53 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:25:53 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:25:55 [Thread-6] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"2p39l4n5ui3q63517t9vej6et5","load":0,"hostname":"localhost","port":8003}
+2018-04-19 21:25:55 [Thread-6] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"2p39l4n5ui3q63517t9vej6et5","load":0,"hostname":"localhost","port":8003}] from [/127.0.0.1:52343]
+2018-04-19 21:25:55 [Thread-6] DEBUG serverLogger - Announcement received from /127.0.0.1:52343
+2018-04-19 21:25:55 [Thread-6] DEBUG serverLogger - Send announce to /127.0.0.1:52338
+2018-04-19 21:25:56 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"endrsb1qjo712efjkgvathugln","load":1,"hostname":"localhost","port":8006}
+2018-04-19 21:25:56 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"endrsb1qjo712efjkgvathugln","load":1,"hostname":"localhost","port":8006}] from [/127.0.0.1:52338]
+2018-04-19 21:25:56 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:25:56 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:25:56 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}
+2018-04-19 21:25:56 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"s9g1tf1mg1clov0hok2oqggb3c","load":0,"hostname":"localhost","port":8002}] from [/127.0.0.1:52338]
+2018-04-19 21:25:56 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:25:56 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:25:56 [Thread-5] DEBUG serverLogger - receive data {"command":"SERVER_ANNOUNCE","id":"7eg652oi0vmd4h45visqaaa8oo","load":1,"hostname":"localhost","port":8005}
+2018-04-19 21:25:56 [Thread-5] DEBUG serverLogger - received message [{"command":"SERVER_ANNOUNCE","id":"7eg652oi0vmd4h45visqaaa8oo","load":1,"hostname":"localhost","port":8005}] from [/127.0.0.1:52338]
+2018-04-19 21:25:56 [Thread-5] DEBUG serverLogger - Announcement received from /127.0.0.1:52338
+2018-04-19 21:25:56 [Thread-5] DEBUG serverLogger - Send announce to /127.0.0.1:52343
+2018-04-19 21:25:58 [Thread-3] INFO  serverLogger - refresh ui thread ends

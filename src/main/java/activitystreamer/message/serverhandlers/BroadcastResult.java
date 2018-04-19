@@ -92,6 +92,15 @@ class BroadcastResult {
 					Control.log.info("User {} login successfully.", username);
 					loginRequest.getFrom().sendLoginSuccMsg(String.format("login successfully as user '%s'", username));
 					loginRequest.getFrom().setAuthed(true);
+
+					//check redirect
+					if(Control.getInstance().findRedirectServer()!=null){
+						String redirectServer = Control.getInstance().findRedirectServer();
+						Control.log.info("Redirection is triggered, redirect user to server {}",redirectServer);
+						Control.getInstance().doRedirect(loginRequest.getFrom(),redirectServer, username);
+						return true;
+					}
+
 				} else { // if it is a REGISTER request reply
 					Control.log.info("User '{}' exists in this system, register failed.", username);
 					lockRequest.getFrom().sendRegisterFailedMsg(username);

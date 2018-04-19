@@ -22,6 +22,7 @@ public class ClientSkeleton extends Thread {
 	private ClientTextFrame textFrame;
 	private Socket s = null;
 	private HashMap<MessageType, MessageHandler> handlerMap;
+	private boolean term ;
 
 	BufferedReader inreader;
 	BufferedWriter outwriter;
@@ -38,7 +39,7 @@ public class ClientSkeleton extends Thread {
 
 	public ClientSkeleton() {
 
-		// TODO initialise socket
+		term = false;
 
 		this.s = connectToServer(Settings.getRemoteHostname(), Settings.getRemotePort());
 		try {
@@ -116,15 +117,8 @@ public class ClientSkeleton extends Thread {
 
 
 	public void disconnect() {
-		// TODO close socket, close TextFrame
-		try {
-//			sendLogoutMsg();
-			s.close();
+			term = true;
 			if(textFrame!=null) textFrame.dispose();
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 	//client receive thread
@@ -132,7 +126,7 @@ public class ClientSkeleton extends Thread {
 		try {
 			String data;
 			boolean status = true;
-			while (status && (data = inreader.readLine()) != null) {
+			while (!term && status && (data = inreader.readLine()) != null) {
 				try {
 					log.debug("Receive data {}", data);
 					JsonParser parser = new JsonParser();

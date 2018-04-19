@@ -35,7 +35,6 @@ public class Control extends Thread {
 	public static Control getInstance() {
 		if (control == null) {
 			control = new Control();
-			control.initialHandlers();
 		}
 		return control;
 	}
@@ -56,6 +55,7 @@ public class Control extends Thread {
 		// initialize the request list for register and login
 		UserRegisterHandler.registerLockHashMap = new HashMap<>();
 		UserLoginHandler.enquiryRequestHashmap = new HashMap<>();
+		initialHandlers();
 
 		// connect to another remote server if remote host is provided, or just start listener to provide services
 		if (Settings.getRemoteHostname() != null) {

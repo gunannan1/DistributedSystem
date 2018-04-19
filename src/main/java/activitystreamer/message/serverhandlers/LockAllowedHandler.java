@@ -80,26 +80,9 @@ public class LockAllowedHandler extends MessageHandler {
 		if (!l.getFrom().isAuthedServer()) {
 			Control.log.info("LOCK ALLOWEDs from all servers are received, send REGISTER_SUCCESS to the client");
 			try {
-				if(loginRequest != null){
-					Control.log.info("User '{}' login failed, username does not exists.", username);
-					l.getFrom().sendLoginFailedMsg(String.format("No user with username '%s' exists in this system", username));
-					UserLoginHandler.enquiryRequestHashmap.remove(username);
-				}
-				// If it is a register request
-				if(lockRequest != null && l.getResult() == BroadcastResult.LOCK_STATUS.USER_NOT_FOUND){
-					control.addUser(u);
-					Control.log.info("User '{}' registered successfully.", username);
-					l.getFrom().sendRegisterSuccMsg(username);
-					UserRegisterHandler.registerLockHashMap.remove(username);
-				}else{
-					Control.log.info("User '{}' exists in this system, register failed.", username);
-					l.getFrom().sendRegisterFailedMsg(username);
-					UserRegisterHandler.registerLockHashMap.remove(username);
-				}
+				BroadcastResult.LOCK_STATUS searchStatus = l.getResult();
 
-				l.getFrom().closeCon();
-				control.connectionClosed(l.getFrom());
-				return true;
+				return BroadcastResult.processLock(searchStatus,loginRequest,lockRequest,u);
 			} catch (Exception e) {
 				Control.log.info("The client sending register request was disconnected");
 				return true; // do not close any connection as closing connection should be handled in other way

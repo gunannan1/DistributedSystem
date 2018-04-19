@@ -1,4 +1,5 @@
 import activitystreamer.message.Activity;
+import activitystreamer.server.ServerTextFrame;
 import com.google.gson.JsonObject;
 
 /**
@@ -12,11 +13,8 @@ public class test {
 
 	public static void main(String[] argv) {
 
-		JsonObject json = new JsonObject();
-		json.addProperty("command","ACTIVITY_MESSAGE");
-		Activity a = new Activity("hello");
-		json.add("activity",a.toJson());
-		System.out.print(json.toString());
+		ServerTextFrame s = new ServerTextFrame();
+		s.setLoadArea("<table class='table table-bordered'> <thead>%s</thead><tbody>%S</tbody></table><p>Update Time:%s</p>");
 
 	}
 

@@ -1,13 +1,16 @@
 package activitystreamer.server;
 
-import activitystreamer.client.ClientSkeleton;
 import activitystreamer.util.Settings;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.parser.JSONParser;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import javax.swing.text.Element;
+import javax.swing.text.html.HTML;
+import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 import java.awt.*;
@@ -15,6 +18,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 import java.net.Socket;
 
 
@@ -36,22 +40,22 @@ public class ServerTextFrame extends JFrame implements ActionListener {
 	// TODO need a variable to hold threads created within this instance inreader order to close them when disconnect
 
 	public ServerTextFrame() {
-		setTitle(String.format("Server-%s:%d", Settings.getLocalHostname(),Settings.getLocalPort()));
+		setTitle(String.format("Server-%s:%d", Settings.getLocalHostname(), Settings.getLocalPort()));
 		JPanel mainPanel = new JPanel();
 		mainPanel.setLayout(new GridLayout(2, 1));
 
 		JPanel upPanel = new JPanel();
-		upPanel.setLayout(new GridLayout(2,2));
+		upPanel.setLayout(new GridLayout(2, 2));
 		mainPanel.add(upPanel);
 
 		registeredUserArea = addHtmlPanel(upPanel, "Users Registered at this server");
 		loginUserArea = addHtmlPanel(upPanel, "Users Logged in this server");
 		serverArea = addHtmlPanel(upPanel, "Servers connected to this server");
 //		serverArea.setFont(new Font(Font.DIALOG,Font.PLAIN,10));
-		loadArea = addHtmlPanel(upPanel,"Server Loads");
+		loadArea = addHtmlPanel(upPanel, "Server Loads");
 //		loadArea.setFont(new Font(Font.DIALOG,Font.PLAIN,10));
 
-		logText = addLogPanel(mainPanel);
+		logText = addTextPanel(mainPanel, "Log");
 
 		add(mainPanel);
 		setLocationRelativeTo(null);
@@ -67,19 +71,19 @@ public class ServerTextFrame extends JFrame implements ActionListener {
 		});
 	}
 
-	public JTextArea addLogPanel(JPanel mainPanel) {
+	public JTextArea addTextPanel(JPanel mainPanel, String title) {
 		JTextArea textArea;
 		JPanel logPanel = new JPanel();
 		logPanel.setLayout(new BorderLayout());
-		Border lineBorder = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.lightGray),"Log Output");
+		Border lineBorder = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.lightGray), title);
 		logPanel.setBorder(lineBorder);
 		logPanel.setName("Log");
 
 		textArea = new JTextArea();
 		textArea.setLineWrap(false);
-		textArea.setFont(new Font(Font.DIALOG,Font.PLAIN,10));
+		textArea.setFont(new Font(Font.DIALOG, Font.PLAIN, 10));
 		JScrollPane scrollPane = new JScrollPane(textArea);
-		logPanel.add(scrollPane,BorderLayout.CENTER);
+		logPanel.add(scrollPane, BorderLayout.CENTER);
 		scrollPane.setAutoscrolls(true);
 		mainPanel.add(logPanel);
 
@@ -100,6 +104,13 @@ public class ServerTextFrame extends JFrame implements ActionListener {
 		htmlPane.setEditorKit(kit);
 		Document doc = kit.createDefaultDocument();
 		htmlPane.setDocument(doc);
+		try {
+			kit.insertHTML((HTMLDocument) doc, 0, "<div id='table-div'></div>", 0, 0, HTML.Tag.DIV);
+		} catch (BadLocationException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		StyleSheet styleSheet = kit.getStyleSheet();
 		styleSheet.addRule(".table { width: 100%; max-width: 100%; margin-bottom: 1rem; background-color: transparent;}");
 		styleSheet.addRule(".table-bordered {border: 1; }");
@@ -114,26 +125,39 @@ public class ServerTextFrame extends JFrame implements ActionListener {
 	}
 
 	public void setLoginUserArea(String str) {
-		loginUserArea.setText(str);
+		updateTableInfo(loginUserArea,str);
 	}
 
 	public void setRegisteredArea(String str) {
-		if(registeredUserArea!=null) registeredUserArea.setText(str);
+		updateTableInfo(registeredUserArea,str);
 	}
 
 	public void setServerArea(String str) {
-		this.serverArea.setText(str);
+		updateTableInfo(serverArea,str);
 	}
+
 	public void setLoadArea(String str) {
-		if(str != null)
-		this.loadArea.setText(str);
+		updateTableInfo(loadArea,str);
+	}
+
+	private void updateTableInfo(JEditorPane j, String str){
+		HTMLDocument doc = (HTMLDocument) j.getDocument();
+		try {
+			Element body = doc.getElement("table-div");
+			doc.setInnerHTML(body, str);
+		} catch (BadLocationException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	//show error message
 	public void showErrorMsg(String error) {
 		JOptionPane.showMessageDialog(null, error, "Error", JOptionPane.INFORMATION_MESSAGE);
 	}
-	public JTextArea getLogArea(){
+
+	public JTextArea getLogArea() {
 		return logText;
 	}
 

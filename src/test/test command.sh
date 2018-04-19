@@ -94,3 +94,25 @@ java -jar Client-jar-with-dependencies.jar -r -u kangnwh -rp 8002 -rh localhost 
 
 java -jar Client-jar-with-dependencies.jar -r -u kangnwh1 -rp 8001 -rh localhost -s abc
 java -jar Client-jar-with-dependencies.jar -l -u kangnwh1 -rp 8001 -rh localhost -s abc
+
+
+-------------------------
+
+注册server
+
+java -jar target/Server-jar-with-dependencies.jar -lh localhost -lp 8001 -s abc
+java -jar target/Server-jar-with-dependencies.jar -lh localhost -lp 8002 -s abc -rh localhost -rp 8001
+java -jar target/Server-jar-with-dependencies.jar -lh localhost -lp 8003 -s abc -rh localhost -rp 8001
+java -jar target/Server-jar-with-dependencies.jar -lh localhost -lp 8004 -s abc -rh localhost -rp 8002
+
+注册client
+java -jar target/Client-jar-with-dependencies.jar -r -u u_a -rp 8001 -rh localhost -s s_a
+java -jar target/Client-jar-with-dependencies.jar -r -u u_b -rp 8003 -rh localhost -s s_b
+java -jar target/Client-jar-with-dependencies.jar -r -u u_c -rp 8004 -rh localhost -s s_c
+java -jar target/Client-jar-with-dependencies.jar -r -u u_d -rp 8004 -rh localhost -s s_d
+
+登陆client
+java -jar target/Client-jar-with-dependencies.jar -l -u u_a -rp 8001 -rh localhost -s s_a
+java -jar target/Client-jar-with-dependencies.jar -l -u u_b -rp 8001 -rh localhost -s s_b
+java -jar target/Client-jar-with-dependencies.jar -l -u u_c -rp 8001 -rh localhost -s s_c
+java -jar target/Client-jar-with-dependencies.jar -l -u u_d -rp 8004 -rh localhost -s s_d

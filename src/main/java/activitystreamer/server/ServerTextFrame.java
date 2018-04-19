@@ -145,10 +145,8 @@ public class ServerTextFrame extends JFrame implements ActionListener {
 		try {
 			Element body = doc.getElement("table-div");
 			doc.setInnerHTML(body, str);
-		} catch (BadLocationException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			Control.log.error("UI window updating fails.");
 		}
 	}
 

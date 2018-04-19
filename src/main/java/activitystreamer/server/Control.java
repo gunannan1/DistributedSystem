@@ -209,14 +209,6 @@ public class Control extends Thread {
 	}
 
 
-//	public synchronized void broadcastToServer(String msg,Connection from) {
-//		for(Connection c:connections){
-//			if(c.isAuthedServer() && c != from) {
-//				c.writeMsg(msg);
-//			}
-//		}
-//	}
-
 	// broadcastToAll lock request
 	public void broadcastLockRequest(User u, Connection from) {
 		String lockRequest = MessageGenerator.lockRequest(u.getUsername(), u.getSecret());
@@ -224,11 +216,8 @@ public class Control extends Thread {
 
 	}
 
-	public void broadcastActivity(Activity a, Connection from) {
 
-	}
-
-	public void broadcastEnquiry(String serverId, User u, Connection from) {
+	public void broadcastEnquiry(User u, Connection from) {
 		String enquiryRequest = MessageGenerator.lockRequest(u.getUsername(), u.getSecret());
 		broadcastToServers(enquiryRequest, from);
 
@@ -307,7 +296,7 @@ public class Control extends Thread {
 	}
 
 
-	public int getClientLoads() {
+	private int getClientLoads() {
 		int load = 0;
 		for (Connection c : connections) {
 			if (c.isAuthedClient()) {
@@ -366,12 +355,7 @@ public class Control extends Thread {
 		UserLoginHandler.enquiryRequestHashmap.remove(username);
 	}
 
-	public String getIdentifier() {
-		return identifier;
-	}
-
-	//TODO UI information refresh
-
+	// UI information refresh
 	public ServerTextFrame getServerTextFrame() {
 		return serverTextFrame;
 	}
@@ -421,21 +405,19 @@ public class Control extends Thread {
 
 
 	}
-	private void refreshLoadInfo(){
+	public void refreshLoadInfo(){
 		String html = "<table class='table table-bordered'> <thead>%s</thead><tbody>%S</tbody></table><p>Update Time:%s</p>";
 		String header = "<tr>\n" +
 				"      <td>IP</td>\n" +
 				"      <td>Port</td>\n" +
 				"      <td>Load</td>\n" +
 				"    </tr>";
+		String rowFormat = "<tr><td>%s</td><td>%s</td><td>%s</td></tr>";
 		StringJoiner sj = new StringJoiner("");
+		sj.add(String.format(rowFormat,Settings.getLocalHostname(),Settings.getLocalPort(),getClientLoads()));
 		for (Map.Entry<String,ServerState> ss : serverStateList.entrySet()) {
 			ServerState server = ss.getValue();
-			sj.add(String.format(" <tr>\n" +
-					"      <td>%s</td>\n" +
-					"      <td>%s</td>\n" +
-					"      <td>%s</td>\n" +
-					"    </tr>",server.getHost(),server.getPort(),server.getLoad() ));
+			sj.add(String.format(rowFormat,server.getHost(),server.getPort(),server.getLoad() ));
 		}
 		String now = Calendar.getInstance().getTime().toString();
 		this.serverTextFrame.setLoadArea(String.format(html, header, sj.toString(),now));
@@ -446,7 +428,7 @@ public class Control extends Thread {
 			refreshRegisterInfo();
 			refreshServerInfo();
 			refreshLoginInfo();
-			refreshLoadInfo();
+//			refreshLoadInfo();
 		}
 	}
 

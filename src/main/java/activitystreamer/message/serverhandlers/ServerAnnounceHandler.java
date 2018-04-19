@@ -57,7 +57,7 @@ public class ServerAnnounceHandler extends MessageHandler {
 				c.sendAnnounceMsg(id, load, host, port);
 			}
 		}
-
+		control.refreshLoadInfo();
 		return true;
 	}
 }

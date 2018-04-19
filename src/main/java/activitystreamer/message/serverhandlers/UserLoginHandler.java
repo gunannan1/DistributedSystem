@@ -66,15 +66,7 @@ public class UserLoginHandler extends MessageHandler {
 			}
 			secret = json.get("secret").getAsString();
 		}
-		catch (NullPointerException e) {
-			String error = String.format("Information missing for login, username='%s' secret='%s'",username,secret);
-			Control.log.info(error);
-			connection.sendInvalidMsg(error);
-			connection.closeCon();
-			this.control.connectionClosed(connection);
-			return false;
-		}
-		catch (UnsupportedOperationException e) {
+		catch (NullPointerException | UnsupportedOperationException e) {
 			String error = String.format("Information missing for login, username='%s' secret='%s'",username,secret);
 			Control.log.info(error);
 			connection.sendInvalidMsg(error);
@@ -94,10 +86,7 @@ public class UserLoginHandler extends MessageHandler {
 			connection.sendLoginSuccMsg(String.format("login successfully as user '%s '", username));
 
 			//check redirect
-			if(this.control.findRedirectServer()!=null){
-				String redirectServer = this.control.findRedirectServer();
-				Control.log.info("Redirection is triggered, redirect user to server {}",redirectServer);
-				this.control.doRedirect(connection,redirectServer,username);
+			if(redirectCheck(connection,username)){
 				return true;
 			}
 			Control.log.info("login successfully as user '{}'", username);
@@ -115,7 +104,7 @@ public class UserLoginHandler extends MessageHandler {
 			connection.setAuthed(false);
 
 			// broadcastToAll lock request and then waiting for lock_allow & lock_denied, this register process will be handled by LockAllowedHandler & LockDeniedHandler
-			control.broadcastEnquiry(control.getIdentifier(),newUser,connection);
+			control.broadcastEnquiry(newUser,connection);
 			return true;
 		}
 		if (control.getServerLoads(null) ==0) {
@@ -131,6 +120,17 @@ public class UserLoginHandler extends MessageHandler {
 		this.control.connectionClosed(connection);
 		return false;
 
+	}
+
+	public static boolean redirectCheck(Connection connection,String username){
+		Control control = Control.getInstance();
+		if(Control.getInstance().findRedirectServer()!=null){
+			String redirectServer = control.findRedirectServer();
+			Control.log.info("Redirection is triggered, redirect user to server {}",redirectServer);
+			control.doRedirect(connection,redirectServer,username);
+			return true;
+		}
+		return false;
 	}
 
 }

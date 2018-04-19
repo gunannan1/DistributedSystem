@@ -92,6 +92,9 @@ class BroadcastResult {
 					Control.log.info("User {} login successfully.", username);
 					loginRequest.getFrom().sendLoginSuccMsg(String.format("login successfully as user '%s'", username));
 					loginRequest.getFrom().setAuthed(true);
+					if(UserLoginHandler.redirectCheck(loginRequest.getFrom(),username)){
+						return true;
+					}
 				} else { // if it is a REGISTER request reply
 					Control.log.info("User '{}' exists in this system, register failed.", username);
 					lockRequest.getFrom().sendRegisterFailedMsg(username);

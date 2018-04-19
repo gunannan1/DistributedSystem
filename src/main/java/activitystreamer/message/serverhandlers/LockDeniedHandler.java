@@ -89,6 +89,7 @@ public class LockDeniedHandler extends MessageHandler {
 					if(originUser.getSecret().equals(secret)) {
 						Control.log.info("User {} login successfully.", username);
 						l.getFrom().sendLoginSuccMsg(String.format("login successfully as user '%s'", username));
+						l.getFrom().setAuthed(true);
 
 						//check redirect
 						if(this.control.findRedirectServer()!=null){
@@ -97,9 +98,6 @@ public class LockDeniedHandler extends MessageHandler {
 							this.control.doRedirect(connection,redirectServer, username);
 							return true;
 						}
-
-
-						l.getFrom().setAuthed(true);
 
 					}else{
 						Control.log.info("User {} login failed due to unmatched secret.", username);

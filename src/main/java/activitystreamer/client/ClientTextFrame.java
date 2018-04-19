@@ -113,12 +113,12 @@ public class ClientTextFrame extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == sendButton) {
 			String msg = inputText.getText().trim().replaceAll("\r", " ").replaceAll("\n", " ").replaceAll("\t", " ");
-
 			Activity act = new Activity(msg);
 			ClientSkeleton.getInstance().sendActivityObject(act);
 
 
 		} else if (e.getSource() == disconnectButton) {
+			ClientSkeleton.getInstance().sendLogoutMsg();
 			ClientSkeleton.getInstance().disconnect();
 		}
 	}

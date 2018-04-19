@@ -39,7 +39,7 @@ public class ClientSkeleton extends Thread {
 
 	public ClientSkeleton() {
 
-		term = false;
+		// TODO initialise socket
 
 		this.s = connectToServer(Settings.getRemoteHostname(), Settings.getRemotePort());
 		try {
@@ -126,7 +126,7 @@ public class ClientSkeleton extends Thread {
 		try {
 			String data;
 			boolean status = true;
-			while (!term && status && (data = inreader.readLine()) != null) {
+			while (status && (data = inreader.readLine()) != null) {
 				try {
 					log.debug("Receive data {}", data);
 					JsonParser parser = new JsonParser();

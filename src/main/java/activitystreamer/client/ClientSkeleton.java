@@ -10,6 +10,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.json.simple.JSONObject;
 
 import java.io.*;
 import java.net.Socket;
@@ -102,9 +103,10 @@ public class ClientSkeleton extends Thread {
 	}
 
 
-	public void startUI() {
+	public void startUI(JsonObject json) {
 		if(textFrame == null) {
 			textFrame = new ClientTextFrame();
+			textFrame.setOutputText(json);
 //			UILogAppender.setTextArea(this.textFrame.getLogTextArea());
 		}
 	}

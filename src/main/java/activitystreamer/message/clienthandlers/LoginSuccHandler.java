@@ -26,7 +26,7 @@ public class LoginSuccHandler extends MessageHandler {
 
 		ClientSkeleton.log.info("Login successfully to server {}", Settings.getRemoteHostname());
 		ClientSkeleton.log.info("Start User Interface");
-		this.clientSkeleton.startUI();
+		this.clientSkeleton.startUI(json);
 		return true;
 	}
 }

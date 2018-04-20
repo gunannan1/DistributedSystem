@@ -4,7 +4,6 @@ import activitystreamer.message.MessageHandler;
 import activitystreamer.server.Connection;
 import activitystreamer.server.Control;
 import activitystreamer.server.User;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.util.HashMap;
@@ -79,18 +78,27 @@ public class UserLoginHandler extends MessageHandler {
 
 
 		// 3. Check if user exists locally
-		User localUser = this.control.authUser(username, secret);
+		User localUser = this.control.getUser(username);
 		if (localUser != null) {
-			connection.setAuthed(true);
-			connection.setUser(localUser);
-			connection.sendLoginSuccMsg(String.format("login successfully as user '%s '", username));
+			// if secret is correct
+			if(localUser.getSecret().equals(secret)) {
+				connection.setAuthed(true);
+				connection.setUser(localUser);
+				connection.sendLoginSuccMsg(String.format("login successfully as user '%s '", username));
 
-			//check redirect
-			if(redirectCheck(connection,username)){
+				//check redirect
+				if (redirectCheck(connection, username)) {
+					return true;
+				}
+				Control.log.info("login successfully as user '{}'", username);
 				return true;
+			}else{
+				String info = String.format("Secret '%s' does not match for user '%s'",secret,username);
+				connection.sendLoginFailedMsg(info);
+				connection.closeCon();
+				this.control.connectionClosed(connection);
+				return false;
 			}
-			Control.log.info("login successfully as user '{}'", username);
-			return true;
 		}
 
 		// 4. check if any remote servers

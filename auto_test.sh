@@ -55,12 +55,10 @@ java -jar target/Client-jar-with-dependencies.jar -r -u ningk -rp 8003 -rh local
 #登陆client
 nohup java -jar target/Client-jar-with-dependencies.jar -l -u yirupan -rp 8001 -rh localhost -s s_a > log/client1.log 2>&1 &
 sleep 3
-nohup java -jar target/Client-jar-with-dependencies.jar -l -u wenyizhao -rp 8002 -rh localhost -s s_b > log/client2.log 2>&1 &
+nohup java -jar target/Client-jar-with-dependencies.jar -l -u wenyizhao -rp 8001 -rh localhost -s s_b > log/client2.log 2>&1 &
 sleep 3
-nohup java -jar target/Client-jar-with-dependencies.jar -l -u nanangu -rp 8003 -rh localhost -s s_c > log/client3.log 2>&1 &
-sleep 3
-nohup java -jar target/Client-jar-with-dependencies.jar -l -u ningk -rp 8004 -rh localhost -s s_d > log/client4.log 2>&1 &
+nohup java -jar target/Client-jar-with-dependencies.jar -l -u nanangu -rp 8001 -rh localhost -s s_c > log/client3.log 2>&1 &
 sleep 3
 nohup java -jar target/Client-jar-with-dependencies.jar -l -u ningk -rp 8004 -rh localhost -s s_d > log/client4.log 2>&1 &
-sleep 3
-nohup java -jar target/Client-jar-with-dependencies.jar -l -u ningk -rp 8004 -rh localhost -s s_d > log/client4.log 2>&1 &
+
+nohup java -jar target/Client-jar-with-dependencies.jar -l -u yirupan -rp 8006 -rh localhost -s sa > log/client1.log 2>&1 &

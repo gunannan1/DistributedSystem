@@ -240,13 +240,8 @@ public class Control extends Thread {
 		}
 	}
 
-	public User authUser(String username, String secret) {
-		User u = userList.get(username);
-		if (u != null && u.getSecret().equals(secret)) {
-			return u;
-		} else {
-			return null;
-		}
+	public User getUser(String username) {
+		return userList.get(username);
 	}
 
 	@Override

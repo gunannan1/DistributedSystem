@@ -38,7 +38,7 @@ public class UserLoginHandler extends MessageHandler {
 
 		Control.log.info("login message is received from {}",connection.getSocket().getRemoteSocketAddress());
 
-		User newUser = null;
+		User newUser;
 		String username = null;
 		String secret = null;
 
@@ -61,7 +61,7 @@ public class UserLoginHandler extends MessageHandler {
 					return true;
 				}
 
-				Control.log.info("user '{}' login successfully", username);
+				//Control.log.info("user '{}' login successfully", username);
 				return true;
 			}
 			secret = json.get("secret").getAsString();

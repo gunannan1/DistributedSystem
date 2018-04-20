@@ -89,10 +89,20 @@ class BroadcastResult {
 				break;
 			case USER_FOUND:
 				if (loginRequest != null) { // if it is a LOGIN request reply
-					Control.log.info("User {} login successfully.", username);
-					loginRequest.getFrom().sendLoginSuccMsg(String.format("login successfully as user '%s'", username));
-					loginRequest.getFrom().setAuthed(true);
-					if(UserLoginHandler.redirectCheck(loginRequest.getFrom(),username)){
+					// if secret is correct
+					if(u.getSecret().equals(loginRequest.getUser().getSecret())) {
+						Control.log.info("User {} login successfully.", username);
+						loginRequest.getFrom().sendLoginSuccMsg(String.format("login successfully as user '%s'", username));
+						loginRequest.getFrom().setAuthed(true);
+						if (UserLoginHandler.redirectCheck(loginRequest.getFrom(), username)) {
+							return true;
+						}
+					}else{
+						String info = String.format("User '%s' login failed because secret '%s' is incorrect .", username,secret);
+						Control.log.info(info);
+						loginRequest.getFrom().sendLoginFailedMsg(info);
+						lockRequest.getFrom().closeCon();
+						Control.getInstance().connectionClosed(lockRequest.getFrom());
 						return true;
 					}
 				} else { // if it is a REGISTER request reply

@@ -319,7 +319,8 @@ public class Control extends Thread {
 
 	public void maintainServerState(String id, String host, int load, int port) {
 		if (serverStateList.containsKey(id)) {
-			serverStateList.get(id).setLoad(load);
+			ServerState s = serverStateList.get(id);
+			s.setLoad(load);
 		} else {
 			serverStateList.put(id, new ServerState(port, load, host, id));
 		}
@@ -367,68 +368,12 @@ public class Control extends Thread {
 		uiRefresher.start();
 	}
 
-
-	private void refreshLoginInfo() {
-		String html = "<table class='table table-bordered'> <thead>%s</thead><tbody>%s</tbody>";
-		StringJoiner sj = new StringJoiner("");
-
-		for (Connection c : connections) {
-			if (c.isAuthedClient()) {
-				sj.add(c.getUser().toString());
-			}
-		}
-
-		this.serverTextFrame.setLoginUserArea(String.format(html, User.tableHeader(), sj.toString()));
-	}
-
-	private void refreshRegisterInfo() {
-		String html = "<table class='table table-bordered'> <thead>%s</thead><tbody>%S</tbody>";
-		StringJoiner sj = new StringJoiner("");
-
-		for (Map.Entry<String, User> e : userList.entrySet()) {
-			sj.add(e.getValue().toString());
-		}
-		this.serverTextFrame.setRegisteredArea(String.format(html, User.tableHeader(), sj.toString()));
-
-	}
-
-	private void refreshServerInfo() {
-		String html = "<div>%s</div>";
-		StringJoiner sj = new StringJoiner("</br>");
-
-		for (Connection c : connections) {
-			if (c.isAuthedServer()) {
-				sj.add(c.getSocket().getRemoteSocketAddress().toString());
-			}
-		}
-		this.serverTextFrame.setServerArea(String.format(html, sj.toString()));
-
-
-	}
-	public void refreshLoadInfo(){
-		String html = "<table class='table table-bordered'> <thead>%s</thead><tbody>%S</tbody></table><p>Update Time:%s</p>";
-		String header = "<tr>\n" +
-				"      <td>IP</td>\n" +
-				"      <td>Port</td>\n" +
-				"      <td>Load</td>\n" +
-				"    </tr>";
-		String rowFormat = "<tr><td>%s</td><td>%s</td><td>%s</td></tr>";
-		StringJoiner sj = new StringJoiner("");
-		sj.add(String.format(rowFormat,Settings.getLocalHostname(),Settings.getLocalPort(),getClientLoads()));
-		for (Map.Entry<String,ServerState> ss : serverStateList.entrySet()) {
-			ServerState server = ss.getValue();
-			sj.add(String.format(rowFormat,server.getHost(),server.getPort(),server.getLoad() ));
-		}
-		String now = Calendar.getInstance().getTime().toString();
-		this.serverTextFrame.setLoadArea(String.format(html, header, sj.toString(),now));
-	}
-
 	public void refreshUI() {
 		if (serverTextFrame != null) {
-			refreshRegisterInfo();
-			refreshServerInfo();
-			refreshLoginInfo();
-//			refreshLoadInfo();
+			this.serverTextFrame.setLoadArea(serverStateList.values());
+			this.serverTextFrame.setServerArea(connections);
+			this.serverTextFrame.setRegisteredArea(userList.values());
+			this.serverTextFrame.setLoginUserArea(connections);
 		}
 	}
 

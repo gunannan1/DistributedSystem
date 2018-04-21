@@ -6,7 +6,9 @@ import activitystreamer.util.Settings;
 import com.google.gson.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -26,7 +28,7 @@ public class ClientTextFrame extends JFrame implements ActionListener {
 	//	private JTextArea logText;
 	private JButton sendButton;
 	private JButton disconnectButton;
-	private JSONParser parser = new JSONParser();
+	private JsonParser parser = new JsonParser();
 
 	//TODO need a socket to send/receive message, how to get this socket?
 	private Socket socket;
@@ -113,9 +115,19 @@ public class ClientTextFrame extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == sendButton) {
 			String msg = inputText.getText().trim().replaceAll("\r", " ").replaceAll("\n", " ").replaceAll("\t", " ");
-			Activity act = new Activity(msg);
-			ClientSkeleton.getInstance().sendActivityObject(act);
+			JsonObject json;
+			try {
+//				Gson gson = new Gson();
+				json = (JsonObject) parser.parse(msg);
+				ClientSkeleton.getInstance().sendActivityObject(json);
+			} catch (ClassCastException | JsonSyntaxException e1) {
+				String error = String.format("Data not sent as the string you input is not a valid json string: %s",msg);
+				log.error(error);
+				showErrorMsg(error);
+			}
+			//Activity act = new Activity(msg);
 
+			//ClientSkeleton.getInstance().sendActivityObject(act);
 
 		} else if (e.getSource() == disconnectButton) {
 			ClientSkeleton.getInstance().sendLogoutMsg();

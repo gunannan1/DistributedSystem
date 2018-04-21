@@ -6,7 +6,10 @@ import org.apache.commons.cli.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
 import java.net.InetAddress;
 
 public class Client {
@@ -27,8 +30,8 @@ public class Client {
 
 		Options options = new Options();
 		// TODO new option is required to separate "connect" and "register"
-		options.addOption("r", false, " user register, enter u,s then");
-		options.addOption("l", false, " user login");
+//		options.addOption("r", false, " user register, enter u,s then");
+//		options.addOption("l", false, " user login");
 
 		options.addOption("u", true, "username");
 		options.addOption("s", true, "secret for username");
@@ -36,7 +39,7 @@ public class Client {
 		options.addOption("rp", true, "remote port number");
 		options.addOption("rh", true, "remote hostname");
 
-		options.addOption("a", false, "anonymous login");
+//		options.addOption("a", false, "anonymous login");
 		// build the parser
 		CommandLineParser parser = new DefaultParser();
 
@@ -82,14 +85,6 @@ public class Client {
 		}
 
 		log.info("starting client");
-//		try {
-//			ClientSkeleton c = ClientSkeleton.getInstance();
-//			c.sendLoginMsg();
-//
-//		} catch (IOException e) {
-//			log.error("client starts fail");
-//		}
-//		}
 
 		// user info
 		if (cmd.hasOption("u")) {
@@ -98,34 +93,65 @@ public class Client {
 		if (cmd.hasOption("s")) {
 			Settings.setSecret(cmd.getOptionValue("s"));
 		}
-//		else if(cmd.hasOption("r")){
-//			log.error("no secret provided,please check your command");
-//			System.exit(-1);
+
+
+//		//Register
+//		if (cmd.hasOption("r")) {
+//			ClientSkeleton c = ClientSkeleton.getInstance();
+//			c.sendRegisterMsg();
 //		}
+//
+//		//anonymous login
+//		if (cmd.hasOption("a")) {
+//			Settings.setUsername("anonymous");
+//			Settings.setSecret("");
+//			ClientSkeleton c = ClientSkeleton.getInstance();
+//			c.sendAnonymousLoginMsg();
+//		}
+//
+//		if(cmd.hasOption('l')){
+//			ClientSkeleton c = ClientSkeleton.getInstance();
+//			c.sendLoginMsg();
+//		}
+		String username = Settings.getUsername();
+		String secret = Settings.getSecret();
 
-
-
-		//Register
-
-		if (cmd.hasOption("r")) {
-			ClientSkeleton c = ClientSkeleton.getInstance();
-			c.sendRegisterMsg();
-		}
-
-		//anonymous login
-		if (cmd.hasOption("a")) {
+		// If anonymous login
+		if (username == null || username.equals("anonymous")) {
 			Settings.setUsername("anonymous");
-			Settings.setSecret("");
+			log.info("Username is 'anonymous', try to login as anonymous");
 			ClientSkeleton c = ClientSkeleton.getInstance();
 			c.sendAnonymousLoginMsg();
+
 		}
 
-		if(cmd.hasOption('l')){
+		// if secret is null and username is not null
+		else if (secret == null) {
+			log.info("Username is provided '{}' but secret is not, try to register...", Settings.getUsername());
+			secret = Settings.nextSecret();
+			Settings.setSecret(secret);
+			log.info("First generate the secret as: '{}'", secret);
+
+			// write down the secret file for testing batch testing
+
+			try {
+
+				FileWriter writer = new FileWriter("secret_map.csv", true);
+				writer.write(String.format("%s,%s%s",Settings.getUsername(),Settings.getSecret(),System.lineSeparator()));
+				writer.close();
+			} catch (IOException e) {
+				log.error("Cannot create/update file 'secret_map.csv'.");
+			}
+
+			ClientSkeleton c = ClientSkeleton.getInstance();
+			c.sendRegisterMsg();
+		}else {
+
+			// If none of above cases, the username and secret must be both provided, just try to login
+			log.info("Both username({}) and secret({}) are provide, try to login...", username, secret);
 			ClientSkeleton c = ClientSkeleton.getInstance();
 			c.sendLoginMsg();
 		}
-
-
 	}
 
 

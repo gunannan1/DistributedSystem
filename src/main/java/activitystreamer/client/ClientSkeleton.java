@@ -150,7 +150,7 @@ public class ClientSkeleton extends Thread {
 					this.disconnect();
 				}
 			}
-			String closeInfo = "Connection" + Settings.socketAddress(s) + " closed by remote server";
+			String closeInfo = "\nConnection" + Settings.socketAddress(s) + " closed by remote server";
 			log.info(closeInfo);
 			if (this.textFrame!=null) this.textFrame.setOutputText(closeInfo);
 			s.close();
@@ -204,7 +204,7 @@ public class ClientSkeleton extends Thread {
 	}
 
 	@SuppressWarnings("unchecked")
-	public void sendActivityObject(Activity activityObj) {
+	public void sendActivityObject(JsonObject activityObj) {
 		log.info("send activity to server with activity={}",activityObj.toString());
 			String actStr = MessageGenerator.generateActMessage(Settings.getUsername(),Settings.getSecret(),activityObj);
 			log.debug(actStr);

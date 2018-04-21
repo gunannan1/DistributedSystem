@@ -64,7 +64,10 @@ public class MessageGenerator {
 	}
 
 	public static String anonymousLogin(String username) {
-		return generate(MessageType.LOGIN, username);
+		JsonObject json = new JsonObject();
+		json.addProperty("command", MessageType.LOGIN.name());
+		json.addProperty("username", username);
+		return json.toString();
 	}
 
 	private static String generate(MessageType messageType, String infoOrSecret) {
@@ -83,10 +86,10 @@ public class MessageGenerator {
 				json.addProperty("command", messageType.name());
 				json.addProperty("secret", infoOrSecret);
 				return json.toString();
-			case LOGIN:
-				json.addProperty("command", messageType.name());
-				json.addProperty("username", infoOrSecret);
-				return json.toString();
+//			case LOGIN: //sendAnonymousLoginMsg
+//				json.addProperty("command", messageType.name());
+//				json.addProperty("username", infoOrSecret);
+//				return json.toString();
 			default:
 				log.error("Invalid message type '{}' with parameter 'info' {}", messageType, infoOrSecret);
 
@@ -163,13 +166,13 @@ public class MessageGenerator {
 	}
 
 	// for ACTIVITY_MESSAGE
-	public static String generateActMessage(String username, String secret, Activity act) {
+	public static String generateActMessage(String username, String secret, JsonObject act) {
 		JsonObject json = new JsonObject();
 
 		json.addProperty("command", MessageType.ACTIVITY_MESSAGE.name());
 		json.addProperty("username", username);
 		json.addProperty("secret", secret);
-		json.add("activity", act.toJson());
+		json.add("activity", act);
 
 		return json.toString();
 	}

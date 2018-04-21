@@ -58,7 +58,7 @@ public class LockRequestHandler extends MessageHandler {
 		// check locally
 		User localUser = control.checkUserExists(username);
 		if (localUser != null) {
-			Control.log.info("User exists in this server, reply lock denied (user found) request with secret in this server");
+			Control.log.info("User '{}' exists in this server, reply lock denied (user found) request with secret in this server",username);
 			connection.sendLockDeniedMsg(username, localUser.getSecret());
 			return true;
 		}

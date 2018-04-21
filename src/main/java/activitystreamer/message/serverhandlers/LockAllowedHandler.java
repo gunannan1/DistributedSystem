@@ -78,7 +78,7 @@ public class LockAllowedHandler extends MessageHandler {
 		// here means this server receives LOCK responses (user not found) from all other servers
 		// if owner is the server itself
 		if (!l.getFrom().isAuthedServer()) {
-			Control.log.info("LOCK ALLOWEDs from all servers are received.");
+			Control.log.info("LOCK ALLOWEDs for user '{}' from all servers are received .",username);
 			try {
 				BroadcastResult.LOCK_STATUS searchStatus = l.getResult();
 
@@ -89,7 +89,7 @@ public class LockAllowedHandler extends MessageHandler {
 			}
 		}
 
-		Control.log.info("LOCK ALLOWEDs from all servers are received, send LOCK_ALLOW to the server who sends LOCK_REQUEST");
+		Control.log.info("LOCK ALLOWEDs for user '{}' from all servers are received, send LOCK_ALLOW to the server who sends LOCK_REQUEST");
 		// if not owner, send lockAllow to "from" server
 		try {
 			l.getFrom().sendLockAllowedMsg(username, secret);

@@ -26,7 +26,6 @@ public class LoginFailedHandler extends MessageHandler {
 
 		ClientSkeleton.log.info("Login failed to server {}:{}", Settings.getRemoteHostname(), Settings.getRemotePort());
 		ClientSkeleton.log.info("Connection will be closed");
-		this.clientSkeleton.startUI(json);
 		return false;
 	}
 }

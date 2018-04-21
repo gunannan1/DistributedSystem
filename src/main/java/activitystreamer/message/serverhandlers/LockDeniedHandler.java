@@ -40,12 +40,7 @@ public class LockDeniedHandler extends MessageHandler {
 		try{
 			username = json.get("username").getAsString();
 			secret = json.get("secret").getAsString();
-		}catch (NullPointerException e){
-			String error = String.format("Lock denied command missing information username='%s' secret='%s'", username, secret);
-			failHandler(error, connection);
-			return false;
-		}
-		catch (UnsupportedOperationException e){
+		}catch (NullPointerException | UnsupportedOperationException e){
 			String error = String.format("Lock denied command missing information username='%s' secret='%s'", username, secret);
 			failHandler(error, connection);
 			return false;
@@ -64,7 +59,7 @@ public class LockDeniedHandler extends MessageHandler {
 		// whether all servers allowed
 		l.addDeny();
 		if( l.getResult() == BroadcastResult.LOCK_STATUS.PENDING) {
-			Control.log.info("LOCK DEINED (user found) is received, not all servers reply, continue waiting future information...");
+			Control.log.info("LOCK DEINED (user found) for user '{}' is received, not all servers reply, continue waiting future information...",username);
 			return true;
 		}
 

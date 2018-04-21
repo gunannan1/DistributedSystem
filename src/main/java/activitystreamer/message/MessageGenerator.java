@@ -91,7 +91,7 @@ public class MessageGenerator {
 //				json.addProperty("username", infoOrSecret);
 //				return json.toString();
 			default:
-				log.error("Invalid message type '{}' with parameter 'info' {}", messageType, infoOrSecret);
+				log.error("Invalid message type [{}] with parameter 'info' {}", messageType, infoOrSecret);
 
 		}
 		return json.toString();
@@ -118,7 +118,7 @@ public class MessageGenerator {
 				return json.toString();
 
 			default:
-				log.error("Invalid message type '{}' with parameter username='{}', secret='{}' ", messageType, username, secret);
+				log.error("Invalid message type [{}] with parameter username=[{}], secret=[{}] ", messageType, username, secret);
 
 		}
 		return json.toString();

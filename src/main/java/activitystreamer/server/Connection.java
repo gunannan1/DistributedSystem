@@ -145,12 +145,12 @@ public class Connection extends Thread {
 
 	//TODO for client
 	public void sendLoginSuccMsg(String info){
-		Control.log.debug("send login succ message to client with info='{}'",info);
+		Control.log.debug("send login succ message to client with info=[{}]",info);
 		String loginSuccStr = MessageGenerator.loginSucc(info);
 		this.writeMsg(loginSuccStr);
 	}
 	public void sendLoginFailedMsg(String info){
-		Control.log.debug("send login failed message to client with info='{}'",info);
+		Control.log.debug("send login failed message to client with info=[{}]",info);
 		String loginFailedStr = MessageGenerator.loginFail(info);
 		this.writeMsg(loginFailedStr);
 	}

@@ -150,12 +150,12 @@ public class Control extends Thread {
 			if (h != null) {
 				isSucc = h.processMessage(json, con);
 			} else {
-				log.error("Cannot find message handler for message type '{}'", m.name());
+				log.error("Cannot find message handler for message type [{}]", m.name());
 			}
 			// refresh UI
 			refreshUI();
 		} catch (IllegalStateException e) {
-			String info = String.format("Invalid message '%s'", msg);
+			String info = String.format("Invalid message [%s]", msg);
 			log.error(info);
 			isSucc = false;
 			String invalidMsg = MessageGenerator.invalid(info);
@@ -235,7 +235,7 @@ public class Control extends Thread {
 			userList.put(user.getUsername(), user);
 			return true;
 		} else {
-			log.info("User '{}' exists, reject register.", user.getUsername());
+			log.info("User [{}] exists, reject register.", user.getUsername());
 			return false;
 		}
 	}
@@ -345,7 +345,7 @@ public class Control extends Thread {
 	public void doRedirect(Connection connection, String id, String username) {
 		connection.sendRedirectMsg(this.getServerStateList().get(id).getHost(),
 				this.getServerStateList().get(id).getPort());
-		Control.log.info(" user '{}' needs redirect", username);
+		Control.log.info(" user [{}] needs redirect", username);
 		connection.closeCon();
 		control.connectionClosed(connection);
 		UserLoginHandler.enquiryRequestHashmap.remove(username);

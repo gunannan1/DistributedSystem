@@ -73,14 +73,14 @@ class BroadcastResult {
 		switch (searchStatus) {
 			case USER_NOT_FOUND:
 				if (loginRequest != null) { // if it is a LOGIN request reply
-					Control.log.info("User '{}' login failed, username does not exists.", username);
-					loginRequest.getFrom().sendLoginFailedMsg(String.format("No user with username '%s' exists in this system", username));
+					Control.log.info("User [{}] login failed, username does not exists.", username);
+					loginRequest.getFrom().sendLoginFailedMsg(String.format("No user with username [%s] exists in this system", username));
 					UserLoginHandler.enquiryRequestHashmap.remove(username);
 					loginRequest.getFrom().closeCon();
 					Control.getInstance().connectionClosed(loginRequest.getFrom());
 				} else { // if it is a REGISTER request reply
 					Control.getInstance().addUser(new User(username, secret));
-					Control.log.info("User '{}' registered successfully.", username);
+					Control.log.info("User [{}] registered successfully.", username);
 					lockRequest.getFrom().sendRegisterSuccMsg(username);
 					UserRegisterHandler.registerLockHashMap.remove(username);
 					lockRequest.getFrom().closeCon();
@@ -92,13 +92,13 @@ class BroadcastResult {
 					// if secret is correct
 					if(u.getSecret().equals(loginRequest.getUser().getSecret())) {
 						Control.log.info("User {} login successfully.", username);
-						loginRequest.getFrom().sendLoginSuccMsg(String.format("login successfully as user '%s'", username));
+						loginRequest.getFrom().sendLoginSuccMsg(String.format("login successfully as user [%s]", username));
 						loginRequest.getFrom().setAuthed(true);
 						if (UserLoginHandler.redirectCheck(loginRequest.getFrom(), username)) {
 							return true;
 						}
 					}else{
-						String info = String.format("User '%s' login failed because secret '%s' is incorrect .", username,secret);
+						String info = String.format("User [%s] login failed because secret [%s] is incorrect .", username,secret);
 						Control.log.info(info);
 						loginRequest.getFrom().sendLoginFailedMsg(info);
 						lockRequest.getFrom().closeCon();
@@ -106,7 +106,7 @@ class BroadcastResult {
 						return true;
 					}
 				} else { // if it is a REGISTER request reply
-					Control.log.info("User '{}' exists in this system, register failed.", username);
+					Control.log.info("User [{}] exists in this system, register failed.", username);
 					lockRequest.getFrom().sendRegisterFailedMsg(username);
 					UserRegisterHandler.registerLockHashMap.remove(username);
 					lockRequest.getFrom().closeCon();

@@ -52,13 +52,13 @@ public class UserRegisterHandler extends MessageHandler {
 			secret = json.get("secret").getAsString();
 
 		} catch (NullPointerException e){
-			String error = String.format("User register command missing information username='%s' secret='%s'", username, secret);
+			String error = String.format("User register command missing information username=[%s] secret=[%s]", username, secret);
 			connection.sendInvalidMsg(error);
 			failHandler(error, connection);
 			return false;
 		}
 		catch (UnsupportedOperationException e) {
-			String error = String.format("User register command missing information username='%s' secret='%s'", username, secret);
+			String error = String.format("User register command missing information username=[%s] secret=[%s]", username, secret);
 			connection.sendInvalidMsg(error);
 			failHandler(error, connection);
 			return false;
@@ -77,7 +77,7 @@ public class UserRegisterHandler extends MessageHandler {
 		//2. Check if user exists locally
 		User localUser = this.control.checkUserExists(username);
 		if (localUser != null) {
-			String error = String.format("User '%s' exists in this server'", username);
+			String error = String.format("User [%s] exists in this server'", username);
 			connection.sendRegisterFailedMsg(error);
 			failHandler(error, connection);
 
@@ -86,7 +86,7 @@ public class UserRegisterHandler extends MessageHandler {
 
 		// 2.1 check if username under register process( in the register list but not approved)
 		if (UserRegisterHandler.registerLockHashMap.containsKey(newUser.getUsername())) {
-			String error = String.format("User '%s' is under register processing'", username);
+			String error = String.format("User [%s] is under register processing'", username);
 			connection.sendRegisterFailedMsg(error);
 			failHandler(error, connection);
 			return false;
@@ -94,7 +94,7 @@ public class UserRegisterHandler extends MessageHandler {
 
 		// 2.1.1 check if any remote servers exists
 		if (this.control.getServerLoads(null) > 0) {
-			Control.log.info("Remote servers exist, need to get confirmation from remote servers for user register '{}' ", username);
+			Control.log.info("Remote servers exist, need to get confirmation from remote servers for user register [{}] ", username);
 			BroadcastResult lockResult = new BroadcastResult(connection, control.getServerLoads(null),newUser);
 			UserRegisterHandler.registerLockHashMap.put(newUser.getUsername(), lockResult);
 			//TODO need testing

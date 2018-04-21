@@ -66,7 +66,7 @@ public class UserLoginHandler extends MessageHandler {
 			secret = json.get("secret").getAsString();
 		}
 		catch (NullPointerException | UnsupportedOperationException e) {
-			String error = String.format("Information missing for login, username='%s' secret='%s'",username,secret);
+			String error = String.format("Information missing for login, username=[%s] secret=[%s]",username,secret);
 			Control.log.info(error);
 			connection.sendInvalidMsg(error);
 			connection.closeCon();
@@ -84,16 +84,16 @@ public class UserLoginHandler extends MessageHandler {
 			if(localUser.getSecret().equals(secret)) {
 				connection.setAuthed(true);
 				connection.setUser(localUser);
-				connection.sendLoginSuccMsg(String.format("login successfully as user '%s '", username));
+				connection.sendLoginSuccMsg(String.format("login successfully as user [%s]", username));
 
 				//check redirect
 				if (redirectCheck(connection, username)) {
 					return true;
 				}
-				Control.log.info("login successfully as user '{}'", username);
+				Control.log.info("login successfully as user [{}]", username);
 				return true;
 			}else{
-				String info = String.format("Secret '%s' does not match for user '%s'",secret,username);
+				String info = String.format("Secret [%s] does not match for user [%s]",secret,username);
 				connection.sendLoginFailedMsg(info);
 				connection.closeCon();
 				this.control.connectionClosed(connection);
@@ -103,7 +103,7 @@ public class UserLoginHandler extends MessageHandler {
 
 		// 4. check if any remote servers
 		 if (control.getServerLoads(null) > 0) {
-			Control.log.info("Remote servers exist, will check with other servers for user '{}' ", username);
+			Control.log.info("Remote servers exist, will check with other servers for user [{}] ", username);
 
 			BroadcastResult loginResult = new BroadcastResult(connection,control.getServerLoads(connection),newUser);
 			UserLoginHandler.enquiryRequestHashmap.put(username, loginResult);
@@ -116,7 +116,7 @@ public class UserLoginHandler extends MessageHandler {
 			return true;
 		}
 		if (control.getServerLoads(null) ==0) {
-			 connection.sendLoginFailedMsg(String.format("User '%s' does not exist",username));
+			 connection.sendLoginFailedMsg(String.format("User [%s] does not exist",username));
 			 connection.closeCon();
 			 control.connectionClosed(connection);
 			 return false;

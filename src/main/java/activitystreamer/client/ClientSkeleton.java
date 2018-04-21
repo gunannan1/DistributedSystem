@@ -144,7 +144,7 @@ public class ClientSkeleton extends Thread {
 						log.error("No handler for message:{}", command);
 					}
 				} catch (IllegalStateException e) {
-					String info = String.format("Invalid message '%s'", data);
+					String info = String.format("Invalid message [%s]", data);
 					log.error(info);
 					this.sendInvalidMsg(info);
 					this.disconnect();

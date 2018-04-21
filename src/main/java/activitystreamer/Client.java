@@ -127,10 +127,10 @@ public class Client {
 
 		// if secret is null and username is not null
 		else if (secret == null) {
-			log.info("Username is provided '{}' but secret is not, try to register...", Settings.getUsername());
+			log.info("Username is provided [{}] but secret is not, try to register...", Settings.getUsername());
 			secret = Settings.nextSecret();
 			Settings.setSecret(secret);
-			log.info("First generate the secret as: '{}'", secret);
+			log.info("First generate the secret as: [{}]", secret);
 
 			// write down the secret file for testing batch testing
 

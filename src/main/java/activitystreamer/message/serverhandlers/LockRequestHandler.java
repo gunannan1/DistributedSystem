@@ -45,11 +45,11 @@ public class LockRequestHandler extends MessageHandler {
 
 		}
 		catch (NullPointerException e) {
-			String error = String.format("Lock request command missing information username='%s' secret='%s'", username, secret);
+			String error = String.format("Lock request command missing information username=[%s] secret=[%s]", username, secret);
 			failHandler(error, connection);
 			return false;
 		}catch (UnsupportedOperationException e) {
-			String error = String.format("Lock request command missing information username='%s' secret='%s'", username, secret);
+			String error = String.format("Lock request command missing information username=[%s] secret=[%s]", username, secret);
 			failHandler(error, connection);
 			return false;
 		}
@@ -58,14 +58,14 @@ public class LockRequestHandler extends MessageHandler {
 		// check locally
 		User localUser = control.checkUserExists(username);
 		if (localUser != null) {
-			Control.log.info("User '{}' exists in this server, reply lock denied (user found) request with secret in this server",username);
+			Control.log.info("User [{}] exists in this server, reply lock denied (user found) request with secret in this server",username);
 			connection.sendLockDeniedMsg(username, localUser.getSecret());
 			return true;
 		}
 
 
 		// Check remotely if server load > 0 exclude the sending server
-		Control.log.info("User '{}' does not exist in this server", username);
+		Control.log.info("User [{}] does not exist in this server", username);
 		if (control.getServerLoads(connection) > 0) {
 			Control.log.info("More server found, check with other servers(exclude the sending server)");
 			// add this requst to local requst hashmap

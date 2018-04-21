@@ -1,5 +1,5 @@
-mvn clean
-mvn package
+#mvn clean
+#mvn package
 #register server
 
 nohup java -jar target/Server-jar-with-dependencies.jar -lh localhost -lp 8001 -s abc > log/8001.log &

@@ -43,34 +43,17 @@ public class LockRequestHandler extends MessageHandler {
 			username = json.get("username").getAsString();
 			secret = json.get("secret").getAsString();
 
-		}
-		catch (NullPointerException e) {
-			String error = String.format("Lock request command missing information username=[%s] secret=[%s]", username, secret);
-			failHandler(error, connection);
-			return false;
-		}catch (UnsupportedOperationException e) {
+		} catch (NullPointerException | UnsupportedOperationException e) {
 			String error = String.format("Lock request command missing information username=[%s] secret=[%s]", username, secret);
 			failHandler(error, connection);
 			return false;
 		}
 		newUser = new User(username, secret);
 
-		// check locally
-		User localUser = control.checkUserExists(username);
-		if (localUser != null) {
-			Control.log.info("User [{}] exists in this server, reply lock denied (user found) request with secret in this server",username);
-			connection.sendLockDeniedMsg(username, localUser.getSecret());
-			return true;
-		}
-
-
 		// Check remotely if server load > 0 exclude the sending server
 		Control.log.info("User [{}] does not exist in this server", username);
-		if (control.getServerLoads(connection) > 0) {
+		if (control.getServerLoads() > 0) {
 			Control.log.info("More server found, check with other servers(exclude the sending server)");
-			// add this requst to local requst hashmap
-			BroadcastResult lockResult = new BroadcastResult(connection, control.getServerLoads(connection), newUser);
-			UserRegisterHandler.registerLockHashMap.put(username, lockResult);
 			control.broadcastLockRequest(newUser, connection);
 
 		} else {
@@ -79,7 +62,19 @@ public class LockRequestHandler extends MessageHandler {
 			return true;
 		}
 
-		return true;
+		// check locally
+		User localUser = control.checkUserExists(username);
+		if (localUser != null && !secret.equals(localUser.getSecret())) {
+			Control.log.info("User [{}] exists in this server with a different secret, reply lock denied.", username);
+			connection.sendLockDeniedMsg(username, localUser.getSecret());
+			return true;
+		} else {
+			Control.log.info("User [{}] does not exist in this server, reply lock allowed.", username);
+			control.addUser(newUser);
+			connection.sendLockAllowedMsg(username, secret);
+			return true;
+		}
+
 	}
 
 	private void failHandler(String error, Connection connection) {

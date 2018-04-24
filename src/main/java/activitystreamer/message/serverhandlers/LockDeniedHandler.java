@@ -1,6 +1,8 @@
 package activitystreamer.message.serverhandlers;
 
+import activitystreamer.message.MessageGenerator;
 import activitystreamer.message.MessageHandler;
+import activitystreamer.message.MessageType;
 import activitystreamer.server.Connection;
 import activitystreamer.server.Control;
 import activitystreamer.server.User;
@@ -46,49 +48,25 @@ public class LockDeniedHandler extends MessageHandler {
 			return false;
 		}
 
+		control.removeUser(username);
 
 		BroadcastResult lockRequest = UserRegisterHandler.registerLockHashMap.get(username);
-		BroadcastResult loginRequest = UserLoginHandler.enquiryRequestHashmap.get(username);
-		BroadcastResult l = lockRequest == null ? loginRequest:lockRequest;
-		if (l == null ) {
-			// just ignore to align with Aaron's server
-			Control.log.error("No register information received for user [{}]", username);
-			return true;
-		}
 
-		// whether all servers allowed
-		l.addDeny();
-		if( l.getResult() == BroadcastResult.LOCK_STATUS.PENDING) {
-			Control.log.info("LOCK DEINED (user found) for user [{}] is received, not all servers reply, continue waiting future information...",username);
+		// If lock request is not from this server
+		if (lockRequest == null ) {
+			Control.log.info("Transform lock allowed to the system username=[{}]", username);
+			control.broadcastToServers(json.toString(),connection);
 			return true;
-		}
-
-		// whether owner is the server itself, if the 'from' connection is not a server, then it is the user who sends register request
-		if (!l.getFrom().isAuthedServer()) {
+		}else{// If this is the server who sent lockRequest
+			lockRequest.addDeny();
 			try {
-				BroadcastResult.LOCK_STATUS searchStatus = l.getResult();
-				return BroadcastResult.processLock(searchStatus,loginRequest,lockRequest,new User(username,secret));
+				BroadcastResult.LOCK_STATUS searchStatus = lockRequest.getResult();
+				return BroadcastResult.processLock(searchStatus,lockRequest,new User(username,secret));
 			} catch (Exception e) {
 				Control.log.info("The client sending register request is disconnected");
 				return true; // do not close any connection as closing connection should be handled in other way
 			}
 		}
-
-		// if not owner, send lockDenied to "from" server
-		try {
-
-			l.getFrom().sendLockDeniedMsg(username, secret);
-			UserRegisterHandler.registerLockHashMap.remove(username);
-			return true;
-
-		} catch (Exception e) {
-			Control.log.info("The server sending lock request request is disconnected");
-			return true; // do not close any connection as closing connection should be handled in other way
-		}
-
-
-
-
 
 	}
 	private void failHandler(String error, Connection connection) {

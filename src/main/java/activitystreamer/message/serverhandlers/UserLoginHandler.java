@@ -28,9 +28,6 @@ public class UserLoginHandler extends MessageHandler {
 	 * 1. check if anoymous user
 	 * 2. check if both username & secret exist
 	 * 3. check if user exists locally
-	 * 4. check if any remote servers
-	 * 		NO - login failed
-	 * 		YES - broadcastToAll for user information
 	 */
 	@Override
 	public boolean processMessage(JsonObject json, Connection connection) {
@@ -85,7 +82,6 @@ public class UserLoginHandler extends MessageHandler {
 				connection.setAuthed(true);
 				connection.setUser(localUser);
 				connection.sendLoginSuccMsg(String.format("login successfully as user [%s]", username));
-
 				//check redirect
 				if (redirectCheck(connection, username)) {
 					return true;
@@ -100,34 +96,10 @@ public class UserLoginHandler extends MessageHandler {
 				return false;
 			}
 		}
-
-		// 4. check if any remote servers
-		 if (control.getServerLoads(null) > 0) {
-			Control.log.info("Remote servers exist, will check with other servers for user [{}] ", username);
-
-			BroadcastResult loginResult = new BroadcastResult(connection,control.getServerLoads(connection),newUser);
-			UserLoginHandler.enquiryRequestHashmap.put(username, loginResult);
-
-			connection.setUser(newUser);
-			connection.setAuthed(false);
-
-			// broadcastToAll lock request and then waiting for lock_allow & lock_denied, this register process will be handled by LockAllowedHandler & LockDeniedHandler
-			control.broadcastEnquiry(newUser,connection);
-			return true;
-		}
-		if (control.getServerLoads(null) ==0) {
-			 connection.sendLoginFailedMsg(String.format("User [%s] does not exist",username));
-			 connection.closeCon();
-			 control.connectionClosed(connection);
-			 return false;
-		 }
-
-//		 Should not run to here
-		Control.log.error("Wired things happened in class UserLoginHandler");
+		Control.log.info("User [{}] does not exist.",username);
 		connection.closeCon();
 		this.control.connectionClosed(connection);
 		return false;
-
 	}
 
 	public static boolean redirectCheck(Connection connection,String username){

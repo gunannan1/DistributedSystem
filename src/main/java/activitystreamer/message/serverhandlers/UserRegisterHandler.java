@@ -93,9 +93,9 @@ public class UserRegisterHandler extends MessageHandler {
 		}
 
 		// 2.1.1 check if any remote servers exists
-		if (this.control.getServerLoads(null) > 0) {
+		if (this.control.getServerLoads() > 0) {
 			Control.log.info("Remote servers exist, need to get confirmation from remote servers for user register [{}] ", username);
-			BroadcastResult lockResult = new BroadcastResult(connection, control.getServerLoads(null),newUser);
+			BroadcastResult lockResult = new BroadcastResult(connection, control.getServerLoads(),newUser);
 			UserRegisterHandler.registerLockHashMap.put(newUser.getUsername(), lockResult);
 			//TODO need testing
 			// broadcastToAll lock request and then waiting for lock_allow & lock_denied, this register process will be handled by LockAllowedHandler & LockDeniedHandler

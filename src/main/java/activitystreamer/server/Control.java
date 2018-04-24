@@ -228,6 +228,9 @@ public class Control extends Thread {
 	public synchronized User checkUserExists(String username) {
 		return userList.get(username);
 	}
+	public synchronized void removeUser(String username) {
+		userList.remove(username);
+	}
 
 	//TODO add user
 	public synchronized boolean addUser(User user) {
@@ -301,14 +304,8 @@ public class Control extends Thread {
 		return load;
 	}
 
-	public int getServerLoads(Connection exclude) {
-		int load = 0;
-		for (Connection c : connections) {
-			if (exclude != c && c.isAuthedServer()) {
-				load++;
-			}
-		}
-		return load;
+	public int getServerLoads() {
+		return serverStateList.size();
 	}
 
 

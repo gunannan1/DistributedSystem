@@ -23,8 +23,18 @@ public class ServerAuthenRequestHandler extends MessageHandler {
 
 	@Override
 	public boolean processMessage(JsonObject json,Connection connection) {
-		//TODO need future work
-		String secret = json.get("secret").getAsString();
+		String secret = null;
+		try {
+			secret = json.get("secret").getAsString();
+		}catch(UnsupportedOperationException e){
+			// Invalid message
+			connection.sendInvalidMsg("secret is not provided");
+			Control.log.info("secret is not provided");
+			connection.closeCon();
+			control.connectionClosed(connection);
+			return false;
+
+		}
 		Control.log.info("process authentication for server{} with secret {}", connection.getSocket().getRemoteSocketAddress(), secret);
 
 		if(connection.isAuthedServer()){

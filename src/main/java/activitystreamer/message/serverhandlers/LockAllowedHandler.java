@@ -1,5 +1,6 @@
 package activitystreamer.message.serverhandlers;
 
+import activitystreamer.message.MessageGenerator;
 import activitystreamer.message.MessageHandler;
 import activitystreamer.server.Connection;
 import activitystreamer.server.Control;
@@ -45,64 +46,31 @@ public class LockAllowedHandler extends MessageHandler {
 			username = json.get("username").getAsString();
 			secret = json.get("secret").getAsString();
 			u = new User(username,secret);
-		}catch (NullPointerException e){
-			String error = String.format("Lock allowed command missing information username=[%s] secret=[%s]", username, secret);
-			failHandler(error, connection);
-			return false;
-		}
-		catch (UnsupportedOperationException e){
+		}catch (NullPointerException | UnsupportedOperationException e){
 			String error = String.format("Lock allowed command missing information username=[%s] secret=[%s]", username, secret);
 			failHandler(error, connection);
 			return false;
 		}
 
+
+		String allowedMsg = MessageGenerator.lockAllowed(username,secret);
 
 		BroadcastResult lockRequest = UserRegisterHandler.registerLockHashMap.get(username);
-		BroadcastResult loginRequest = UserLoginHandler.enquiryRequestHashmap.get(username);
-		BroadcastResult l = lockRequest == null ? loginRequest:lockRequest;
-
-		// whether the register information in pending list
-		if(l == null){
-			// just ignore to align with Aaron's server
-			Control.log.info("No register information received for user [{}] or the register information is processed already, ignore this message", username);
+		// If lock request is not from this server
+		if (lockRequest == null ) {
+			Control.log.info("Transform lock allowed to the system username=[{}]", username);
+			control.broadcastToServers(allowedMsg,connection);
 			return true;
-		}
-
-		// whether all servers allowed
-		l.addAllow();
-		if( l.getResult() == BroadcastResult.LOCK_STATUS.PENDING) {
-			Control.log.info("Although LOCK ALLOWED is received, not all servers reply, continue waiting future information...");
-			return true;
-		}
-
-		// here means this server receives LOCK responses (user not found) from all other servers
-		// if owner is the server itself
-		if (!l.getFrom().isAuthedServer()) {
-			Control.log.info("LOCK ALLOWEDs for user [{}] from all servers are received .",username);
+		}else{ // If this is the server who sent lockRequest
 			try {
-				BroadcastResult.LOCK_STATUS searchStatus = l.getResult();
-
-				return BroadcastResult.processLock(searchStatus,loginRequest,lockRequest,u);
+				lockRequest.addAllow();
+				BroadcastResult.LOCK_STATUS searchStatus = lockRequest.getResult();
+				return BroadcastResult.processLock(searchStatus,lockRequest,new User(username,secret));
 			} catch (Exception e) {
-				Control.log.info("The client sending register request was disconnected");
+				Control.log.info("The client sending register request is disconnected");
 				return true; // do not close any connection as closing connection should be handled in other way
 			}
 		}
-
-		Control.log.info("LOCK ALLOWEDs for user [{}] from all servers are received, send LOCK_ALLOW to the server who sends LOCK_REQUEST");
-		// if not owner, send lockAllow to "from" server
-		try {
-			l.getFrom().sendLockAllowedMsg(username, secret);
-			UserRegisterHandler.registerLockHashMap.remove(username);
-			return true;
-
-		} catch (Exception e) {
-			Control.log.info("The server sending lock request request is disconnected");
-			return true; // do not close any connection as closing connection should be handled in other way
-		}
-
-
-
 	}
 	private void failHandler(String error, Connection connection) {
 		Control.log.info(error);

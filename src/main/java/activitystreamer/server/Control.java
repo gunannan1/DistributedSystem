@@ -250,6 +250,7 @@ public class Control extends Thread {
 		while (!term) {
 			// do something with 5 second intervals in between
 			try {
+				maintainServerState(Settings.getServerId(),Settings.getLocalHostname(),getClientLoads(),Settings.getLocalPort());
 				sendServerAnnounce();
 				Thread.sleep(Settings.getActivityInterval());
 			} catch (InterruptedException e) {

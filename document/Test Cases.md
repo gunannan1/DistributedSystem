@@ -60,12 +60,3 @@ We need deal with it: https://app.lms.unimelb.edu.au/webapps/discussionboard/do/
 
 - Clients do activities when received activity message
 
-
-
- Testing of Functionality of  Server Auth
- Testing of Functionality of  Register
- Testing of Functionality of  Login
- Testing of Functionality of  Logout
- Testing of Functionality of  Load Announce
- Testing of Functionality of  Redirection
- Testing of Functionality of  Activity

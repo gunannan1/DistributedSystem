@@ -50,16 +50,15 @@ public class LockRequestHandler extends MessageHandler {
 		}
 		newUser = new User(username, secret);
 
-		// Check remotely if server load > 0 exclude the sending server
+		// Broadcast remotely if server load > 0 exclude the sending server
 		Control.log.info("User [{}] does not exist in this server", username);
 		if (control.getServerLoads() > 0) {
 			Control.log.info("More server found, check with other servers(exclude the sending server)");
 			control.broadcastLockRequest(newUser, connection);
 
 		} else {
-			Control.log.info("No other servers in this system(exclude the sending server), reply lockAllow message back");
+			Control.log.info("No other connecting servers(exclude the sending server), reply lockAllow message back");
 			connection.sendLockAllowedMsg(username, secret);
-			return true;
 		}
 
 		// check locally

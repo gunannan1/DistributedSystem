@@ -154,12 +154,14 @@ public class Control extends Thread {
 			}
 			// refresh UI
 			refreshUI();
-		} catch (IllegalStateException e) {
+		} catch (Exception e) {
 			String info = String.format("Invalid message [%s]", msg);
 			log.error(info);
 			isSucc = false;
 			String invalidMsg = MessageGenerator.invalid(info);
 			con.writeMsg(invalidMsg);
+			con.closeCon();
+			connectionClosed(con);
 
 		}
 		return isSucc;
@@ -253,6 +255,7 @@ public class Control extends Thread {
 		while (!term) {
 			// do something with 5 second intervals in between
 			try {
+				maintainServerState(Settings.getServerId(),Settings.getLocalHostname(),getClientLoads(),Settings.getLocalPort());
 				sendServerAnnounce();
 				Thread.sleep(Settings.getActivityInterval());
 			} catch (InterruptedException e) {
@@ -305,7 +308,8 @@ public class Control extends Thread {
 	}
 
 	public int getServerLoads() {
-		return serverStateList.size();
+		// exclude itself
+		return serverStateList.size() - 1;
 	}
 
 

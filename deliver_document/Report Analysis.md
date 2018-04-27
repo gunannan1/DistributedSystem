@@ -43,12 +43,12 @@ For the original system, the restarted server will not have any user information
 ```json
 {
     "command":"USER_INFO",
-    "user_info":{
-       "username01": "secret01",
-       "username02": "secret02",
-       "username03": "secret03",
+    "user_info":[
+       {"username":"username01","secret":"secret01"},
+       {"username":"username02","secret":"secret02"},
+       {"username":"username03","secret":"secret03"},
         ...
-    }
+    ]
 }
 ```
 
@@ -63,13 +63,6 @@ Anf for our solution, once a server is crash, all data (information of users who
 
 
 
-
-
-
-​		
-​		
-​	
-​	
 ​		
 ​			
 ​				

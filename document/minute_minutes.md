@@ -1,11 +1,23 @@
 # Meeting Minutes
-##### Date: 16 Apr 2018
+##### Date: 27 Apr 2018
+
+##### Duration: 1 hours
+
+##### Attentance: Yirun Pan, Ning Kang, Nannan Gu, Wenyi Zhao
+
+0. Report finalise
+ 
+
+
+##### Date: 23 Apr 2018
 
 ##### Duration: 2 hours
 
 ##### Attentance: Yirun Pan, Ning Kang, Nannan Gu, Wenyi Zhao
 
-# Full Self-Working version on 17 Apr at 19:00 clock
+0. Testing results discussion
+0. Report questions analysis
+0. Documentation tasks assignment
 
 
 ##### Date: 16 Apr 2018
@@ -13,7 +25,6 @@
 ##### Duration: 2 hours
 
 ##### Attentance: Yirun Pan, Ning Kang, Nannan Gu, Wenyi Zhao
-
 
 Meeting minutes:
 
@@ -22,7 +33,7 @@ Meeting minutes:
 0. Test cases designing
 0. Test cases tasks assignments
 0. Useless code clearance 
-0. Documentation tasks assignment
+
 
 ##### Date: 13 Apr 2018
 
@@ -34,7 +45,7 @@ Meeting minutes:
 Meeting minutes:
 
 0. Finalise and explain whole system architecture of communication 
-0. Discuss message handler designings
+0. Discuss message-handler mapping pattern
 0. Assign tasks
 
 ##### Date: 29 Mar 2018
@@ -52,5 +63,3 @@ Meeting minutes:
 0. Analysis client side code and assign tasks for client development and Update WBS accordingly 
 0. Assign server side code analysis tasks
 
-
----

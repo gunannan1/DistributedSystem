@@ -103,11 +103,10 @@ public class ClientSkeleton extends Thread {
 	}
 
 
-	public void startUI(JsonObject json) {
+	public void startUI(String str) {
 		if(textFrame == null) {
 			textFrame = new ClientTextFrame();
-			textFrame.setOutputText(json);
-//			UILogAppender.setTextArea(this.textFrame.getLogTextArea());
+			textFrame.setOutputText(str);
 		}
 	}
 
@@ -130,11 +129,10 @@ public class ClientSkeleton extends Thread {
 			boolean status = true;
 			while (status && (data = inreader.readLine()) != null) {
 				try {
-					log.debug("Receive data {}", data);
+					log.info("Receive data [{}]", data);
 					JsonParser parser = new JsonParser();
 					JsonObject json = parser.parse(data).getAsJsonObject();
 					//display received content in UI
-					showOutput(json);
 					String command = json.get("command").getAsString();
 					MessageType commandType = MessageType.valueOf(command);
 					MessageHandler h = this.handlerMap.get(commandType);

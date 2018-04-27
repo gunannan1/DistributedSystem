@@ -90,12 +90,14 @@ public class UserLoginHandler extends MessageHandler {
 				return true;
 			}else{
 				String info = String.format("Secret [%s] does not match for user [%s]",secret,username);
+				Control.log.info(info);
 				connection.sendLoginFailedMsg(info);
 				connection.closeCon();
 				this.control.connectionClosed(connection);
 				return false;
 			}
 		}
+		connection.sendLoginFailedMsg(String.format("User [%s] does not exist.",username));
 		Control.log.info("User [{}] does not exist.",username);
 		connection.closeCon();
 		this.control.connectionClosed(connection);

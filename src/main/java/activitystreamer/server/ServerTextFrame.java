@@ -52,7 +52,7 @@ public class ServerTextFrame extends JFrame implements ActionListener {
 
 		registeredUserArea = addTablePanel(upPanel, "Users Registered at this server",new String[]{"Username","Secret","Load"});
 		loginUserArea = addTablePanel(upPanel, "Users Logged in this server",new String[]{"Username","Secret","Load"});
-		serverArea = addTablePanel(upPanel, "Servers connected to this server",new String[]{"Server Info"});
+		serverArea = addTablePanel(upPanel, "Connections to this server",new String[]{"Server Info"});
 //		serverArea.setFont(new Font(Font.DIALOG,Font.PLAIN,10));
 		loadArea = addTablePanel(upPanel, "Server Loads",new String[]{"IP","Port","Load","Update Time"});
 //		loadArea.setFont(new Font(Font.DIALOG,Font.PLAIN,10));

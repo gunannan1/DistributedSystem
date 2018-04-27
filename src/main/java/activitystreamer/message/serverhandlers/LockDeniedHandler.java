@@ -33,7 +33,6 @@ public class LockDeniedHandler extends MessageHandler {
 	 */
 	@Override
 	public boolean processMessage(JsonObject json,Connection connection) {
-		//TODO need future work
 		Control.log.info("Lock Denied message is recieved");
 		String username = null;
 		String secret = null;

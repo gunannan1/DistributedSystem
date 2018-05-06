@@ -17,11 +17,11 @@ nohup java -jar  target/Server-jar-with-dependencies.jar -lh localhost -lp 8006 
 sleep 3
 
 ##register client
-#rm -f secret_map.csv
-#java -jar  target/Client-jar-with-dependencies.jar -u yirupan -rp 8001 -rh localhost
-#java -jar  target/Client-jar-with-dependencies.jar -u wenyizhao -rp 8002 -rh localhost
-#java -jar  target/Client-jar-with-dependencies.jar -u nanangu -rp 8004 -rh localhost
-#java -jar  target/Client-jar-with-dependencies.jar -u ningk -rp 8003 -rh localhost
+rm -f secret_map.csv
+nohup java -jar  target/Client-jar-with-dependencies.jar -u yirupan -rp 8001 -rh localhost > log/yirupan.log 2>&1 &
+nohup java -jar  target/Client-jar-with-dependencies.jar -u wenyizhao -rp 8002 -rh localhost > log/wenyizhao.log 2>&1 &
+nohup java -jar  target/Client-jar-with-dependencies.jar -u nanangu -rp 8004 -rh localhost > log/nanangu.log 2>&1 &
+nohup java -jar  target/Client-jar-with-dependencies.jar -u ningk -rp 8003 -rh localhost > log/ningk.log 2>&1 &
 #
 ##register client
 #secret=`grep yirupan secret_map.csv|cut -f 2 -d ',' `

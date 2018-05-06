@@ -1,9 +1,16 @@
 package activitystreamer;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.ScrollPaneLayout;
 import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
 
 /**
  * UIPanelCreator
@@ -32,19 +39,19 @@ public class UIPanelCreator {
 		return textArea;
 	}
 
-	public static  DefaultTableModel addTablePanel(JPanel mainPanel, String title, String[] columns) {
-		JPanel outerPanel = new JPanel();
-		outerPanel.setLayout(new BorderLayout());
+	public static DefaultTableModel addTablePanel(JPanel mainPanel, String title, String[] columns) {
+		JScrollPane outerPanel = new JScrollPane();
+		outerPanel.setLayout(new ScrollPaneLayout());
 		Border lineBorder = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.lightGray), title);
 		outerPanel.setBorder(lineBorder);
-		outerPanel.setName(title);
+		outerPanel.setName("info");
 
 		DefaultTableModel model = new DefaultTableModel();
 		for(String c:columns) {
 			model.addColumn(c);
 		}
 		JTable table = new JTable(model);
-		outerPanel.add(table);
+		outerPanel.setViewportView(table);
 		mainPanel.add(outerPanel);
 		return model;
 	}

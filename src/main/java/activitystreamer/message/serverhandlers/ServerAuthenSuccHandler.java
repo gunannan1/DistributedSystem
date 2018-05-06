@@ -47,6 +47,7 @@ public class ServerAuthenSuccHandler extends MessageHandler {
 			control.setUserList(userList);
 			connection.setAuthed(true);
 			control.setProvideService(true); // begin to provide services to clients/servers
+			control.startListener();
 			return true;
 		}catch (NullPointerException | UnsupportedOperationException e) {
 			String error = String.format("Invaid AUTHENTICATION_SUCC  message received:%s", json.toString());

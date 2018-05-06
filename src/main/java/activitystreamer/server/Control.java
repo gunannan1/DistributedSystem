@@ -14,22 +14,23 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 
 public class Control extends Thread {
 	public static final Logger log = LogManager.getLogger("serverLogger");
 
 	private static boolean term = false;
-	private static Listener listener; // why static
+	private Listener listener; // CHANGE: from static to an instance variable
 	private UIRefresher uiRefresher;
-	private static ArrayList<Connection> connections;
+	private ArrayList<Connection> connections; // CHANGE: from static to an instance variable
 	private HashMap<String, User> userList; // <String, user Class>,
 	private HashMap<MessageType, MessageHandler> handlerMap;
 	private ServerTextFrame serverTextFrame;
 	//	private String identifier;
 	private HashMap<String, ServerState> serverStateList;
 
-	private boolean provideService;//whether provide services to clients
+	private boolean provideService;//TODO enhance: indicate whether the system is providing normal service
 
 	protected static Control control = null;
 
@@ -41,7 +42,7 @@ public class Control extends Thread {
 		return control;
 	}
 
-	public Control() {
+	private Control() {
 
 		// Should not provide services
 		provideService = false;
@@ -90,7 +91,6 @@ public class Control extends Thread {
 	public void initiateConnection() {
 		// make a connection to another server if remote hostname is supplied
 		try {
-			startListener();
 			String remoteHost = Settings.getRemoteHostname();
 			int remotePort = Settings.getRemotePort();
 			Socket s = new Socket(remoteHost, remotePort);
@@ -99,9 +99,9 @@ public class Control extends Thread {
 			c.setAuthed(false, remoteHost, remotePort);
 //			c.setMain(true);
 			// Authen itself to remote server
-			String serverRegister = MessageGenerator.authen(Settings.getSecret());
-			c.writeMsg(serverRegister);
-
+			c.sendAuthMsg(Settings.getSecret());
+//			String serverRegister = MessageGenerator.authen(Settings.getSecret());
+//			c.writeMsg(serverRegister);
 //			identifier = Settings.getLocalHostname() + Settings.getLocalPort();
 		} catch (IOException e) {
 			log.error("failed to make connection to " + Settings.getRemoteHostname() + ":" + Settings.getRemotePort() + " :" + e);
@@ -262,9 +262,11 @@ public class Control extends Thread {
 		while (!term) {
 			// do something with 5 second intervals in between
 			try {
-				maintainServerState(Settings.getServerId(), Settings.getLocalHostname(), getClientLoads(), Settings.getLocalPort());
+				maintainServerState(Settings.getServerId(), Settings.getLocalHostname(),
+						getClientLoads(), Settings.getLocalPort());
 				sendServerAnnounce();
 				sendBackupList();
+				cleanServerStatusList();
 				Thread.sleep(Settings.getActivityInterval());
 			} catch (InterruptedException e) {
 				log.info("received an interrupt, system is shutting down");
@@ -362,6 +364,16 @@ public class Control extends Thread {
 		}
 	}
 
+	// If the load info of a server is not updated for more than 20 sec, then remove it.
+	private void cleanServerStatusList(){
+		for(String id : serverStateList.keySet()) {
+			if((Calendar.getInstance().getTime().getTime()
+					- serverStateList.get(id).getUpdateTime().getTime())/1000 > 20 ){
+				serverStateList.remove(id);
+			}
+		}
+	}
+
 	public HashMap<String, ServerState> getServerStateList() {
 		return serverStateList;
 	}
@@ -382,6 +394,8 @@ public class Control extends Thread {
 		}
 		return null;
 	}
+
+
 
 	public void doRedirect(Connection connection, String id, String username) {
 		connection.sendRedirectMsg(this.getServerStateList().get(id).getHost(),
@@ -404,12 +418,14 @@ public class Control extends Thread {
 		uiRefresher.start();
 	}
 
-	public void refreshUI() {
+
+	private void refreshUI() {
 		if (serverTextFrame != null) {
+			ArrayList<Connection> copyConn = new ArrayList<>(connections);
 			this.serverTextFrame.setLoadArea(serverStateList.values());
-			this.serverTextFrame.setServerArea(connections);
+			this.serverTextFrame.setServerArea(copyConn);
 			this.serverTextFrame.setRegisteredArea(userList.values());
-			this.serverTextFrame.setLoginUserArea(connections);
+			this.serverTextFrame.setLoginUserArea(copyConn);
 		}
 	}
 

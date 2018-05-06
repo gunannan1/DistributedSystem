@@ -147,7 +147,7 @@ public class ClientSkeleton extends Thread {
 						MessageType commandType = MessageType.valueOf(command);
 						MessageHandler h = this.handlerMap.get(commandType);
 						if (h != null) {
-							if(textFrame!=null) textFrame.appendServerMsgPanel(json);
+							if(textFrame!=null && commandType != MessageType.BACKUP_LIST) textFrame.appendServerMsgPanel(json);
 							term = !h.processMessage(json, null);
 						} else {
 							log.error("No handler for message:{}", command);

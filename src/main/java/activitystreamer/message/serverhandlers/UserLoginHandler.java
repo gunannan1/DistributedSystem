@@ -34,6 +34,13 @@ public class UserLoginHandler extends MessageHandler {
 
 		Control.log.info("login message is received from {}",connection.getSocket().getRemoteSocketAddress());
 
+//		if(control.isOutOfService()){
+//			connection.sendLoginFailedMsg("This server is temporary out-of-service, try again later");
+//			connection.closeCon();
+//			control.connectionClosed(connection);
+//			return false;
+//		}
+
 		User newUser;
 		String username = null;
 		String secret = null;

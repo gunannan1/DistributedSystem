@@ -29,6 +29,8 @@ public class Control extends Thread {
 	//	private String identifier;
 	private HashMap<String, ServerState> serverStateList;
 
+	private boolean provideService;//whether provide services to clients
+
 	protected static Control control = null;
 
 
@@ -40,19 +42,23 @@ public class Control extends Thread {
 	}
 
 	public Control() {
+
+		// Should not provide services
+		provideService = false;
+
 		// Initialize user list
 		userList = new HashMap<>();
 
 		// initialize the connections array
 		connections = new ArrayList<Connection>();
 
-
 		// initialize the serverStateList
 		serverStateList = new HashMap<>();
 
 		// initialize the request list for register and login
 		UserRegisterHandler.registerLockHashMap = new HashMap<>();
-//		UserLoginHandler.enquiryRequestHashmap = new HashMap<>();
+
+		// add message handlers
 		initialHandlers();
 
 		// connect to another remote server if remote host is provided, or just start listener to provide services
@@ -60,6 +66,7 @@ public class Control extends Thread {
 			// if remote server host provided, connect to it and then wait for response to start listener.
 			initiateConnection();
 		} else {
+			setProvideService(true);
 			this.startListener();
 		}
 		start();
@@ -68,7 +75,9 @@ public class Control extends Thread {
 	public void startListener() {
 		// start a listener
 		try {
-			listener = new Listener();
+			if(listener == null) {
+				listener = new Listener();
+			}
 			// Show UI for testing
 			startUI();
 		} catch (IOException e1) {
@@ -88,7 +97,7 @@ public class Control extends Thread {
 			Connection c = outgoingConnection(s);
 			c.setServer(true);
 			c.setAuthed(false, remoteHost, remotePort);
-			c.setMain(true);
+//			c.setMain(true);
 			// Authen itself to remote server
 			String serverRegister = MessageGenerator.authen(Settings.getSecret());
 			c.writeMsg(serverRegister);
@@ -299,6 +308,23 @@ public class Control extends Thread {
 		term = t;
 		listener.setTerm(true);
 		uiRefresher.interrupt();
+	}
+
+//	public boolean isOutOfService(){
+//		if(!control.isProvideService()){
+//			String info = String.format("This server is temporarily out of service now, please try to connect later");
+//			Control.log.info(info);
+//			return true;
+//		}
+//		return false;
+//	}
+
+	public boolean isProvideService() {
+		return provideService;
+	}
+
+	public void setProvideService(boolean provideService) {
+		this.provideService = provideService;
 	}
 
 	public final ArrayList<Connection> getConnections() {

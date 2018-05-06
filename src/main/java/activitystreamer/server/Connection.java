@@ -1,12 +1,7 @@
 package activitystreamer.server;
 
 
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 
@@ -26,7 +21,7 @@ public class Connection extends Thread {
 	private boolean term=false;
 	private boolean isAuthed = false;
 	private User user;
-	private boolean isMain = false; //TODO need to take care of this , maybe useless
+//	private boolean isMain = false; //TODO need to take care of this , maybe useless
 	private String remoteServerHost;
 	private int remoteServerPort;
 
@@ -34,7 +29,7 @@ public class Connection extends Thread {
 	//TODO reconnect to backup servers when target server crash
 	//TODO when to remove a server from backServer list?
 
-	Connection(Socket socket, Boolean isServer) throws IOException{
+	private Connection(Socket socket, Boolean isServer) throws IOException{
 		DataInputStream in = new DataInputStream(socket.getInputStream());
 		DataOutputStream out = new DataOutputStream(socket.getOutputStream());
 	    inreader = new BufferedReader( new InputStreamReader(in));
@@ -45,6 +40,7 @@ public class Connection extends Thread {
 		user = null;
 	    start();
 	}
+
 	Connection(Socket socket) throws IOException{
 		this(socket,false);
 	}
@@ -53,13 +49,11 @@ public class Connection extends Thread {
 	/*
 		 * returns true if the message was written, otherwise false
 		 */
-	public boolean writeMsg(String msg) {
+	public void writeMsg(String msg) {
 		if(open){
 			outwriter.println(msg);
 			outwriter.flush();
-			return true;	
 		}
-		return false;
 	}
 	
 	public void closeCon(){
@@ -69,13 +63,13 @@ public class Connection extends Thread {
 				term=true;
 				inreader.close();
 				outwriter.close();
-				if(isMain){
-					String info ="Connection to upstream server breaks, shutdown all services to clients and downstream servers";
-					Control.log.info(info);
-					Control.getInstance().setTerm(true);
-					Control.getInstance().refreshUI();
-					Control.getInstance().getServerTextFrame().showErrorMsg(info);
-				}
+//				if(isMain){
+//					String info ="Connection to upstream server breaks, shutdown all services to clients and downstream servers";
+//					Control.log.info(info);
+//					Control.getInstance().setTerm(true);
+//					Control.getInstance().refreshUI();
+//					Control.getInstance().getServerTextFrame().showErrorMsg(info);
+//				}
 			} catch (IOException e) {
 				// already closed?
 				Control.log.error("received exception closing the connection "+Settings.socketAddress(socket)+": "+e);
@@ -87,32 +81,78 @@ public class Connection extends Thread {
 	public void run(){
 		try {
 			String data;
-			while(!term && (data = inreader.readLine())!=null){
-				Control.log.debug("receive data {}",data);
-				term = !Control.getInstance().process(this,data);
+			while(!term) {
+				while (!term && (data = inreader.readLine()) != null) {
+					Control.log.debug("receive data {}", data);
+					term = !Control.getInstance().process(this, data);
+				}
+				Control.log.debug("connection closed to " + Settings.socketAddress(socket));
+				//TODO crash reconnection
+				if (isAuthedServer()) {
+					Control.log.info("This server is authened, " +
+							"need to connect to backup servers if there is any.");
+					// Set this connect to false as the connection between servers is not authened
+					isAuthed = false;
+					if (reConnectBackupServer()) {
+						String info = String.format("Reconnect to backup server %s:%s, sending AUTHENTICATE message",
+								Settings.getRemoteHostname(), Settings.getRemotePort());
+						Control.log.info(info);
+						sendAuthMsg(Settings.getSecret());
+					} else {
+						Control.log.error("All backup servers are out of service, server terminates");
+						this.closeCon();
+						Control.getInstance().connectionClosed(this);
+					}
+				}
 			}
-			Control.log.debug("connection closed to "+Settings.socketAddress(socket));
-			//TODO crash reconnection
-			Control.getInstance().connectionClosed(this);
+
 		} catch (IOException e) {
 			Control.log.error("connection "+Settings.socketAddress(socket)+" closed with exception: "+e);
 			Control.getInstance().connectionClosed(this);
 		}
 		open=false;
 	}
+
+	private boolean reConnectBackupServer(){
+		if(backupServers!= null && backupServers.size() > 0) {
+			BackupServerInfo first = backupServers.get(0);
+			if(!first.getHost().equals(Settings.getLocalHostname()) || first.getProt() != Settings.getLocalPort()) {
+					for (BackupServerInfo sInfo : backupServers) {
+						if (tryOneBackupServer(sInfo.getHost(), sInfo.getProt())) {
+							Settings.setRemoteHostname(sInfo.getHost());
+							Settings.setRemotePort(sInfo.getProt());
+							return true;
+						}
+					}
+			}else{
+				Control.log.info("This server is the primary backup server, no need do reconnection.Wait for other servers.");
+				return false;
+			}
+		}
+		Control.log.info("no backup servers exist, server terminates");
+		return false;
+	}
+
+	private boolean tryOneBackupServer(String host,int port){
+		Control.log.info("try to connect to backup server {}:{}",host,port);
+		try {
+			this.socket.close();
+			Socket s = new Socket(host, port);
+			DataInputStream in = new DataInputStream(s.getInputStream());
+			DataOutputStream out = new DataOutputStream(s.getOutputStream());
+			inreader = new BufferedReader( new InputStreamReader(in));
+			outwriter = new PrintWriter(out, true);
+			return true;
+		} catch (IOException e) {
+			Control.log.info("re-connect backup server {}:{} failed.",host,port);
+			return false;
+		}
+	}
 	
 	public Socket getSocket() {
 		return socket;
 	}
-	
-	public boolean isOpen() {
-		return open;
-	}
 
-	public void setTerm(boolean term) {
-		this.term = term;
-		if(term) interrupt();
-	}
 	public void setAuthed(boolean isAuthed,String host, int port){
 		this.remoteServerHost = host;
 		this.remoteServerPort = port;
@@ -143,14 +183,14 @@ public class Connection extends Thread {
 			this.user = null;
 		}
 	}
-
-	public boolean isMain() {
-		return isMain;
-	}
-
-	public void setMain(boolean main) {
-		isMain = main;
-	}
+//
+//	public boolean isMain() {
+//		return isMain;
+//	}
+//
+//	public void setMain(boolean main) {
+//		isMain = main;
+//	}
 
 	public boolean isAuthedClient(){
 		return user != null && isAuthed;

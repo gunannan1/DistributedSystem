@@ -1,6 +1,5 @@
 package activitystreamer.message.serverhandlers;
 
-import activitystreamer.BackupServerInfo;
 import activitystreamer.message.MessageHandler;
 import activitystreamer.server.Connection;
 import activitystreamer.server.Control;
@@ -9,7 +8,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -31,8 +29,8 @@ public class ServerAuthenSuccHandler extends MessageHandler {
 	public boolean processMessage(JsonObject json,Connection connection) {
 		Control.log.info("Authen Succ message received from {}:{}",
 				connection.getRemoteServerHost(),connection.getRemoteServerPort());
-		connection.setAuthed(true);
 		try{
+
 			Control.log.info("Initialise user list when joining this system");
 			HashMap<String, User> userList = new HashMap<>();
 			JsonArray userJsonArray = json.getAsJsonArray("user_list");
@@ -47,6 +45,8 @@ public class ServerAuthenSuccHandler extends MessageHandler {
 				userList.put(username,new User(username,secret));
 			}
 			control.setUserList(userList);
+			connection.setAuthed(true);
+			control.setProvideService(true); // begin to provide services to clients/servers
 			return true;
 		}catch (NullPointerException | UnsupportedOperationException e) {
 			String error = String.format("Invaid AUTHENTICATION_SUCC  message received:%s", json.toString());

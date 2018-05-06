@@ -24,6 +24,13 @@ public class ServerAuthenRequestHandler extends MessageHandler {
 
 	@Override
 	public boolean processMessage(JsonObject json, Connection connection) {
+//		if(control.isOutOfService()){
+//			connection.sendAuthFailedMsg("This server is temporary out-of-service, try again later");
+//			connection.closeCon();
+//			control.connectionClosed(connection);
+//			return false;
+//		}
+
 		String secret;
 		String remoteServiceHost;
 		int remoteServicePort;

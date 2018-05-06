@@ -48,6 +48,7 @@ public class LockRequestHandler extends MessageHandler {
 			failHandler(error, connection);
 			return false;
 		}
+
 		newUser = new User(username, secret);
 
 		// check locally

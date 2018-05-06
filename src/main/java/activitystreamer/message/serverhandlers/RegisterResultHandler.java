@@ -24,6 +24,7 @@ public class RegisterResultHandler extends MessageHandler {
 	@Override
 	public boolean processMessage(JsonObject json, Connection connection) {
 		Control.log.info("Register result message received from {}",connection.getSocket().getRemoteSocketAddress());
+
 		try{
 			BroadcastResult.REGISTER_RESULT status = BroadcastResult.REGISTER_RESULT.valueOf(json.get("result").getAsString());
 			String username = json.get("username").getAsString();

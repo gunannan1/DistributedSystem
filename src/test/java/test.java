@@ -18,7 +18,10 @@ public class test {
 
 	public static void main(String[] argv) {
 
-		ClientTextFrame c = new ClientTextFrame();
+		String a = null;
+		JsonObject json = new JsonObject();
+		json.addProperty("a",a);
+		System.out.println(a);
 	}
 
 }

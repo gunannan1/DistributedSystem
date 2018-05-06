@@ -75,9 +75,22 @@ public class MessageGenerator {
 	public static String lockRequest(String username, String secret) {
 		return generate(MessageType.LOCK_REQUEST,username,secret);
 	}
-	public static String lockDenied(String username, String secret) {
-		return generate(MessageType.LOCK_DENIED,username,secret);
+	public static String lockDenied(String username, String secret, String info) {
+		JsonObject json = new JsonObject();
+		json.addProperty("command",MessageType.LOCK_DENIED.name());
+		json.addProperty("username",username);
+		json.addProperty("secret",secret);
+		return json.toString();
 	}
+	public static String lockDenied(String username, String secret) {
+		JsonObject json = new JsonObject();
+		json.addProperty("command",MessageType.LOCK_DENIED.name());
+		json.addProperty("username",username);
+		json.addProperty("secret",secret);
+		json.addProperty("info","Username already exists in the system");
+		return json.toString();
+	}
+
 	public static String lockAllowed(String username, String secret) {
 		return generate(MessageType.LOCK_ALLOWED,username,secret);
 	}

@@ -1,7 +1,6 @@
 package activitystreamer.server;
 
 import activitystreamer.UILogAppender;
-import activitystreamer.message.Activity;
 import activitystreamer.message.MessageGenerator;
 import activitystreamer.message.MessageHandler;
 import activitystreamer.message.MessageType;
@@ -14,7 +13,8 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Control extends Thread {
 	public static final Logger log = LogManager.getLogger("serverLogger");
@@ -26,7 +26,7 @@ public class Control extends Thread {
 	private HashMap<String, User> userList; // <String, user Class>,
 	private HashMap<MessageType, MessageHandler> handlerMap;
 	private ServerTextFrame serverTextFrame;
-	private String identifier;
+	//	private String identifier;
 	private HashMap<String, ServerState> serverStateList;
 
 	protected static Control control = null;
@@ -46,15 +46,13 @@ public class Control extends Thread {
 		// initialize the connections array
 		connections = new ArrayList<Connection>();
 
-		// initialize the identifier
-		identifier = null;
 
 		// initialize the serverStateList
 		serverStateList = new HashMap<>();
 
 		// initialize the request list for register and login
 		UserRegisterHandler.registerLockHashMap = new HashMap<>();
-		UserLoginHandler.enquiryRequestHashmap = new HashMap<>();
+//		UserLoginHandler.enquiryRequestHashmap = new HashMap<>();
 		initialHandlers();
 
 		// connect to another remote server if remote host is provided, or just start listener to provide services
@@ -71,8 +69,6 @@ public class Control extends Thread {
 		// start a listener
 		try {
 			listener = new Listener();
-			identifier = Settings.getLocalHostname() + Settings.getLocalPort();
-
 			// Show UI for testing
 			startUI();
 		} catch (IOException e1) {
@@ -86,16 +82,18 @@ public class Control extends Thread {
 		// make a connection to another server if remote hostname is supplied
 		try {
 			startListener();
-			Socket s = new Socket(Settings.getRemoteHostname(), Settings.getRemotePort());
+			String remoteHost = Settings.getRemoteHostname();
+			int remotePort = Settings.getRemotePort();
+			Socket s = new Socket(remoteHost, remotePort);
 			Connection c = outgoingConnection(s);
 			c.setServer(true);
-			c.setAuthed(true);
+			c.setAuthed(false, remoteHost, remotePort);
 			c.setMain(true);
 			// Authen itself to remote server
 			String serverRegister = MessageGenerator.authen(Settings.getSecret());
 			c.writeMsg(serverRegister);
 
-			identifier = Settings.getLocalHostname() + Settings.getLocalPort();
+//			identifier = Settings.getLocalHostname() + Settings.getLocalPort();
 		} catch (IOException e) {
 			log.error("failed to make connection to " + Settings.getRemoteHostname() + ":" + Settings.getRemotePort() + " :" + e);
 			listener.setTerm(true);
@@ -104,7 +102,6 @@ public class Control extends Thread {
 
 	}
 
-	// TODO initialize message handlers
 	private void initialHandlers() {
 		this.handlerMap = new HashMap<>();
 		this.handlerMap.put(MessageType.INVALID_MESSAGE, new ServerInvalidHandler(this));
@@ -112,6 +109,8 @@ public class Control extends Thread {
 		// Message from Clients
 		this.handlerMap.put(MessageType.REGISTER, new UserRegisterHandler(this));
 		this.handlerMap.put(MessageType.LOGIN, new UserLoginHandler(this));
+		/* used for sync registered user list */
+		this.handlerMap.put(MessageType.USER_REGISTER_RESULT,new RegisterResultHandler(this));
 
 		this.handlerMap.put(MessageType.LOGOUT, new UserLogoutHandler(this));
 		this.handlerMap.put(MessageType.ACTIVITY_MESSAGE, new ActivityRequestHandler(this));
@@ -119,19 +118,18 @@ public class Control extends Thread {
 		// Message from Servers
 		this.handlerMap.put(MessageType.AUTHENTICATE, new ServerAuthenRequestHandler(this));
 		this.handlerMap.put(MessageType.AUTHENTICATION_FAIL, new ServerAuthenFailedHandler(this));
+		this.handlerMap.put(MessageType.AUTHENTICATION_SUCC, new ServerAuthenSuccHandler(this));
 
 		this.handlerMap.put(MessageType.SERVER_ANNOUNCE, new ServerAnnounceHandler(this));
 		this.handlerMap.put(MessageType.ACTIVITY_BROADCAST, new ActivityBroadcastHandler(this));
-
-		// Messages for Login
-//		this.handlerMap.put(MessageType.USER_ENQUIRY, new UserEnquiryHandler(this));
-//		this.handlerMap.put(MessageType.USER_FOUND, new UserFoundHandler(this));
-//		this.handlerMap.put(MessageType.USER_NOT_FOUND, new UserNotFoundHandler(this));
 
 		// Messages for Register
 		this.handlerMap.put(MessageType.LOCK_REQUEST, new LockRequestHandler(this));
 		this.handlerMap.put(MessageType.LOCK_ALLOWED, new LockAllowedHandler(this));
 		this.handlerMap.put(MessageType.LOCK_DENIED, new LockDeniedHandler(this));
+
+		// Backup subsystem for High Available
+		this.handlerMap.put(MessageType.BACKUP_LIST, new ServerBackupListHandler(this));
 
 	}
 
@@ -199,7 +197,6 @@ public class Control extends Thread {
 
 	}
 
-	//TODO handle boradcast task
 	public synchronized void broadcastToServers(String msg, Connection from) {
 		for (Connection c : connections) {
 			if (c != from && c.isAuthedServer()) {
@@ -224,14 +221,12 @@ public class Control extends Thread {
 	}
 
 
-	//TODO check user exists
 	public synchronized User checkUserExists(String username) {
 		return userList.get(username);
 	}
 
-	//TODO add user
 	public synchronized boolean addUser(User user) {
-		if (checkUserExists(user.getUsername())==null) {
+		if (checkUserExists(user.getUsername()) == null) {
 			userList.put(user.getUsername(), user);
 			return true;
 		} else {
@@ -244,14 +239,23 @@ public class Control extends Thread {
 		return userList.get(username);
 	}
 
+	public HashMap<String, User> getUserList() {
+		return userList;
+	}
+
+	public void setUserList(HashMap<String, User> userList) {
+		this.userList = userList;
+	}
+
 	@Override
 	public void run() {
 		log.info("using activity interval of " + Settings.getActivityInterval() + " milliseconds");
 		while (!term) {
 			// do something with 5 second intervals in between
 			try {
-				maintainServerState(Settings.getServerId(),Settings.getLocalHostname(),getClientLoads(),Settings.getLocalPort());
+				maintainServerState(Settings.getServerId(), Settings.getLocalHostname(), getClientLoads(), Settings.getLocalPort());
 				sendServerAnnounce();
+				sendBackupList();
 				Thread.sleep(Settings.getActivityInterval());
 			} catch (InterruptedException e) {
 				log.info("received an interrupt, system is shutting down");
@@ -272,6 +276,16 @@ public class Control extends Thread {
 			if (c.isAuthedServer()) {
 				c.sendAnnounceMsg(Settings.getServerId(), this.getClientLoads(),
 						Settings.getLocalHostname(), Settings.getLocalPort());
+			}
+		}
+	}
+
+	/* High avaliable for project 2 */
+	private void sendBackupList() {
+		String msg = MessageGenerator.backupList(connections);
+		for (Connection c : connections) {
+			if (c.isAuthedServer() || c.isAuthedClient()) {
+				c.writeMsg(msg);
 			}
 		}
 	}
@@ -337,7 +351,7 @@ public class Control extends Thread {
 				minLoadServerId = id;
 			}
 		}
-		if (this.getClientLoads() - minLoad >=2) {
+		if (this.getClientLoads() - minLoad >= 2) {
 			return minLoadServerId;
 		}
 		return null;
@@ -349,7 +363,7 @@ public class Control extends Thread {
 		Control.log.info(" user [{}] needs redirect", username);
 		connection.closeCon();
 		control.connectionClosed(connection);
-		UserLoginHandler.enquiryRequestHashmap.remove(username);
+//		UserLoginHandler.enquiryRequestHashmap.remove(username);
 	}
 
 	// UI information refresh
@@ -373,7 +387,7 @@ public class Control extends Thread {
 		}
 	}
 
-	public void closeAll(){
+	public void closeAll() {
 		listener.interrupt();
 		uiRefresher.interrupt();
 		term = true;
@@ -382,12 +396,15 @@ public class Control extends Thread {
 
 	private class UIRefresher extends Thread {
 		private boolean isRun;
-		UIRefresher(){
+
+		UIRefresher() {
 			isRun = true;
 		}
-		public void setTerm(){
+
+		public void setTerm() {
 			isRun = false;
 		}
+
 		@Override
 		public void run() {
 			while (isRun) {

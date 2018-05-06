@@ -1,4 +1,6 @@
+import activitystreamer.client.ClientTextFrame;
 import activitystreamer.message.Activity;
+import activitystreamer.message.serverhandlers.BroadcastResult;
 import activitystreamer.server.ServerTextFrame;
 import com.google.gson.JsonObject;
 
@@ -16,10 +18,7 @@ public class test {
 
 	public static void main(String[] argv) {
 
-		SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm:ss");
-		String ss = timeFormat.format(Calendar.getInstance().getTime());
-		System.out.print(ss);
-
+		ClientTextFrame c = new ClientTextFrame();
 	}
 
 }

@@ -24,7 +24,6 @@ public class ActivityRequestHandler extends MessageHandler {
 
 	@Override
 	public boolean processMessage(JsonObject json, Connection connection) {
-		//TODO need future work
 		Control.log.info("Activity request received from {}", connection.getSocket().getRemoteSocketAddress());
 
 		String username = json.get("username").getAsString();

@@ -29,9 +29,7 @@ public class Client {
 		log.info("reading command line options");
 
 		Options options = new Options();
-		// TODO new option is required to separate "connect" and "register"
-//		options.addOption("r", false, " user register, enter u,s then");
-//		options.addOption("l", false, " user login");
+
 
 		options.addOption("u", true, "username");
 		options.addOption("s", true, "secret for username");
@@ -63,7 +61,7 @@ public class Client {
 				help(options);
 			}
 		}
-		//TODO what if remote host is not provided--finished
+
 		if (cmd.hasOption("rp")) {
 			try {
 				int port = Integer.parseInt(cmd.getOptionValue("rp"));
@@ -75,7 +73,6 @@ public class Client {
 			}
 		}
 
-		//TODO what if no user information is provided or only username is provided ?
 		if (cmd.hasOption("s")) {
 			Settings.setSecret(cmd.getOptionValue("s"));
 		}

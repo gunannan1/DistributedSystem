@@ -8,7 +8,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
 
+import activitystreamer.BackupServerInfo;
 import activitystreamer.message.Activity;
 import activitystreamer.message.MessageGenerator;
 
@@ -16,8 +18,7 @@ import activitystreamer.util.Settings;
 
 
 public class Connection extends Thread {
-	private DataInputStream in;
-	private DataOutputStream out;
+
 	private BufferedReader inreader;
 	private PrintWriter outwriter;
 	private boolean open = false;
@@ -25,11 +26,17 @@ public class Connection extends Thread {
 	private boolean term=false;
 	private boolean isAuthed = false;
 	private User user;
-	private boolean isMain = false;
-	
+	private boolean isMain = false; //TODO need to take care of this , maybe useless
+	private String remoteServerHost;
+	private int remoteServerPort;
+
+	private ArrayList<BackupServerInfo> backupServers;
+	//TODO reconnect to backup servers when target server crash
+	//TODO when to remove a server from backServer list?
+
 	Connection(Socket socket, Boolean isServer) throws IOException{
-		in = new DataInputStream(socket.getInputStream());
-	    out = new DataOutputStream(socket.getOutputStream());
+		DataInputStream in = new DataInputStream(socket.getInputStream());
+		DataOutputStream out = new DataOutputStream(socket.getOutputStream());
 	    inreader = new BufferedReader( new InputStreamReader(in));
 	    outwriter = new PrintWriter(out, true);
 	    this.socket = socket;
@@ -61,9 +68,9 @@ public class Connection extends Thread {
 			try {
 				term=true;
 				inreader.close();
-				out.close();
+				outwriter.close();
 				if(isMain){
-					String info = String.format("Connection to upstream server breaks, shutdown all services to clients and downstream servers");
+					String info ="Connection to upstream server breaks, shutdown all services to clients and downstream servers";
 					Control.log.info(info);
 					Control.getInstance().setTerm(true);
 					Control.getInstance().refreshUI();
@@ -85,6 +92,8 @@ public class Connection extends Thread {
 				term = !Control.getInstance().process(this,data);
 			}
 			Control.log.debug("connection closed to "+Settings.socketAddress(socket));
+			//TODO crash reconnection
+			Control.getInstance().connectionClosed(this);
 		} catch (IOException e) {
 			Control.log.error("connection "+Settings.socketAddress(socket)+" closed with exception: "+e);
 			Control.getInstance().connectionClosed(this);
@@ -104,9 +113,24 @@ public class Connection extends Thread {
 		this.term = term;
 		if(term) interrupt();
 	}
+	public void setAuthed(boolean isAuthed,String host, int port){
+		this.remoteServerHost = host;
+		this.remoteServerPort = port;
+		this.isAuthed = isAuthed;
+	}
+
 	public void setAuthed(boolean isAuthed){
 		this.isAuthed = isAuthed;
 	}
+
+	public String getRemoteServerHost() {
+		return remoteServerHost;
+	}
+
+	public int getRemoteServerPort() {
+		return remoteServerPort;
+	}
+
 	public User getUser(){
 		return user;
 	}
@@ -136,14 +160,12 @@ public class Connection extends Thread {
 		return user == null && isAuthed;
 	}
 
-	// TODO implement send methods for different types of messages
 	public void sendInvalidMsg(String info){
 		Control.log.debug("send invalid message to server with info={}",info);
 		String invalidStr = MessageGenerator.invalid(info);
 		this.writeMsg(invalidStr);
 	}
 
-	//TODO for client
 	public void sendLoginSuccMsg(String info){
 		Control.log.debug("send login succ message to client with info=[{}]",info);
 		String loginSuccStr = MessageGenerator.loginSucc(info);
@@ -174,20 +196,18 @@ public class Connection extends Thread {
 	}
 
 	public void sendAnnounceMsg(String id, int load, String host, int port){
-		String announce=MessageGenerator.generateAnnounce(id,load,host,port);
+		String announce=MessageGenerator.serverAnnounce(id,load,host,port);
 		this.writeMsg(announce);
 	}
 
 	public void sendActivityBroadcastMsg(String msg){
-//		String activityBroadcast = MessageGenerator.generateActBroadcast(act);
+//		String activityBroadcast = MessageGenerator.actBroadcast(act);
 		this.writeMsg(msg);
 	}
 	public void sendActivityBroadcastMsg(Activity act){
-		String activityBroadcast = MessageGenerator.generateActBroadcast(act);
+		String activityBroadcast = MessageGenerator.actBroadcast(act);
 		this.writeMsg(activityBroadcast);
 	}
-
-//	public void sendLockRequestMsg(){}
 
 	// User register messages
 	public void sendLockAllowedMsg(String username,String secret) {
@@ -199,19 +219,12 @@ public class Connection extends Thread {
 		this.writeMsg(message);
 	}
 
-	// User login messages
-//	public void sendUserNotFoundMsg(String username,String secret, String owner) {
-//		String message = MessageGenerator.generateUserNotFound(username, secret, owner);
-//		this.writeMsg(message);
-//	}
-//	public void sendUserFoundMsg(String username,String secret, String owner){
-//		String message = MessageGenerator.generateUserFound(username,secret,owner);
-//		this.writeMsg(message);
-//	}
-
 	public void sendRedirectMsg(String hostname, int port){
-		String message=MessageGenerator.generateRedirect(hostname,port);
+		String message=MessageGenerator.redirect(hostname,port);
 		this.writeMsg(message);
 	}
 
+	public void setBackupServers(ArrayList<BackupServerInfo> bsInfo) {
+		this.backupServers = bsInfo;
+	}
 }

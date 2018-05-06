@@ -24,7 +24,7 @@ java -jar deliveriable/Client-original.jar -u ningk -rp 8003 -rh localhost
 
 #register client
 secret=`grep yirupan secret_map.csv|cut -f 2 -d ',' `
-nohup java -jar deliveriable/Client-original.jar -u yirupan -rp 8001 -rh localhost -s ${secret} > log/yirupan.log 2>&1 &
+nohup java -jar deliveriable/Client-original.jar -u yirupan -rp 8001 -rh localhost -s 2kk98drmsl2f5utd2ra0m08pu6 > log/yirupan.log 2>&1 &
 sleep 3
 
 secret=`grep wenyizhao secret_map.csv|cut -f 2 -d ',' `

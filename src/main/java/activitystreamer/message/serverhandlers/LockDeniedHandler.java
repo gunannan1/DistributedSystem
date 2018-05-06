@@ -31,7 +31,6 @@ public class LockDeniedHandler extends MessageHandler {
 	 */
 	@Override
 	public boolean processMessage(JsonObject json,Connection connection) {
-		//TODO need future work
 		Control.log.info("Lock Denied message is recieved");
 		String username = null;
 		String secret = null;
@@ -47,9 +46,9 @@ public class LockDeniedHandler extends MessageHandler {
 		}
 
 
-		BroadcastResult lockRequest = UserRegisterHandler.registerLockHashMap.get(username);
-		BroadcastResult loginRequest = UserLoginHandler.enquiryRequestHashmap.get(username);
-		BroadcastResult l = lockRequest == null ? loginRequest:lockRequest;
+		BroadcastResult l = UserRegisterHandler.registerLockHashMap.get(username);
+//		BroadcastResult loginRequest = UserLoginHandler.enquiryRequestHashmap.get(username);
+//		BroadcastResult l = lockRequest == null ? loginRequest:lockRequest;
 		if (l == null ) {
 			// just ignore to align with Aaron's server
 			Control.log.error("No register information received for user [{}]", username);
@@ -67,7 +66,7 @@ public class LockDeniedHandler extends MessageHandler {
 		if (!l.getFrom().isAuthedServer()) {
 			try {
 				BroadcastResult.LOCK_STATUS searchStatus = l.getResult();
-				return BroadcastResult.processLock(searchStatus,loginRequest,lockRequest,new User(username,secret));
+				return BroadcastResult.processLock(searchStatus,l,new User(username,secret));
 			} catch (Exception e) {
 				Control.log.info("The client sending register request is disconnected");
 				return true; // do not close any connection as closing connection should be handled in other way

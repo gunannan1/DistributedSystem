@@ -32,7 +32,6 @@ public class Server {
 		log.info("reading command line options");
 		
 		Options options = new Options();
-		//TODO option for command type
 
 		options.addOption("lh",true,"local hostname");
 		options.addOption("lp",true,"local port number");
@@ -56,7 +55,6 @@ public class Server {
 			help(options);
 		}
 
-		// TODO what if arguments are not suitable, for example no remote infomation provided when register?
 		
 		if(cmd.hasOption("lp")){
 			try{

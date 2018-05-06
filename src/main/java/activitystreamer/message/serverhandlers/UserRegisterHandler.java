@@ -51,13 +51,7 @@ public class UserRegisterHandler extends MessageHandler {
 			username = json.get("username").getAsString();
 			secret = json.get("secret").getAsString();
 
-		} catch (NullPointerException e){
-			String error = String.format("User register command missing information username=[%s] secret=[%s]", username, secret);
-			connection.sendInvalidMsg(error);
-			failHandler(error, connection);
-			return false;
-		}
-		catch (UnsupportedOperationException e) {
+		} catch (NullPointerException | UnsupportedOperationException e){
 			String error = String.format("User register command missing information username=[%s] secret=[%s]", username, secret);
 			connection.sendInvalidMsg(error);
 			failHandler(error, connection);
@@ -93,11 +87,11 @@ public class UserRegisterHandler extends MessageHandler {
 		}
 
 		// 2.1.1 check if any remote servers exists
+		// TODO a time-out limition should be set
 		if (this.control.getServerLoads(null) > 0) {
 			Control.log.info("Remote servers exist, need to get confirmation from remote servers for user register [{}] ", username);
 			BroadcastResult lockResult = new BroadcastResult(connection, control.getServerLoads(null),newUser);
 			UserRegisterHandler.registerLockHashMap.put(newUser.getUsername(), lockResult);
-			//TODO need testing
 			// broadcastToAll lock request and then waiting for lock_allow & lock_denied, this register process will be handled by LockAllowedHandler & LockDeniedHandler
 			control.broadcastLockRequest(newUser, connection);
 			return true;

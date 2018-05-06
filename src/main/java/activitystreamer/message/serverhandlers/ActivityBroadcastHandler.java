@@ -23,7 +23,6 @@ public class ActivityBroadcastHandler extends MessageHandler {
 
 	@Override
 	public boolean processMessage(JsonObject json,Connection connection) {
-		//TODO need future work
 		Control.log.info("Activity broadcast message received from {}", connection.getSocket().getRemoteSocketAddress());
 
 		if(!connection.isAuthedServer()){

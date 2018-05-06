@@ -1,63 +1,55 @@
 package activitystreamer.client;
 
-import activitystreamer.message.Activity;
-
+import activitystreamer.BackupServerInfo;
+import activitystreamer.UIPanelCreator;
 import activitystreamer.util.Settings;
 import com.google.gson.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.net.Socket;
+import java.util.ArrayList;
 
 
 @SuppressWarnings("serial")
 public class ClientTextFrame extends JFrame implements ActionListener {
 	private static final Logger log = LogManager.getLogger("clientLogger");
 	private JTextArea inputText;
-	private JTextArea outputText;
+	private JTextArea activityOutputText;
+	private DefaultTableModel backupServers;
+	private JTextArea serverMsgOutputText;
 	//	private JTextArea logText;
 	private JButton sendButton;
 	private JButton disconnectButton;
 	private JsonParser parser = new JsonParser();
 
-	//TODO need a socket to send/receive message, how to get this socket?
-	private Socket socket;
-
-	// TODO need a variable to hold threads created within this instance inreader order to close them when disconnect
-
 	public ClientTextFrame() {
 
-		setTitle(String.format("Client-%s (%s)", ClientSkeleton.getInstance().getLocalAddress(), Settings.getUsername()));
+		setTitle(String.format("User:(%s) | Server:(%s:%s)", Settings.getUsername(),Settings.getRemoteHostname(),Settings.getRemotePort()));
 
 		JPanel mainPanel = new JPanel();
-		mainPanel.setLayout(new GridLayout(1, 3));
+		mainPanel.setLayout(new GridLayout(2, 2));
 
 		JPanel inputPanel = new JPanel();
 		inputPanel.setLayout(new BorderLayout());
-		Border lineBorder = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.lightGray), "JSON input, to send to server");
+		Border lineBorder = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.lightGray), "");
 		inputPanel.setBorder(lineBorder);
 
-		JPanel outputPanel = new JPanel();
-		outputPanel.setLayout(new BorderLayout());
-		lineBorder = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.lightGray), "JSON output, received from server");
-		outputPanel.setBorder(lineBorder);
-		outputPanel.setName("Text output");
+		// add output panel
+		activityOutputText = UIPanelCreator.addTextPanel(mainPanel, "JSON output, received from server");
 
-		inputText = new JTextArea();
-		inputText.setLineWrap(true);
-		JScrollPane scrollPane = new JScrollPane(inputText);
-		inputPanel.add(scrollPane, BorderLayout.CENTER);
+		// add backup server list panel
+		backupServers = UIPanelCreator.addTablePanel(mainPanel,"Backup Servers",new String[]{"host","port"});
 
+		// add input panel
+		inputText = UIPanelCreator.addTextPanel(inputPanel,"JSON input, to send to server");
 		JPanel buttonGroup = new JPanel();
 		sendButton = new JButton("Send");
 		disconnectButton = new JButton("Disconnect");
@@ -66,17 +58,13 @@ public class ClientTextFrame extends JFrame implements ActionListener {
 		inputPanel.add(buttonGroup, BorderLayout.SOUTH);
 		sendButton.addActionListener(this);
 		disconnectButton.addActionListener(this);
-
-		outputText = new JTextArea();
-		outputText.setLineWrap(true);
-		scrollPane = new JScrollPane(outputText);
-		outputPanel.add(scrollPane, BorderLayout.CENTER);
-
-
 		mainPanel.add(inputPanel);
-		mainPanel.add(outputPanel);
-		add(mainPanel);
 
+		// Add a panel to show all other message from server exclude ACTIVITY message
+		serverMsgOutputText = UIPanelCreator.addTextPanel(mainPanel, "Messages received from server");
+
+		// add main panel to frame
+		add(mainPanel);
 		setLocationRelativeTo(null);
 		setSize(640, 384);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -90,20 +78,32 @@ public class ClientTextFrame extends JFrame implements ActionListener {
 		});
 	}
 
-
-	// TODO maybe we can move this message handler into receive thread
-	public void setOutputText(final JsonObject obj) {
+	private String prettyJsonString(final JsonObject obj){
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		JsonParser jp = new JsonParser();
 		JsonElement je = jp.parse(obj.toString());
-		String prettyJsonString = gson.toJson(je);
-		setOutputText(prettyJsonString);
+		return gson.toJson(je);
+	}
+	public void appendActivityPanel(final JsonObject obj) {
+
+		appendActivityPanel(prettyJsonString(obj));
 	}
 
-	public void setOutputText(String info) {
-		outputText.append(info);
-		outputText.revalidate();
-		outputText.repaint();
+	public void appendActivityPanel(String info) {
+		activityOutputText.append('\n'+info);
+		activityOutputText.revalidate();
+		activityOutputText.repaint();
+	}
+
+
+	public void appendServerMsgPanel(final JsonObject obj) {
+		appendServerMsgPanel(prettyJsonString(obj));
+	}
+
+	public void appendServerMsgPanel(String info) {
+		serverMsgOutputText.append('\n'+info);
+		serverMsgOutputText.revalidate();
+		serverMsgOutputText.repaint();
 	}
 
 	//show error message
@@ -117,17 +117,13 @@ public class ClientTextFrame extends JFrame implements ActionListener {
 			String msg = inputText.getText().trim().replaceAll("\r", " ").replaceAll("\n", " ").replaceAll("\t", " ");
 			JsonObject json;
 			try {
-//				Gson gson = new Gson();
 				json = (JsonObject) parser.parse(msg);
 				ClientSkeleton.getInstance().sendActivityObject(json);
 			} catch (ClassCastException | JsonSyntaxException e1) {
-				String error = String.format("Data not sent as the string you input is not a valid json string: %s",msg);
+				String error = String.format("Data not sent as the string you input is not a valid json string: %s", msg);
 				log.error(error);
 				showErrorMsg(error);
 			}
-			//Activity act = new Activity(msg);
-
-			//ClientSkeleton.getInstance().sendActivityObject(act);
 
 		} else if (e.getSource() == disconnectButton) {
 			ClientSkeleton.getInstance().sendLogoutMsg();
@@ -135,4 +131,12 @@ public class ClientTextFrame extends JFrame implements ActionListener {
 		}
 	}
 
+	public void setBackupPanel(ArrayList<BackupServerInfo> serverInfos) {
+		backupServers.setRowCount(0);
+		for(BackupServerInfo sInfo:serverInfos) {
+			String host = sInfo.getHost();
+			String port = Integer.toString(sInfo.getProt());
+			backupServers.addRow(new String[]{host,port});
+		}
+	}
 }

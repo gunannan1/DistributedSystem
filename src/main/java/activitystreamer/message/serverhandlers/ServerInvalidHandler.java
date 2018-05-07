@@ -23,7 +23,6 @@ public class ServerInvalidHandler extends MessageHandler {
 
 	@Override
 	public boolean processMessage(JsonObject json,Connection connection) {
-		// TODO need future work
 		Control.log.info("Invalid message received from {}",connection.getSocket().getRemoteSocketAddress());
 		Control.log.info(json.get("info"));
 		Control.log.info("Close connection with {}",connection.getSocket().getRemoteSocketAddress());

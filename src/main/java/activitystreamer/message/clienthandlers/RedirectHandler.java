@@ -1,6 +1,5 @@
 package activitystreamer.message.clienthandlers;
 
-import activitystreamer.Client;
 import activitystreamer.client.ClientSkeleton;
 import activitystreamer.message.MessageHandler;
 import activitystreamer.server.Connection;
@@ -24,26 +23,24 @@ public class RedirectHandler extends MessageHandler {
 
 	@Override
 	public boolean processMessage(JsonObject json, Connection connection) {
-		//TODO need future work
 		try {
-			ClientSkeleton.log.info("redirect message received from server {}:{}", Settings.getRemoteHostname(),Settings.getRemotePort());
+			ClientSkeleton.log.info("redirect message received from server {}:{}", Settings.getRemoteHostname(), Settings.getRemotePort());
 
 			String newRemoteHost = json.get("hostname").getAsString();
 			int newRemotePort = json.get("port").getAsInt();
 
-			ClientSkeleton.log.info("redirect to server {}:{}", newRemoteHost,newRemotePort);
+			ClientSkeleton.log.info("redirect to server {}:{}", newRemoteHost, newRemotePort);
 
-			Settings.setRemoteHostname(newRemoteHost);
-			Settings.setRemotePort(newRemotePort);
-
-			clientSkeleton.redirectToServer(newRemoteHost, newRemotePort);
-
-			clientSkeleton.sendLoginMsg();
+			if (!clientSkeleton.redirectToServer(newRemoteHost, newRemotePort)) {
+				ClientSkeleton.log.error("Cannot redirect to server {}:{}", newRemoteHost, newRemotePort);
+				clientSkeleton.disconnect();
+				return false;
+			}
 
 			return true;
-		}catch (NullPointerException e){
-			ClientSkeleton.log.info("Invalid redirection message received:{}",json.toString());
-			connection.closeCon();
+		} catch (NullPointerException e) {
+			ClientSkeleton.log.info("Invalid redirection message received:{}", json.toString());
+			clientSkeleton.disconnect();
 		}
 		return false;
 	}

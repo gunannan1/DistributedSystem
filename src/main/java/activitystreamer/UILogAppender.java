@@ -55,7 +55,6 @@ public class UILogAppender extends AbstractAppender {
 
 	@Override
 	public void append(LogEvent event) {
-		// TODO Auto-generated method stub
 		final String message = new String(this.getLayout().toByteArray(event));
 		// Append formatted message to text area using the Thread.
 		try {

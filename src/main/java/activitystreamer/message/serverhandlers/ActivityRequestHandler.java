@@ -24,11 +24,15 @@ public class ActivityRequestHandler extends MessageHandler {
 
 	@Override
 	public boolean processMessage(JsonObject json, Connection connection) {
-		//TODO need future work
-		Control.log.info("Activity request received from {}",connection.getSocket().getRemoteSocketAddress());
+		Control.log.info("Activity request received from {}", connection.getSocket().getRemoteSocketAddress());
 
 		String username = json.get("username").getAsString();
-		String secret = json.get("secret").getAsString();
+		String secret = null;
+		try {
+			secret = json.get("secret").getAsString();
+		} catch (UnsupportedOperationException e) {
+			secret = null;
+		}
 
 		User conUser = connection.getUser();
 
@@ -67,12 +71,12 @@ public class ActivityRequestHandler extends MessageHandler {
 		}
 
 		JsonObject actJson = json.get("activity").getAsJsonObject();
-		Activity activity=new Activity(actJson.get("text").getAsString());
+		Activity activity = new Activity(actJson, connection.getUser().getUsername());
 
-		Control.log.info("Process activity from user {}",username);
+		Control.log.info("Process activity from user {}", username);
 		activity.setAuthenticated_user(username);
 
-		Control.log.info("Broadcast activity from user {} to all clients/servers",username);
+		Control.log.info("Broadcast activity from user {} to all clients/servers", username);
 		for (Connection c : this.control.getConnections()) {
 			if (c.isAuthedServer() || c.isAuthedClient()) {
 				c.sendActivityBroadcastMsg(activity);

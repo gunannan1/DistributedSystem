@@ -2,13 +2,15 @@ package activitystreamer.server;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 public class ServerState {
     private int port;
     private int load;
     private String host;
     private String id;
-    private String updateTime;
+    private String updateTimeString;
+    private Date updateTime;
 
     public ServerState(int port,int load,String host,String id){
         this.load=load;
@@ -52,12 +54,17 @@ public class ServerState {
         this.id = id;
     }
 
-    public String getUpdateTime() {
-        return updateTime;
+    public String getUpdateTimeString() {
+        return updateTimeString;
     }
 
-    public void setUpdateTime() {
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime() {
         SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm:ss");
-        this.updateTime = timeFormat.format(Calendar.getInstance().getTime());
+        this.updateTime = Calendar.getInstance().getTime();
+        this.updateTimeString = timeFormat.format(updateTime);
     }
 }

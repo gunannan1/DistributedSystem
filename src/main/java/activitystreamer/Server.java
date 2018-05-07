@@ -32,7 +32,6 @@ public class Server {
 		log.info("reading command line options");
 		
 		Options options = new Options();
-		//TODO option for command type
 
 		options.addOption("lh",true,"local hostname");
 		options.addOption("lp",true,"local port number");
@@ -56,7 +55,6 @@ public class Server {
 			help(options);
 		}
 
-		// TODO what if arguments are not suitable, for example no remote infomation provided when register?
 		
 		if(cmd.hasOption("lp")){
 			try{
@@ -106,11 +104,30 @@ public class Server {
 			Settings.setLocalHostname(cmd.getOptionValue("lh"));
 		}
 
-		if(cmd.hasOption("s")){
+//		if(cmd.hasOption("s")){
+//			Settings.setSecret(cmd.getOptionValue("s"));
+//			log.info("Secret for the system: "+Settings.getSecret());
+//		}
+
+		if(cmd.hasOption("s") && !cmd.hasOption("rh") && !cmd.hasOption("rp")){
 			Settings.setSecret(cmd.getOptionValue("s"));
 			log.info("Secret for the system: "+Settings.getSecret());
 		}
-		
+
+		if(!cmd.hasOption("s") && !cmd.hasOption("rh") && !cmd.hasOption("rp")){
+			log.info("secret for the first server is not provided, generate one automatically");
+			Settings.setSecret(Settings.nextSecret());
+			log.info("Generated secret: [{}]: ",Settings.getSecret());
+		}
+
+		if(!cmd.hasOption("s") && cmd.hasOption("rh") && cmd.hasOption("rp")){
+			log.info("Secret must be provided to join to an existing server");
+		}else{
+			String secret = cmd.getOptionValue("s");
+			log.info("Set secret to [{}]",secret);
+			Settings.setSecret(secret);
+		}
+
 		log.info("starting server");
 
 		Settings.setServerId(Settings.nextSecret());

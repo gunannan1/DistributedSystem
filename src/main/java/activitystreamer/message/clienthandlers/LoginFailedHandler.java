@@ -23,10 +23,11 @@ public class LoginFailedHandler extends MessageHandler {
 
 	@Override
 	public boolean processMessage(JsonObject json,Connection connection) {
-
-		ClientSkeleton.log.info("Login failed to server {}:{}", Settings.getRemoteHostname(), Settings.getRemotePort());
+		String error = String.format("Login failed to server [%s:%s]", Settings.getRemoteHostname(), Settings.getRemotePort());
+		ClientSkeleton.log.info(error);
+		clientSkeleton.getTextFrame().appendServerMsgPanel(error);
 		ClientSkeleton.log.info("Connection will be closed");
-		this.clientSkeleton.startUI(json);
+		clientSkeleton.setAuthen(false);
 		return false;
 	}
 }

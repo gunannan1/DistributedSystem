@@ -27,7 +27,10 @@ public class RegisterSuccHandler extends MessageHandler {
 		clientSkeleton.disconnect();
 		ClientSkeleton.log.info("Register successfully to server {}:{}", Settings.getRemoteHostname(),Settings.getRemotePort());
 		ClientSkeleton.log.info("Close client and login with parameters:");
-		ClientSkeleton.log.info("-l -u {} -s {} -rh {} -rp {} ", Settings.getUsername(),Settings.getSecret(),Settings.getRemoteHostname(),Settings.getRemotePort());
-		return false;// return false so that run loop will end
+		ClientSkeleton.log.info("-u {} -s {} -rh {} -rp {} ", Settings.getUsername(),Settings.getSecret(),Settings.getRemoteHostname(),Settings.getRemotePort());
+		ClientSkeleton.log.info("Login automatically after register success, accroding to head tutor's comment");
+		return clientSkeleton.redirectToServer(Settings.getRemoteHostname(),Settings.getRemotePort());
+//		clientSkeleton.sendLoginMsg();
+//		return true;// return false so that run loop will end
 	}
 }

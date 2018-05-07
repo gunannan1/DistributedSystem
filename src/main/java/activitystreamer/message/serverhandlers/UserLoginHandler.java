@@ -16,7 +16,7 @@ import java.util.HashMap;
  */
 
 public class UserLoginHandler extends MessageHandler {
-	public static HashMap<String, BroadcastResult> enquiryRequestHashmap = new HashMap<>();;
+//	public static HashMap<String, BroadcastResult> enquiryRequestHashmap = new HashMap<>();;
 	private final Control control;
 
 	public UserLoginHandler(Control control) {
@@ -28,14 +28,18 @@ public class UserLoginHandler extends MessageHandler {
 	 * 1. check if anoymous user
 	 * 2. check if both username & secret exist
 	 * 3. check if user exists locally
-	 * 4. check if any remote servers
-	 * 		NO - login failed
-	 * 		YES - broadcastToAll for user information
 	 */
 	@Override
 	public boolean processMessage(JsonObject json, Connection connection) {
 
 		Control.log.info("login message is received from {}",connection.getSocket().getRemoteSocketAddress());
+
+//		if(control.isOutOfService()){
+//			connection.sendLoginFailedMsg("This server is temporary out-of-service, try again later");
+//			connection.closeCon();
+//			control.connectionClosed(connection);
+//			return false;
+//		}
 
 		User newUser;
 		String username = null;
@@ -66,7 +70,7 @@ public class UserLoginHandler extends MessageHandler {
 			secret = json.get("secret").getAsString();
 		}
 		catch (NullPointerException | UnsupportedOperationException e) {
-			String error = String.format("Information missing for login, username='%s' secret='%s'",username,secret);
+			String error = String.format("Information missing for login, username=[%s] secret=[%s]",username,secret);
 			Control.log.info(error);
 			connection.sendInvalidMsg(error);
 			connection.closeCon();
@@ -84,50 +88,27 @@ public class UserLoginHandler extends MessageHandler {
 			if(localUser.getSecret().equals(secret)) {
 				connection.setAuthed(true);
 				connection.setUser(localUser);
-				connection.sendLoginSuccMsg(String.format("login successfully as user '%s '", username));
-
+				connection.sendLoginSuccMsg(String.format("login successfully as user [%s]", username));
 				//check redirect
 				if (redirectCheck(connection, username)) {
 					return true;
 				}
-				Control.log.info("login successfully as user '{}'", username);
+				Control.log.info("login successfully as user [{}]", username);
 				return true;
 			}else{
-				String info = String.format("Secret '%s' does not match for user '%s'",secret,username);
+				String info = String.format("Secret [%s] does not match for user [%s]",secret,username);
+				Control.log.info(info);
 				connection.sendLoginFailedMsg(info);
 				connection.closeCon();
 				this.control.connectionClosed(connection);
 				return false;
 			}
 		}
-
-		// 4. check if any remote servers
-		 if (control.getServerLoads(null) > 0) {
-			Control.log.info("Remote servers exist, will check with other servers for user '{}' ", username);
-
-			BroadcastResult loginResult = new BroadcastResult(connection,control.getServerLoads(connection),newUser);
-			UserLoginHandler.enquiryRequestHashmap.put(username, loginResult);
-
-			connection.setUser(newUser);
-			connection.setAuthed(false);
-
-			// broadcastToAll lock request and then waiting for lock_allow & lock_denied, this register process will be handled by LockAllowedHandler & LockDeniedHandler
-			control.broadcastEnquiry(newUser,connection);
-			return true;
-		}
-		if (control.getServerLoads(null) ==0) {
-			 connection.sendLoginFailedMsg(String.format("User '%s' does not exist",username));
-			 connection.closeCon();
-			 control.connectionClosed(connection);
-			 return false;
-		 }
-
-//		 Should not run to here
-		Control.log.error("Wired things happened in class UserLoginHandler");
+		connection.sendLoginFailedMsg(String.format("User [%s] does not exist.",username));
+		Control.log.info("User [{}] does not exist.",username);
 		connection.closeCon();
 		this.control.connectionClosed(connection);
 		return false;
-
 	}
 
 	public static boolean redirectCheck(Connection connection,String username){

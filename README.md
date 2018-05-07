@@ -76,21 +76,18 @@ In this way, a network will be established.
 
 For every server, a UI will show up to indicate the information of login users, registered users, existing connections and log.
 
-![image-20180417125337006](/Users/eric/Documents/projects/DistributedSystem/document/serverUI.png)
+![image-20180423154555795](/Users/eric/Documents/projects/DistributedSystem/serverUI.png)
 
 ### Client Setup
 
 ```bash
-usage: ActivityStreamer.Client [-a] [-l] [-r] [-rh <arg>] [-rp <arg>] [-s
+usage: ActivityStreamer.Client [-rh <arg>] [-rp <arg>] [-s
        <arg>] [-u <arg>]
 An ActivityStream Client for Unimelb COMP90015
-
- -a          anonymous login
- -l or -r    user login or user register
  -rh <arg>   remote hostname
  -rp <arg>   remote port number
- -s  <arg>   secret for username
- -u  <arg>   username
+ -s  <arg>   secret for username, if not provided, run "register" process
+ -u  <arg>   username, if not provided, login as "anonymous".
 ```
 
 Assume servers are started as the structure described above.
@@ -99,16 +96,16 @@ Assume servers are started as the structure described above.
 
 ```bash
 # Register user named 'ningk' at server 8001
-java -jar Client-jar-with-dependencies.jar -r -u ningk -rp 8001 -rh localhost -s secret1
+java -jar Client-jar-with-dependencies.jar -u ningk -rp 8001 -rh localhost 
 
 # Register user named 'yirupan' at server 8002
-java -jar Client-jar-with-dependencies.jar -r -u yirupan -rp 8002 -rh localhost -s secret1
+java -jar Client-jar-with-dependencies.jar -u yirupan -rp 8002 -rh localhost
 
 # Register user named 'nannangu' at server 8002
-java -jar Client-jar-with-dependencies.jar -r -u nannangu -rp 8002 -rh localhost -s secret1
+java -jar Client-jar-with-dependencies.jar -u nannangu -rp 8002 -rh localhost 
 
 # Register user named 'wenyizhao' at server 8005
-java -jar Client-jar-with-dependencies.jar -r -u wenyizhao -rp 8005 -rh localhost -s secret1
+java -jar Client-jar-with-dependencies.jar -u wenyizhao -rp 8005 -rh localhost
 ```
 
 
@@ -119,16 +116,16 @@ Note that users who are already registered can login from any server.
 
 ```bash
 # Login user named 'ningk' at server 8003 (instead of 8001 which this id registers at)
-java -jar Client-jar-with-dependencies.jar -l -u ningk -rp 8003 -rh localhost -s secret1
+java -jar Client-jar-with-dependencies.jar -u ningk -rp 8003 -rh localhost -s $secret1
 
 # Login user named 'yirupan' at server 8001 (instead of 8002 which this id registers at)
-java -jar Client-jar-with-dependencies.jar -l -u yirupan -rp 8001 -rh localhost -s secret1
+java -jar Client-jar-with-dependencies.jar -u yirupan -rp 8001 -rh localhost -s $secret1
 
 # Login user named 'nannangu' at server 8004 (instead of 8002 which this id registers at)
-java -jar Client-jar-with-dependencies.jar -l -u nannangu -rp 8004 -rh localhost -s secret1
+java -jar Client-jar-with-dependencies.jar -u nannangu -rp 8004 -rh localhost -s $secret1
 
 # Login user named 'wenyizhao' at server 8002 (instead of 8005 which this id registers at)
-java -jar Client-jar-with-dependencies.jar -l -u wenyizhao -rp 8002 -rh localhost -s secret1
+java -jar Client-jar-with-dependencies.jar -u wenyizhao -rp 8002 -rh localhost -s $secret1
 ```
 
 This login will make the network like this:
@@ -137,13 +134,13 @@ This login will make the network like this:
 
 A UI will show up which allows user to send activity and receive message from server.
 
-![image-20180417125619908](/Users/eric/Documents/projects/DistributedSystem/document/clientUI.png)
+![image-20180423154845689](/Users/eric/Documents/projects/DistributedSystem/clientUI.png)
 
 
 
 ### Client Sends Activities
 
-Users can send activities through UI, just as what it shows.
+Users can send activities through UI, just as what it shows, but must be **in JSON format**.
 
 
 

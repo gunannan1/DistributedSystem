@@ -31,7 +31,6 @@ public class LockDeniedHandler extends MessageHandler {
 	 */
 	@Override
 	public boolean processMessage(JsonObject json,Connection connection) {
-		//TODO need future work
 		Control.log.info("Lock Denied message is recieved");
 		String username = null;
 		String secret = null;
@@ -40,31 +39,26 @@ public class LockDeniedHandler extends MessageHandler {
 		try{
 			username = json.get("username").getAsString();
 			secret = json.get("secret").getAsString();
-		}catch (NullPointerException e){
-			String error = String.format("Lock denied command missing information username='%s' secret='%s'", username, secret);
-			failHandler(error, connection);
-			return false;
-		}
-		catch (UnsupportedOperationException e){
-			String error = String.format("Lock denied command missing information username='%s' secret='%s'", username, secret);
+		}catch (NullPointerException | UnsupportedOperationException e){
+			String error = String.format("Lock denied command missing information username=[%s] secret=[%s]", username, secret);
 			failHandler(error, connection);
 			return false;
 		}
 
 
-		BroadcastResult lockRequest = UserRegisterHandler.registerLockHashMap.get(username);
-		BroadcastResult loginRequest = UserLoginHandler.enquiryRequestHashmap.get(username);
-		BroadcastResult l = lockRequest == null ? loginRequest:lockRequest;
+		BroadcastResult l = UserRegisterHandler.registerLockHashMap.get(username);
+//		BroadcastResult loginRequest = UserLoginHandler.enquiryRequestHashmap.get(username);
+//		BroadcastResult l = lockRequest == null ? loginRequest:lockRequest;
 		if (l == null ) {
 			// just ignore to align with Aaron's server
-			Control.log.error("No register information received for user '{}'", username);
+			Control.log.error("No register information received for user [{}]", username);
 			return true;
 		}
 
 		// whether all servers allowed
 		l.addDeny();
 		if( l.getResult() == BroadcastResult.LOCK_STATUS.PENDING) {
-			Control.log.info("LOCK DEINED (user found) is received, not all servers reply, continue waiting future information...");
+			Control.log.info("LOCK DEINED (user found) for user [{}] is received, not all servers reply, continue waiting future information...",username);
 			return true;
 		}
 
@@ -72,7 +66,7 @@ public class LockDeniedHandler extends MessageHandler {
 		if (!l.getFrom().isAuthedServer()) {
 			try {
 				BroadcastResult.LOCK_STATUS searchStatus = l.getResult();
-				return BroadcastResult.processLock(searchStatus,loginRequest,lockRequest,new User(username,secret));
+				return BroadcastResult.processLock(searchStatus,l,new User(username,secret));
 			} catch (Exception e) {
 				Control.log.info("The client sending register request is disconnected");
 				return true; // do not close any connection as closing connection should be handled in other way

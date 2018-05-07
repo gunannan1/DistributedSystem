@@ -32,7 +32,6 @@ public class LockRequestHandler extends MessageHandler {
 	 */
 	@Override
 	public boolean processMessage(JsonObject json, Connection connection) {
-		//TODO need future work
 		Control.log.info("Lock request received from {}", connection.getSocket().getRemoteSocketAddress());
 		User newUser = null;
 		String username = null;
@@ -44,28 +43,31 @@ public class LockRequestHandler extends MessageHandler {
 			secret = json.get("secret").getAsString();
 
 		}
-		catch (NullPointerException e) {
-			String error = String.format("Lock request command missing information username='%s' secret='%s'", username, secret);
-			failHandler(error, connection);
-			return false;
-		}catch (UnsupportedOperationException e) {
-			String error = String.format("Lock request command missing information username='%s' secret='%s'", username, secret);
+		catch (NullPointerException | UnsupportedOperationException e) {
+			String error = String.format("Lock request command missing information username=[%s] secret=[%s]", username, secret);
 			failHandler(error, connection);
 			return false;
 		}
+
 		newUser = new User(username, secret);
 
 		// check locally
 		User localUser = control.checkUserExists(username);
 		if (localUser != null) {
-			Control.log.info("User exists in this server, reply lock denied (user found) request with secret in this server");
+			Control.log.info("User [{}] exists in this server, reply lock denied (user found) request with secret in this server",username);
 			connection.sendLockDeniedMsg(username, localUser.getSecret());
 			return true;
 		}
 
-
+		// check lockrequest list
+		if (UserRegisterHandler.registerLockHashMap.get(username)!=null){
+			Control.log.info("User [{}] is already under register process, reject",username);
+			connection.sendLockDeniedMsg(username, localUser.getSecret());
+			return true;
+		}
+		
 		// Check remotely if server load > 0 exclude the sending server
-		Control.log.info("User '{}' does not exist in this server", username);
+		Control.log.info("User [{}] does not exist in this server", username);
 		if (control.getServerLoads(connection) > 0) {
 			Control.log.info("More server found, check with other servers(exclude the sending server)");
 			// add this requst to local requst hashmap

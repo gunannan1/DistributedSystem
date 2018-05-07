@@ -1,9 +1,16 @@
 package activitystreamer.message;
 
+import activitystreamer.message.serverhandlers.BroadcastResult;
+import activitystreamer.server.Connection;
+import activitystreamer.server.User;
 import activitystreamer.util.Settings;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * MessageGenerator
@@ -19,9 +26,6 @@ public class MessageGenerator {
 		return generate(MessageType.INVALID_MESSAGE, info);
 	}
 
-	public static String authFail(String info) {
-		return generate(MessageType.AUTHENTICATION_FAIL, info);
-	}
 
 	public static String registerFail(String username) {
 		return generate(MessageType.REGISTER_FAILED, String.format("%s is already registered with the system",username));
@@ -39,8 +43,31 @@ public class MessageGenerator {
 		return generate(MessageType.LOGIN_SUCCESS, info);
 	}
 
+	public static String authFail(String info) {
+		return generate(MessageType.AUTHENTICATION_FAIL, info);
+	}
+
 	public static String authen(String secret) {
-		return generate(MessageType.AUTHENTICATE, secret);
+		JsonObject json = new JsonObject();
+		json.addProperty("command", MessageType.AUTHENTICATE.name());
+		json.addProperty("secret", secret);
+		json.addProperty("host",Settings.getLocalHostname());
+		json.addProperty("port",Settings.getLocalPort());
+		return json.toString();
+	}
+
+	public static String authenSucc(HashMap<String, User> userList) {
+		JsonObject json = new JsonObject();
+		json.addProperty("command", MessageType.AUTHENTICATION_SUCC.name());
+		JsonArray userJsonList = new JsonArray();
+		for(User u: userList.values()){
+			JsonObject oneUser = new JsonObject();
+			oneUser.addProperty("username",u.getUsername());
+			oneUser.addProperty("secret",u.getSecret());
+			userJsonList.add(oneUser);
+		}
+		json.add("user_list", userJsonList);
+		return json.toString();
 	}
 
 	
@@ -48,9 +75,22 @@ public class MessageGenerator {
 	public static String lockRequest(String username, String secret) {
 		return generate(MessageType.LOCK_REQUEST,username,secret);
 	}
-	public static String lockDenied(String username, String secret) {
-		return generate(MessageType.LOCK_DENIED,username,secret);
+	public static String lockDenied(String username, String secret, String info) {
+		JsonObject json = new JsonObject();
+		json.addProperty("command",MessageType.LOCK_DENIED.name());
+		json.addProperty("username",username);
+		json.addProperty("secret",secret);
+		return json.toString();
 	}
+	public static String lockDenied(String username, String secret) {
+		JsonObject json = new JsonObject();
+		json.addProperty("command",MessageType.LOCK_DENIED.name());
+		json.addProperty("username",username);
+		json.addProperty("secret",secret);
+		json.addProperty("info","Username already exists in the system");
+		return json.toString();
+	}
+
 	public static String lockAllowed(String username, String secret) {
 		return generate(MessageType.LOCK_ALLOWED,username,secret);
 	}
@@ -64,7 +104,18 @@ public class MessageGenerator {
 	}
 
 	public static String anonymousLogin(String username) {
-		return generate(MessageType.LOGIN, username);
+		JsonObject json = new JsonObject();
+		json.addProperty("command", MessageType.LOGIN.name());
+		json.addProperty("username", username);
+		return json.toString();
+	}
+	public static String registerResult(BroadcastResult.REGISTER_RESULT result, String username, String secret){
+		JsonObject json = new JsonObject();
+		json.addProperty("command",MessageType.USER_REGISTER_RESULT.name());
+		json.addProperty("result",result.toString());
+		json.addProperty("username",username);
+		json.addProperty("secret",secret);
+		return json.toString();
 	}
 
 	private static String generate(MessageType messageType, String infoOrSecret) {
@@ -83,12 +134,12 @@ public class MessageGenerator {
 				json.addProperty("command", messageType.name());
 				json.addProperty("secret", infoOrSecret);
 				return json.toString();
-			case LOGIN:
-				json.addProperty("command", messageType.name());
-				json.addProperty("username", infoOrSecret);
-				return json.toString();
+//			case LOGIN: //sendAnonymousLoginMsg
+//				json.addProperty("command", messageType.name());
+//				json.addProperty("username", infoOrSecret);
+//				return json.toString();
 			default:
-				log.error("Invalid message type '{}' with parameter 'info' {}", messageType, infoOrSecret);
+				log.error("Invalid message type [{}] with parameter 'info' {}", messageType, infoOrSecret);
 
 		}
 		return json.toString();
@@ -115,14 +166,14 @@ public class MessageGenerator {
 				return json.toString();
 
 			default:
-				log.error("Invalid message type '{}' with parameter username='{}', secret='{}' ", messageType, username, secret);
+				log.error("Invalid message type [{}] with parameter username=[{}], secret=[{}] ", messageType, username, secret);
 
 		}
 		return json.toString();
 	}
 
 	// for REDIRECT
-	public static String generateRedirect(String hostname, int port) {
+	public static String redirect(String hostname, int port) {
 		JsonObject json = new JsonObject();
 		json.addProperty("command",MessageType.REDIRECT.name());
 		json.addProperty("hostname", hostname);
@@ -131,7 +182,7 @@ public class MessageGenerator {
 	}
 
 	// for LOGOUT
-	public static String generateLogout() {
+	public static String logout() {
 		JsonObject json = new JsonObject();
 
 		json.addProperty("command", MessageType.LOGOUT.name());
@@ -140,7 +191,7 @@ public class MessageGenerator {
 	}
 
 	// for SERVER_ANNOUNCE
-	public static String generateAnnounce(String id, int load, String host, int port) {
+	public static String serverAnnounce(String id, int load, String host, int port) {
 		JsonObject json = new JsonObject();
 
 		json.addProperty("command", MessageType.SERVER_ANNOUNCE.name());
@@ -151,9 +202,28 @@ public class MessageGenerator {
 
 		return json.toString();
 	}
+  public static String backupList(ArrayList<Connection> serverList){
+      JsonObject json = new JsonObject();
+
+      json.addProperty("command", MessageType.BACKUP_LIST.name());
+	  JsonArray backupList = new JsonArray();
+	  for( Connection c : serverList){
+	  	if(c.isAuthedServer()) {
+			JsonObject oneServer = new JsonObject();
+			oneServer.addProperty("host", c.getRemoteServerHost());
+			oneServer.addProperty("port", c.getRemoteServerPort());
+			backupList.add(oneServer);
+		}
+	  }
+
+	  json.add("servers",backupList);
+
+	  return json.toString();
+
+  }
 
 	// for ACTIVITY_BROADCAST
-	public static String generateActBroadcast(Activity act) {
+	public static String actBroadcast(Activity act) {
 		JsonObject json = new JsonObject();
 
 		json.addProperty("command", MessageType.ACTIVITY_BROADCAST.name());
@@ -163,13 +233,13 @@ public class MessageGenerator {
 	}
 
 	// for ACTIVITY_MESSAGE
-	public static String generateActMessage(String username, String secret, Activity act) {
+	public static String actMessage(String username, String secret, JsonObject act) {
 		JsonObject json = new JsonObject();
 
 		json.addProperty("command", MessageType.ACTIVITY_MESSAGE.name());
 		json.addProperty("username", username);
 		json.addProperty("secret", secret);
-		json.add("activity", act.toJson());
+		json.add("activity", act);
 
 		return json.toString();
 	}

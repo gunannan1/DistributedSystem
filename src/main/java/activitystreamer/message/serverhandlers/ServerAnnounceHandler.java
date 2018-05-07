@@ -51,6 +51,10 @@ public class ServerAnnounceHandler extends MessageHandler {
 
 		this.control.maintainServerState(id, host, load, port);
 
+//		if(control.isOutOfService()){
+//			Control.log.info("This server will not transfer announce until its status becomes NORMAL.");
+//			return true; // Do not transfer data if server is temporarily out-of-service
+//		}
 		for (Connection c : this.control.getConnections()) {
 			if (c.isAuthedServer() && c != connection) {
 				Control.log.debug("Send announce to " + c.getSocket().getRemoteSocketAddress());

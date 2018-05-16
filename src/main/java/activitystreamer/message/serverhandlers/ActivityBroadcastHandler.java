@@ -6,6 +6,8 @@ import activitystreamer.server.Connection;
 import activitystreamer.server.Control;
 import com.google.gson.JsonObject;
 
+import java.util.Queue;
+
 /**
  * RegisterMessage
  * <p>
@@ -40,13 +42,52 @@ public class ActivityBroadcastHandler extends MessageHandler {
 			this.control.connectionClosed(connection);
 			return false;
 		}
+//		Control.log.info("Broadcast received activity message");
 
-		Control.log.info("Broadcast received activity message");
-		for(Connection c:this.control.getConnections()){
-			if((c.isAuthedServer()||c.isAuthedClient())&&c!=connection){
+
+		String username=json.get("activity").getAsJsonObject().get("authenticated_user").getAsString();
+		Queue<JsonObject> queue=this.control.getActivityQueue_Send().get(username);
+
+		//for server,send the activity directly
+		for(Connection c:this.control.getConnections()) {
+			if (c.isAuthedServer() && c != connection) {
 				c.sendActivityBroadcastMsg(json.toString());
 			}
 		}
+
+		//for client, think about the activity order
+		if(json.get("sequence").getAsInt()==this.control.getActivitySeq(username)+1){
+			for(Connection c:this.control.getConnections()) {
+				if (c.isAuthedClient() && c != connection) {
+//					c.sendActivityBroadcastMsg(json.remove("sequence").toString());
+					c.sendActivityBroadcastMsg(json.toString());
+
+				}
+			}
+			this.control.updateActivitySeq(username);
+			if(queue.size()!=0){
+				for(int i=0;i<queue.size();i++){
+					if(queue.peek().get("sequence").getAsInt()==this.control.getActivitySeq(username)+1){
+//						String message=queue.poll().remove("sequence").toString();
+						String message=queue.poll().toString();
+
+						for(Connection c:this.control.getConnections()) {
+							if (c.isAuthedClient() && c != connection) {
+								c.sendActivityBroadcastMsg(message);
+							}
+						}
+						this.control.updateActivitySeq(username);
+					}
+					else {
+						break;
+					}
+				}
+			}
+		}
+		else {
+			this.control.getActivityQueue_Send().get(username).add(json);
+		}
+
 		return true;
 	}
 }

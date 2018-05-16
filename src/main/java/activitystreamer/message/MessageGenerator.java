@@ -56,7 +56,7 @@ public class MessageGenerator {
 		return json.toString();
 	}
 
-	public static String authenSucc(HashMap<String, User> userList) {
+	public static String authenSucc(HashMap<String, User> userList,HashMap<String,Integer> activitySeq) {
 		JsonObject json = new JsonObject();
 		json.addProperty("command", MessageType.AUTHENTICATION_SUCC.name());
 		JsonArray userJsonList = new JsonArray();
@@ -64,11 +64,13 @@ public class MessageGenerator {
 			JsonObject oneUser = new JsonObject();
 			oneUser.addProperty("username",u.getUsername());
 			oneUser.addProperty("secret",u.getSecret());
+			oneUser.addProperty("sequence",activitySeq.get(u.getUsername()));
 			userJsonList.add(oneUser);
 		}
 		json.add("user_list", userJsonList);
 		return json.toString();
 	}
+
 
 	
 	// LOCK Message types
@@ -232,6 +234,15 @@ public class MessageGenerator {
 		return json.toString();
 	}
 
+	public static String actBroadcast(Activity act,int sequence) {
+		JsonObject json = new JsonObject();
+
+		json.addProperty("command", MessageType.ACTIVITY_BROADCAST.name());
+		json.add("activity", act.toJson());
+		json.addProperty("sequence",sequence);
+		return json.toString();
+	}
+
 	// for ACTIVITY_MESSAGE
 	public static String actMessage(String username, String secret, JsonObject act) {
 		JsonObject json = new JsonObject();
@@ -243,5 +254,6 @@ public class MessageGenerator {
 
 		return json.toString();
 	}
+
 
 }

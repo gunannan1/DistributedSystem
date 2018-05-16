@@ -255,6 +255,11 @@ public class Connection extends Thread {
 		this.writeMsg(activityBroadcast);
 	}
 
+	public void sendActivityBroadcastMsg(Activity act,int sequence) {
+		String activityBroadcast = MessageGenerator.actBroadcast(act,sequence);
+		this.writeMsg(activityBroadcast);
+	}
+
 	// User register messages
 	public void sendLockAllowedMsg(String username, String secret) {
 		String message = MessageGenerator.lockAllowed(username, secret);

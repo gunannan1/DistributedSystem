@@ -33,6 +33,7 @@ public class ServerAuthenSuccHandler extends MessageHandler {
 
 			Control.log.info("Initialise user list when joining this system");
 			HashMap<String, User> userList = new HashMap<>();
+			HashMap<String,Integer> activitySeq=new HashMap<>();
 			JsonArray userJsonArray = json.getAsJsonArray("user_list");
 			if (userJsonArray == null) {
 				connection.sendInvalidMsg("Invalid AUTHENTICATION_SUCC message");
@@ -42,9 +43,12 @@ public class ServerAuthenSuccHandler extends MessageHandler {
 				JsonObject info = oneUser.getAsJsonObject();
 				String username = info.get("username").getAsString();
 				String secret = info.get("secret").getAsString();
+				Integer sequence=info.get("sequence").getAsInt();
 				userList.put(username,new User(username,secret));
+				activitySeq.put(username,sequence);
 			}
 			control.setUserList(userList);
+			control.setActivitySeq(activitySeq);
 			connection.setAuthed(true);
 			control.setProvideService(true); // begin to provide services to clients/servers
 			control.startListener();

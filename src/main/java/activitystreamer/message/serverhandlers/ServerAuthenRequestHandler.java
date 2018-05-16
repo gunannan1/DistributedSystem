@@ -78,7 +78,7 @@ public class ServerAuthenRequestHandler extends MessageHandler {
 		connection.setAuthed(true, remoteServiceHost, remoteServicePort);
 		connection.setServer(true);
 
-		String userList = MessageGenerator.authenSucc(control.getUserList());
+		String userList = MessageGenerator.authenSucc(control.getUserList(),control.getActivitySeqMap());
 		connection.writeMsg(userList);
 		return true;
 	}

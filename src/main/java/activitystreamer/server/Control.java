@@ -1,6 +1,7 @@
 package activitystreamer.server;
 
 import activitystreamer.UILogAppender;
+import activitystreamer.message.Activity;
 import activitystreamer.message.MessageGenerator;
 import activitystreamer.message.MessageHandler;
 import activitystreamer.message.MessageType;
@@ -13,9 +14,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
+import java.util.*;
 
 public class Control extends Thread {
 	public static final Logger log = LogManager.getLogger("serverLogger");
@@ -29,6 +28,8 @@ public class Control extends Thread {
 	private ServerTextFrame serverTextFrame;
 	//	private String identifier;
 	private HashMap<String, ServerState> serverStateList;
+	private HashMap<String,Integer> activitySeq; //record activity sequence form client
+	private HashMap<String,Queue<JsonObject>> activityQueue_Send;
 
 	private boolean provideService;//TODO enhance: indicate whether the system is providing normal service
 
@@ -58,6 +59,12 @@ public class Control extends Thread {
 
 		// initialize the request list for register and login
 		UserRegisterHandler.registerLockHashMap = new HashMap<>();
+
+		// initialize the activitySeq
+		activitySeq=new HashMap<>();
+
+		// initialize the activityQueue
+		activityQueue_Send=new HashMap<>();
 
 		// add message handlers
 		initialHandlers();
@@ -237,6 +244,11 @@ public class Control extends Thread {
 	public synchronized boolean addUser(User user) {
 		if (checkUserExists(user.getUsername()) == null) {
 			userList.put(user.getUsername(), user);
+			        Comparator<JsonObject> comparator = (JsonObject j1, JsonObject j2)
+                -> (j1.get("sequence").getAsInt()-j1.get("sequence").getAsInt());
+			activityQueue_Send.put(user.getUsername(),new PriorityQueue<>(comparator));
+
+			activitySeq.put(user.getUsername(),0);
 			return true;
 		} else {
 			log.info("User [{}] exists, reject register.", user.getUsername());
@@ -255,6 +267,26 @@ public class Control extends Thread {
 	public void setUserList(HashMap<String, User> userList) {
 		this.userList = userList;
 	}
+
+	public HashMap<String,Integer> getActivitySeqMap() { return activitySeq; }
+
+	public int getActivitySeq(String username){
+		return activitySeq.get(username);
+	}
+
+	public void setActivitySeq(HashMap<String, Integer> activitySeq) {
+		this.activitySeq = activitySeq;
+	}
+
+	public void updateActivitySeq(String username){
+		activitySeq.put(username,activitySeq.get(username)+1);
+	}
+
+	public HashMap<String, Queue<JsonObject>> getActivityQueue_Send() {
+		return activityQueue_Send;
+	}
+
+
 
 	@Override
 	public void run() {

@@ -35,7 +35,15 @@ The reconnection will be conducted in this layer and will not impact the other l
 
 #### Data Layer
 
-Data layer is used to store all local data and sync its data with other servers' data layer, which means there is a **distributed database** accross the whole server system. In order to ensure eventually consistency , two ways are applide:
+Data layer is used to store all local data and sync its data with other servers' data layer, which means there is a **distributed database** accross the whole server system. The main idea to store is something like database **Table**. There are 3 tables designed in this projcet:
+
+| Table           | Row           | Description                                                  |
+| --------------- | ------------- | ------------------------------------------------------------ |
+| `ServerTable`   | `ServerRow`   | Server information like server id, serveice host/port, load and an online flag. |
+| `UserTable`     | `UserRow`     | User information like username, secret and an online flag.   |
+| `ActivityTable` | `ActivityRow` | Each row represents a real user with all activities that user should receive. Once an activity is sent to the user successfully, the activity will be marked as `isDelivered`. |
+
+The data layer exists in all servers. In order to ensure data eventually consistency, changes happen in one server should be synced by all other servers. Two ways are applide to achieve this target:
 
 - All kinds of data will have an extral field `updateTime`, which indicates the time when it is updated. This is used for data sync.
 
@@ -45,7 +53,7 @@ Data layer is used to store all local data and sync its data with other servers'
 
 
 
-
+## Message Handler by Different Layers
 
 #### Application Layer
 

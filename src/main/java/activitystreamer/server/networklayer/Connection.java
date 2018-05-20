@@ -1,10 +1,13 @@
-package activitystreamer.server;
+package activitystreamer.server.networklayer;
 
 
 import activitystreamer.BackupServerInfo;
-import activitystreamer.message.Activity;
 import activitystreamer.message.MessageGenerator;
+import activitystreamer.server.application.Control;
+import activitystreamer.server.datalayer.UserRow;
 import activitystreamer.util.Settings;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.io.*;
 import java.net.Socket;
@@ -19,14 +22,12 @@ public class Connection extends Thread {
 	private Socket socket;
 	private boolean term = false;
 	private boolean isAuthed = false;
-	private User user;
-	//	private boolean isMain = false; //TODO need to take care of this , maybe useless
+	private UserRow user;
+
 	private String remoteServerHost;
 	private int remoteServerPort;
 
 	private ArrayList<BackupServerInfo> backupServers;
-	//TODO reconnect to backup servers when target server crash
-	//TODO when to remove a server from backServer list?
 
 	private Connection(Socket socket, Boolean isServer) throws IOException {
 		DataInputStream in = new DataInputStream(socket.getInputStream());
@@ -55,6 +56,17 @@ public class Connection extends Thread {
 		}
 	}
 
+	public String connectionFrom(){
+		if(isAuthed){
+			if(isAuthedServer()){
+				return this.remoteServerHost + this.remoteServerPort;
+			}else{
+				return this.user.getUsername();
+			}
+		}
+		return "No_Authed_Connection";
+	}
+
 	public void closeCon() {
 		if (open) {
 			Control.log.info("closing connection " + Settings.socketAddress(socket));
@@ -62,15 +74,7 @@ public class Connection extends Thread {
 				term = true;
 				inreader.close();
 				outwriter.close();
-//				if(isMain){
-//					String info ="Connection to upstream server breaks, shutdown all services to clients and downstream servers";
-//					Control.log.info(info);
-//					Control.getInstance().setTerm(true);
-//					Control.getInstance().refreshUI();
-//					Control.getInstance().getServerTextFrame().showErrorMsg(info);
-//				}
 			} catch (IOException e) {
-				// already closed?
 				Control.log.error("received exception closing the connection " + Settings.socketAddress(socket) + ": " + e);
 			}
 		}
@@ -82,8 +86,17 @@ public class Connection extends Thread {
 			String data;
 			while (!term) {
 				while (!term && (data = inreader.readLine()) != null) {
-					Control.log.debug("receive data {}", data);
-					term = !Control.getInstance().process(this, data);
+					Control.log.debug("receive data {} from {}", data,connectionFrom());
+					JsonParser parser = new JsonParser();
+
+					JsonObject json = parser.parse(data).getAsJsonObject();
+					String m = json.get("command").getAsString();
+					IMessageConsumer h = NetworkLayer.getNetworkLayer().getConsumer(m);
+					if(h!=null) {
+						h.process(this, json);
+					}else{
+						Control.log.error("No layer can conduct messaget type=[{}]",m);
+					}
 				}
 				Control.log.debug("connection closed to " + Settings.socketAddress(socket));
 
@@ -100,7 +113,7 @@ public class Connection extends Thread {
 					} else {
 						Control.log.error("All backup servers are out of service, server terminates");
 						this.closeCon();
-						Control.getInstance().connectionClosed(this);
+						NetworkLayer.getNetworkLayer().connectionClosed(this);
 					}
 				} else {
 					term = true;
@@ -109,7 +122,7 @@ public class Connection extends Thread {
 
 		} catch (IOException e) {
 			Control.log.error("connection " + Settings.socketAddress(socket) + " closed with exception: " + e);
-			Control.getInstance().connectionClosed(this);
+			NetworkLayer.getNetworkLayer().connectionClosed(this);
 		}
 		open = false;
 	}
@@ -172,11 +185,11 @@ public class Connection extends Thread {
 		return remoteServerPort;
 	}
 
-	public User getUser() {
+	public UserRow getUser() {
 		return user;
 	}
 
-	public void setUser(User u) {
+	public void setUser(UserRow u) {
 		this.user = u;
 	}
 
@@ -245,15 +258,16 @@ public class Connection extends Thread {
 		this.writeMsg(announce);
 	}
 
-	public void sendActivityBroadcastMsg(String msg) {
+	public boolean sendActivityBroadcastMsg(String msg) {
 //		String activityBroadcast = MessageGenerator.actBroadcast(act);
 		this.writeMsg(msg);
+		return true;
 	}
 
-	public void sendActivityBroadcastMsg(Activity act) {
-		String activityBroadcast = MessageGenerator.actBroadcast(act);
-		this.writeMsg(activityBroadcast);
-	}
+//	public void sendActivityBroadcastMsg(Activity act) {
+//		String activityBroadcast = MessageGenerator.actBroadcast(act);
+//		this.writeMsg(activityBroadcast);
+//	}
 
 	// User register messages
 	public void sendLockAllowedMsg(String username, String secret) {

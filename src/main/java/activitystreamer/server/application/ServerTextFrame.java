@@ -1,6 +1,9 @@
-package activitystreamer.server;
+package activitystreamer.server.application;
 
 import activitystreamer.UIPanelCreator;
+import activitystreamer.server.datalayer.ServerRow;
+import activitystreamer.server.datalayer.UserRow;
+import activitystreamer.server.networklayer.Connection;
 import activitystreamer.util.Settings;
 
 import javax.swing.*;
@@ -35,7 +38,7 @@ public class ServerTextFrame extends JFrame implements ActionListener {
 
 		registeredUserArea = UIPanelCreator.addTablePanel(upPanel, "Users Registered at this server", new String[]{"Username", "Secret"});
 		loginUserArea = UIPanelCreator.addTablePanel(upPanel, "Users Logged in this server", new String[]{"Username", "Secret"});
-		serverArea = UIPanelCreator.addTablePanel(upPanel, "Servers directly connected to this server",new String[]{"Host", "Port"});
+		serverArea = UIPanelCreator.addTablePanel(upPanel, "Servers directly connected to this server", new String[]{"Host", "Port"});
 		loadArea = UIPanelCreator.addTablePanel(upPanel, "Server Loads", new String[]{"IP", "Port", "Load", "Update Time"});
 
 		logText = UIPanelCreator.addTextPanel(mainPanel, "Log");
@@ -49,36 +52,33 @@ public class ServerTextFrame extends JFrame implements ActionListener {
 		this.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				Control.getInstance().closeAll();
+				Control.getInstance().setTerm(true);
 			}
 		});
 	}
 
 
-	public void setLoginUserArea(ArrayList<Connection> connections) {
+	public void setLoginUserArea(ArrayList<UserRow> userList) {
 		loginUserArea.setRowCount(0);
-		for (Connection c : connections) {
-			if (c.isAuthedClient()) {
-				User u = c.getUser();
-				loginUserArea.addRow(new String[]{u.getUsername(), u.getSecret()});
-			}
+		for (UserRow u : userList) {
+			loginUserArea.addRow(new String[]{u.getUsername(), u.getSecret()});
 		}
 	}
 
-	public void setRegisteredArea(Collection<User> registerUsers) {
+	public void setRegisteredArea(Collection<UserRow> registerUsers) {
 		registeredUserArea.setRowCount(0);
-		for (User u : registerUsers) {
+		for (UserRow u : registerUsers) {
 			registeredUserArea.addRow(new String[]{u.getUsername(), u.getSecret()});
 		}
 	}
 
-		public void setServerArea(ArrayList<Connection> connections) {
+	public void setServerArea(ArrayList<Connection> connections) {
 		this.serverArea.setRowCount(0);
 		for (Connection c : connections) {
 			if (c.isAuthedServer()) {
 				String host = c.getRemoteServerHost();
 				String port = Integer.toString(c.getRemoteServerPort());
-				this.serverArea.addRow(new String[]{host,port});
+				this.serverArea.addRow(new String[]{host, port});
 			}
 		}
 	}
@@ -93,10 +93,10 @@ public class ServerTextFrame extends JFrame implements ActionListener {
 //		}
 //	}
 
-	public void setLoadArea(Collection<ServerState> serverStates) {
+	public void setLoadArea(Collection<ServerRow> serverStates) {
 		loadArea.setRowCount(0);
-		for (ServerState ss : serverStates) {
-			String host = ss.getHost();
+		for (ServerRow ss : serverStates) {
+			String host = ss.getIp();
 			String port = Integer.toString(ss.getPort());
 			String load = Integer.toString(ss.getLoad());
 			String time = ss.getUpdateTimeString();

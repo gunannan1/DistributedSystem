@@ -30,7 +30,7 @@
 5. [DONE]If the load information of a server is not updated for 20 seconds, then mark this server as unavailable and remove it from `server load list`.
 
 ### Consistancy
-1. [DONE}Servers connect to crashed server can automatically connect to a working server.
+1. [DONE]Servers connect to crashed server can automatically connect to a working server.
 2. [DONE]clients connect to crashed server can automatically connect to a working server.
 
 
@@ -47,7 +47,7 @@
 ```
 2. When servers receive `activity`, they transfer this `activity` immediately but hold this message for a period of time(`PERIOD_FOR_ORDERING`) in case of out-of-order message issue.
 3. If a messages with smaller `sequence number` comes in within the `PERIOD_FOR_ORDERING` time, all messages will be re-ordered and send to clients by their `sequence number`
-4. **NOTE**: Servers only hold messages to their directly-connected ***CLIENTS**, messages will be broadcasted immediately to other servers.
+4. **NOTE**: Servers only hold messages to their directly-connected **CLIENTS**, messages will be broadcasted immediately to other servers.
 
 ### Message Delivery Ensure
 

@@ -1,9 +1,11 @@
 package activitystreamer.message.serverhandlers;
 
+import activitystreamer.message.DataSyncHandlers.BroadcastResult;
 import activitystreamer.message.MessageHandler;
-import activitystreamer.server.Connection;
-import activitystreamer.server.Control;
-import activitystreamer.server.User;
+import activitystreamer.server.application.Control;
+import activitystreamer.server.datalayer.DataLayer;
+import activitystreamer.server.networklayer.Connection;
+import activitystreamer.server.networklayer.NetworkLayer;
 import com.google.gson.JsonObject;
 
 import java.util.HashMap;
@@ -18,11 +20,6 @@ import java.util.HashMap;
 public class UserRegisterHandler extends MessageHandler {
 	// HashMap<username, LockResult>
 	public static HashMap<String, BroadcastResult> registerLockHashMap = new HashMap<>();
-	private final Control control;
-
-	public UserRegisterHandler(Control control) {
-		this.control = control;
-	}
 
 	/**
 	 * Check user exists and register
@@ -51,7 +48,7 @@ public class UserRegisterHandler extends MessageHandler {
 //		}
 
 
-		User newUser = null;
+//		User newUser = null;
 		String username = null;
 		String secret = null;
 
@@ -60,14 +57,14 @@ public class UserRegisterHandler extends MessageHandler {
 			username = json.get("username").getAsString();
 			secret = json.get("secret").getAsString();
 
-		} catch (NullPointerException | UnsupportedOperationException e){
+		} catch (NullPointerException | UnsupportedOperationException e) {
 			String error = String.format("User register command missing information username=[%s] secret=[%s]", username, secret);
 			connection.sendInvalidMsg(error);
 			failHandler(error, connection);
 			return false;
 		}
 
-		if(username.equals("anonymous")){
+		if (username.equals("anonymous")) {
 			String error = String.format("Invalid username 'anonymous' or you forget input your username");
 			connection.sendInvalidMsg(error);
 			failHandler(error, connection);
@@ -75,52 +72,35 @@ public class UserRegisterHandler extends MessageHandler {
 		}
 
 		Control.log.info("process register for user {}", username);
-		newUser = new User(username, secret);
-
-		//2. Check if user exists locally
-		User localUser = this.control.checkUserExists(username);
-		if (localUser != null) {
-			String error = String.format("User [%s] exists in this server'", username);
-			connection.sendRegisterFailedMsg(error);
-			failHandler(error, connection);
-
-			return false;
+		BroadcastResult.REGISTER_RESULT registerRegister = DataLayer.getInstance().registerUser(
+				username,
+				secret,
+				connection);
+		switch(registerRegister){
+			case SUCC:
+				connection.sendRegisterSuccMsg(username);
+				return true;
+			case FAIL_UNDER_REGISTER:
+				String error1 = String.format("User [%s] is under register processing'", username);
+				connection.sendAuthFailedMsg(error1);
+				return false;
+			case FAIL:
+				String error2 = String.format("User [%s] exists in this server'", username);
+				connection.sendAuthFailedMsg(error2);
+				break;
+			case PROCESSING:
+				Control.log.info("Remote servers exist, need to get confirmation from remote servers for user register [{}] ", username);
+				return true;
 		}
-
-		// 2.1 check if username under register process( in the register list but not approved)
-		if (UserRegisterHandler.registerLockHashMap.containsKey(newUser.getUsername())) {
-			String error = String.format("User [%s] is under register processing'", username);
-			connection.sendRegisterFailedMsg(error);
-			failHandler(error, connection);
-			return false;
-		}
-
-		// 2.1.1 check if any remote servers exists
-		// TODO a time-out limition should be set
-		if (this.control.getServerLoads(null) > 0) {
-			Control.log.info("Remote servers exist, need to get confirmation from remote servers for user register [{}] ", username);
-			BroadcastResult lockResult = new BroadcastResult(connection, control.getServerLoads(null),newUser);
-			UserRegisterHandler.registerLockHashMap.put(newUser.getUsername(), lockResult);
-			// broadcastToAll lock request and then waiting for lock_allow & lock_denied, this register process will be handled by LockAllowedHandler & LockDeniedHandler
-			control.broadcastLockRequest(newUser, connection);
-			return true;
-		}
-
-		// register successfully if no above condision
-		Control.log.info("No additional server connected, send REGISTER_SUCC for user:{} ", username);
-		connection.sendRegisterSuccMsg(username);
-
-		Control.log.info("Add user {} into local register user list", username);
-		this.control.addUser(newUser);
-		connection.setUser(newUser);
-
-		return true;
+////
+//		connection.sendRegisterSuccMsg(username);
+		return false;
 
 	}
 
 	private void failHandler(String error, Connection connection) {
 		Control.log.info(error);
 		connection.closeCon();
-		this.control.connectionClosed(connection);
+		NetworkLayer.getNetworkLayer().connectionClosed(connection);
 	}
 }

@@ -1,10 +1,10 @@
-package activitystreamer.server;
+package activitystreamer.server.networklayer;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import org.apache.logging.log4j.LogManager;
+import activitystreamer.server.application.Control;
 import org.apache.logging.log4j.Logger;
 
 import activitystreamer.util.Settings;
@@ -28,7 +28,7 @@ public class Listener extends Thread{
 			Socket clientSocket;
 			try {
 				clientSocket = serverSocket.accept();
-				Control.getInstance().incomingConnection(clientSocket);
+				NetworkLayer.getNetworkLayer().incomingConnection(clientSocket);
 			} catch (IOException e) {
 				log.info("received exception, shutting down");
 				term=true;

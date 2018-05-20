@@ -4,6 +4,8 @@ package activitystreamer;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+import activitystreamer.server.datalayer.DataLayer;
+import activitystreamer.server.networklayer.NetworkLayer;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -13,7 +15,7 @@ import org.apache.commons.cli.ParseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import activitystreamer.server.Control;
+import activitystreamer.server.application.Control;
 import activitystreamer.util.Settings;
 
 public class Server {
@@ -87,7 +89,7 @@ public class Server {
 		if(cmd.hasOption("a")){
 			try{
 				int a = Integer.parseInt(cmd.getOptionValue("a"));
-				Settings.setActivityInterval(a);
+				Settings.setAnnounceInterval(a);
 			} catch (NumberFormatException e){
 				log.error("-a requires a number in milliseconds, parsed: "+cmd.getOptionValue("a"));
 				help(options);
@@ -141,6 +143,8 @@ public class Server {
 			public void run() {  
 				c.setTerm(true);
 				c.interrupt();
+				DataLayer.getInstance().setTerm(true);
+				NetworkLayer.getNetworkLayer().setTerm(true);
 		    }
 		 });
 	}

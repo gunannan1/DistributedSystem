@@ -1,8 +1,9 @@
 package activitystreamer.message;
 
-import activitystreamer.message.serverhandlers.BroadcastResult;
-import activitystreamer.server.Connection;
-import activitystreamer.server.User;
+import activitystreamer.message.DataSyncHandlers.BroadcastResult;
+import activitystreamer.server.datalayer.DataLayer;
+import activitystreamer.server.datalayer.UserRow;
+import activitystreamer.server.networklayer.Connection;
 import activitystreamer.util.Settings;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -56,17 +57,11 @@ public class MessageGenerator {
 		return json.toString();
 	}
 
-	public static String authenSucc(HashMap<String, User> userList) {
+	public static String authenSucc() {
 		JsonObject json = new JsonObject();
 		json.addProperty("command", MessageType.AUTHENTICATION_SUCC.name());
-		JsonArray userJsonList = new JsonArray();
-		for(User u: userList.values()){
-			JsonObject oneUser = new JsonObject();
-			oneUser.addProperty("username",u.getUsername());
-			oneUser.addProperty("secret",u.getSecret());
-			userJsonList.add(oneUser);
-		}
-		json.add("user_list", userJsonList);
+		JsonArray userSync = userSyncJson();
+		json.add("user_list",userSync);
 		return json.toString();
 	}
 
@@ -222,16 +217,16 @@ public class MessageGenerator {
 
   }
 
-	// for ACTIVITY_BROADCAST
-	public static String actBroadcast(Activity act) {
-		JsonObject json = new JsonObject();
-
-		json.addProperty("command", MessageType.ACTIVITY_BROADCAST.name());
-		json.add("activity", act.toJson());
-
-		return json.toString();
-	}
-
+//	// for ACTIVITY_BROADCAST
+//	public static String actBroadcast(Activity act) {
+//		JsonObject json = new JsonObject();
+//
+//		json.addProperty("command", MessageType.ACTIVITY_BROADCAST.name());
+//		json.updateOrInsert("activity", act.toJson());
+//
+//		return json.toString();
+//	}
+//
 	// for ACTIVITY_MESSAGE
 	public static String actMessage(String username, String secret, JsonObject act) {
 		JsonObject json = new JsonObject();
@@ -242,6 +237,31 @@ public class MessageGenerator {
 		json.add("activity", act);
 
 		return json.toString();
+	}
+
+//	public static String userUpdate(UserRow userRow){
+//  		JsonObject json = userRow.toJson();
+//  		json.addProperty("command",MessageType.USER_UPDATE.name());
+//  		return json.toString();
+//	}
+
+
+	public static String userSync(){
+
+		JsonObject json = new JsonObject();
+		json.addProperty("command",MessageType.USER_SYNC.name());
+		JsonArray userArray = userSyncJson();
+		json.add("user_list",userArray);
+		return json.toString();
+	}
+
+	private static JsonArray userSyncJson(){
+			HashMap<String, UserRow> allUsers = DataLayer.getInstance().getAllUsers();
+			JsonArray userArray = new JsonArray();
+			for(UserRow userRow:allUsers.values()){
+				userArray.add(userRow.toJson());
+			}
+			return userArray;
 	}
 
 }

@@ -3,7 +3,7 @@ package activitystreamer.message.clienthandlers;
 import activitystreamer.BackupServerInfo;
 import activitystreamer.client.ClientSkeleton;
 import activitystreamer.message.MessageHandler;
-import activitystreamer.server.Connection;
+import activitystreamer.server.networklayer.Connection;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

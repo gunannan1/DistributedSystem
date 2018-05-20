@@ -14,10 +14,12 @@ public class Settings {
 	private static String localHostname = "localhost";
 	private static String remoteHostname = null;
 	private static int remotePort = 3780;
-	private static int activityInterval = 5000; // milliseconds
+	private static int announceInterval = 5000; // milliseconds
+	private static int activityCheckInterval = 1000; // milliseconds
 	private static String secret = null;
 	private static String username = "anonymous";
 	private static String serverId=null;
+	private static final String TIME_FORMAT = "yyyy-mm-dd hh:mm:ss";
 
 	
 	public static int getLocalPort() {
@@ -31,7 +33,11 @@ public class Settings {
 			Settings.localPort = localPort;
 		}
 	}
-	
+
+	public static String getTimeFormat() {
+		return TIME_FORMAT;
+	}
+
 	public static int getRemotePort() {
 		return remotePort;
 	}
@@ -52,14 +58,23 @@ public class Settings {
 		Settings.remoteHostname = remoteHostname;
 	}
 	
-	public static int getActivityInterval() {
-		return activityInterval;
+	public static int getAnnounceInterval() {
+		return announceInterval;
 	}
 
-	public static void setActivityInterval(int activityInterval) {
-		Settings.activityInterval = activityInterval;
+
+	public static void setAnnounceInterval(int announceInterval) {
+		Settings.announceInterval = announceInterval;
 	}
-	
+
+	public static int getActivityCheckInterval() {
+		return activityCheckInterval;
+	}
+
+	public static void setActivityCheckInterval(int activityCheckInterval) {
+		Settings.activityCheckInterval = activityCheckInterval;
+	}
+
 	public static String getSecret() {
 		return secret;
 	}

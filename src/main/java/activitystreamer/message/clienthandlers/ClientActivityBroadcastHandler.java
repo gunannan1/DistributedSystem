@@ -1,9 +1,8 @@
 package activitystreamer.message.clienthandlers;
 
-import activitystreamer.Client;
 import activitystreamer.client.ClientSkeleton;
 import activitystreamer.message.MessageHandler;
-import activitystreamer.server.Connection;
+import activitystreamer.server.networklayer.Connection;
 import com.google.gson.JsonObject;
 
 /*

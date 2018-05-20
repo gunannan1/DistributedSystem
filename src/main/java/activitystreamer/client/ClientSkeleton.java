@@ -64,7 +64,7 @@ public class ClientSkeleton extends Thread {
 		clientSolution.handlerMap.put(MessageType.REGISTER_SUCCESS, new RegisterSuccHandler(this));
 		clientSolution.handlerMap.put(MessageType.AUTHENTICATION_FAIL, new ClientAuthenFailedHandler(this));
 		clientSolution.handlerMap.put(MessageType.INVALID_MESSAGE, new ClientInvalidHandler(this));
-		//add Activity Broadcast
+		//updateOrInsert Activity Broadcast
 		clientSolution.handlerMap.put(MessageType.ACTIVITY_BROADCAST, new ClientActivityBroadcastHandler(this));
 
 		//backup list for high available
@@ -152,7 +152,7 @@ public class ClientSkeleton extends Thread {
 						} else {
 							log.error("No handler for message:{}", command);
 						}
-					} catch (IllegalStateException e) {
+					} catch (Exception e) {
 						String info = String.format("Invalid message [%s]", data);
 						log.error(info);
 						this.sendInvalidMsg(info);

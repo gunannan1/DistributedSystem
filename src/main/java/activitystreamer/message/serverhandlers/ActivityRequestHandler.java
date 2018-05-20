@@ -1,10 +1,12 @@
 package activitystreamer.message.serverhandlers;
 
-import activitystreamer.message.Activity;
+import activitystreamer.server.datalayer.Activity;
 import activitystreamer.message.MessageHandler;
-import activitystreamer.server.Connection;
-import activitystreamer.server.Control;
-import activitystreamer.server.User;
+import activitystreamer.server.datalayer.DataLayer;
+import activitystreamer.server.datalayer.UserRow;
+import activitystreamer.server.networklayer.Connection;
+import activitystreamer.server.application.Control;
+import activitystreamer.server.networklayer.NetworkLayer;
 import com.google.gson.JsonObject;
 
 /**
@@ -16,11 +18,11 @@ import com.google.gson.JsonObject;
 
 public class ActivityRequestHandler extends MessageHandler {
 
-	private final Control control;
-
-	public ActivityRequestHandler(Control control) {
-		this.control = control;
-	}
+//	private final Control control;
+//
+//	public ActivityRequestHandler(Control control) {
+//		this.control = control;
+//	}
 
 	@Override
 	public boolean processMessage(JsonObject json, Connection connection) {
@@ -34,31 +36,31 @@ public class ActivityRequestHandler extends MessageHandler {
 			secret = null;
 		}
 
-		User conUser = connection.getUser();
+		UserRow conUser = connection.getUser();
 
 		if (!connection.isAuthedClient()) {
 			connection.sendAuthFailedMsg("The user has not logged in");
 			Control.log.info("The user has not logged in");
 			connection.closeCon();
-			this.control.connectionClosed(connection);
+			NetworkLayer.getNetworkLayer().connectionClosed(connection);
 			return false;
 		} else if (username == null) {
 			connection.sendInvalidMsg("The message don't have username");
 			Control.log.info("The message don't have username");
 			connection.closeCon();
-			this.control.connectionClosed(connection);
+			NetworkLayer.getNetworkLayer().connectionClosed(connection);
 			return false;
 		} else if (!username.equals("anonymous") && secret == null) {
 			connection.sendInvalidMsg("The message don't have secret and the user is not anonymous");
 			Control.log.info("The message don't have secret and the user is not anonymous");
 			connection.closeCon();
-			this.control.connectionClosed(connection);
+			NetworkLayer.getNetworkLayer().connectionClosed(connection);
 			return false;
 		} else if (json.get("activity") == null) {
 			connection.sendInvalidMsg("The message does not have activity");
 			Control.log.info("The message does not have activity");
 			connection.closeCon();
-			this.control.connectionClosed(connection);
+			NetworkLayer.getNetworkLayer().connectionClosed(connection);
 			return false;
 		} else if (!username.equals("anonymous") &&
 				(conUser == null || !conUser.getUsername().equals(username) || !conUser.getSecret().equals(secret))
@@ -66,22 +68,17 @@ public class ActivityRequestHandler extends MessageHandler {
 			connection.sendAuthFailedMsg("The username and secret do not match the logged in the user");
 			Control.log.info("The username and secret do not match the logged in the user");
 			connection.closeCon();
-			this.control.connectionClosed(connection);
+			NetworkLayer.getNetworkLayer().connectionClosed(connection);
 			return false;
 		}
 
+		Control.log.info("Process activity from user {}", username);
 		JsonObject actJson = json.get("activity").getAsJsonObject();
 		Activity activity = new Activity(actJson, connection.getUser().getUsername());
+		DataLayer.getInstance().insertActivity(activity,null);
 
-		Control.log.info("Process activity from user {}", username);
-		activity.setAuthenticated_user(username);
-
-		Control.log.info("Broadcast activity from user {} to all clients/servers", username);
-		for (Connection c : this.control.getConnections()) {
-			if (c.isAuthedServer() || c.isAuthedClient()) {
-				c.sendActivityBroadcastMsg(activity);
-			}
-		}
+//		Control.log.info("Broadcast activity from user {} to all clients/servers", username);
+//		NetworkLayer.getNetworkLayer().broadcastToAll(activity.toString(),null);
 
 		return true;
 	}

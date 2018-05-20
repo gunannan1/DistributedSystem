@@ -42,13 +42,17 @@ public class ClientTextFrame extends JFrame implements ActionListener {
 		Border lineBorder = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.lightGray), "");
 		inputPanel.setBorder(lineBorder);
 
-		// add output panel
-		activityOutputText = UIPanelCreator.addTextPanel(mainPanel, "JSON output, received from server");
 
-		// add backup server list panel
+		// updateOrInsert output panel
+		activityOutputText = UIPanelCreator.addTextPanel(mainPanel, "JSON output, received from server");
+//		activityOutputText.setEnabled(false);
+		activityOutputText.setEditable(false);
+		activityOutputText.setBackground(Color.lightGray);
+
+		// updateOrInsert backup server list panel
 		backupServers = UIPanelCreator.addTablePanel(mainPanel,"Backup Servers",new String[]{"host","port"});
 
-		// add input panel
+		// updateOrInsert input panel
 		inputText = UIPanelCreator.addTextPanel(inputPanel,"JSON input, to send to server");
 		JPanel buttonGroup = new JPanel();
 		sendButton = new JButton("Send");
@@ -62,8 +66,10 @@ public class ClientTextFrame extends JFrame implements ActionListener {
 
 		// Add a panel to show all other message from server exclude ACTIVITY message
 		serverMsgOutputText = UIPanelCreator.addTextPanel(mainPanel, "Messages received from server");
+		serverMsgOutputText.setEditable(false);
+		serverMsgOutputText.setBackground(Color.lightGray);
 
-		// add main panel to frame
+		// updateOrInsert main panel to frame
 		add(mainPanel);
 		setLocationRelativeTo(null);
 		setSize(640, 384);

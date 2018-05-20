@@ -1,10 +1,9 @@
-package activitystreamer.message.serverhandlers;
+package activitystreamer.message.networklayerhandlers;
 
 import activitystreamer.BackupServerInfo;
-import activitystreamer.client.ClientSkeleton;
 import activitystreamer.message.MessageHandler;
-import activitystreamer.server.Connection;
-import activitystreamer.server.Control;
+import activitystreamer.server.networklayer.Connection;
+import activitystreamer.server.application.Control;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -19,12 +18,6 @@ import java.util.ArrayList;
  */
 
 public class ServerBackupListHandler extends MessageHandler {
-
-	private final Control control;
-
-	public ServerBackupListHandler(Control control) {
-		this.control = control;
-	}
 
 	@Override
 	public boolean processMessage(JsonObject json, Connection connection) {

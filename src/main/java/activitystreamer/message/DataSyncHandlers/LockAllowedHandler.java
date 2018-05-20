@@ -1,9 +1,11 @@
-package activitystreamer.message.serverhandlers;
+package activitystreamer.message.DataSyncHandlers;
 
 import activitystreamer.message.MessageHandler;
-import activitystreamer.server.Connection;
-import activitystreamer.server.Control;
-import activitystreamer.server.User;
+import activitystreamer.message.serverhandlers.UserRegisterHandler;
+import activitystreamer.server.datalayer.UserRow;
+import activitystreamer.server.networklayer.Connection;
+import activitystreamer.server.application.Control;
+import activitystreamer.server.networklayer.NetworkLayer;
 import com.google.gson.JsonObject;
 
 /**
@@ -15,28 +17,10 @@ import com.google.gson.JsonObject;
 
 public class LockAllowedHandler extends MessageHandler {
 
-	private final Control control;
-
-	public LockAllowedHandler(Control control) {
-		this.control = control;
-	}
-
-	/**
-	 * |- validate message
-	 * |- whether the register information in pending list
-	 * |- whether all servers allowed
-	 * |- whether owner is the server itself
-	 * |- Yes: send back RegisterSucc message to corresponding user
-	 * |- No: send LockAllow to the server who sends lock request
-	 *
-	 * @param json
-	 * @param connection
-	 * @return
-	 */
 	@Override
 	public boolean processMessage(JsonObject json, Connection connection) {
 		Control.log.info("Lock allowed is received from {}", connection.getSocket().getRemoteSocketAddress());
-		User u = null;
+		UserRow u = null;
 		String username = null;
 		String secret = null;
 
@@ -44,12 +28,8 @@ public class LockAllowedHandler extends MessageHandler {
 		try {
 			username = json.get("username").getAsString();
 			secret = json.get("secret").getAsString();
-			u = new User(username, secret);
-		} catch (NullPointerException e) {
-			String error = String.format("Lock allowed command missing information username=[%s] secret=[%s]", username, secret);
-			failHandler(error, connection);
-			return false;
-		} catch (UnsupportedOperationException e) {
+			u = new UserRow(username, secret);
+		} catch (NullPointerException | UnsupportedOperationException e) {
 			String error = String.format("Lock allowed command missing information username=[%s] secret=[%s]", username, secret);
 			failHandler(error, connection);
 			return false;
@@ -57,8 +37,6 @@ public class LockAllowedHandler extends MessageHandler {
 
 
 		BroadcastResult l = UserRegisterHandler.registerLockHashMap.get(username);
-//		BroadcastResult loginRequest = UserLoginHandler.enquiryRequestHashmap.get(username);
-//		BroadcastResult l = lockRequest == null ? loginRequest:lockRequest;
 
 		// whether the register information in pending list
 		if (l == null) {
@@ -107,6 +85,6 @@ public class LockAllowedHandler extends MessageHandler {
 		Control.log.info(error);
 		connection.sendInvalidMsg(error);
 		connection.closeCon();
-		this.control.connectionClosed(connection);
+		NetworkLayer.getNetworkLayer().connectionClosed(connection);
 	}
 }

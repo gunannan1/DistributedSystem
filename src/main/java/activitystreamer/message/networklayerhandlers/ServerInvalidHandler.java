@@ -1,9 +1,9 @@
-package activitystreamer.message.serverhandlers;
+package activitystreamer.message.networklayerhandlers;
 
-import activitystreamer.client.ClientSkeleton;
 import activitystreamer.message.MessageHandler;
-import activitystreamer.server.Connection;
-import activitystreamer.server.Control;
+import activitystreamer.server.networklayer.Connection;
+import activitystreamer.server.application.Control;
+import activitystreamer.server.networklayer.NetworkLayer;
 import com.google.gson.JsonObject;
 
 /**
@@ -15,19 +15,13 @@ import com.google.gson.JsonObject;
 
 public class ServerInvalidHandler extends MessageHandler {
 
-	private final Control control;
-
-	public ServerInvalidHandler(Control control) {
-		this.control = control;
-	}
-
 	@Override
 	public boolean processMessage(JsonObject json,Connection connection) {
 		Control.log.info("Invalid message received from {}",connection.getSocket().getRemoteSocketAddress());
 		Control.log.info(json.get("info"));
 		Control.log.info("Close connection with {}",connection.getSocket().getRemoteSocketAddress());
 		connection.closeCon();
-		this.control.connectionClosed(connection);
+		NetworkLayer.getNetworkLayer().connectionClosed(connection);
 		// return false to close related connection and thread
 		return false;
 	}

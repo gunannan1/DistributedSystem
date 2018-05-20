@@ -137,7 +137,7 @@ public class Client {
 				writer.write(String.format("%s,%s%s",Settings.getUsername(),Settings.getSecret(),System.lineSeparator()));
 				writer.close();
 			} catch (IOException e) {
-				log.error("Cannot create/update file 'secret_map.csv'.");
+				log.error("Cannot create/updateOrInsert file 'secret_map.csv'.");
 			}
 
 			ClientSkeleton c = ClientSkeleton.getInstance();

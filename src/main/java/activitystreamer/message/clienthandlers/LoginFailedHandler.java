@@ -2,7 +2,7 @@ package activitystreamer.message.clienthandlers;
 
 import activitystreamer.client.ClientSkeleton;
 import activitystreamer.message.MessageHandler;
-import activitystreamer.server.Connection;
+import activitystreamer.server.networklayer.Connection;
 import activitystreamer.util.Settings;
 import com.google.gson.JsonObject;
 
@@ -25,7 +25,6 @@ public class LoginFailedHandler extends MessageHandler {
 	public boolean processMessage(JsonObject json,Connection connection) {
 		String error = String.format("Login failed to server [%s:%s]", Settings.getRemoteHostname(), Settings.getRemotePort());
 		ClientSkeleton.log.info(error);
-		clientSkeleton.getTextFrame().appendServerMsgPanel(error);
 		ClientSkeleton.log.info("Connection will be closed");
 		clientSkeleton.setAuthen(false);
 		return false;

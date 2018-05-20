@@ -2,8 +2,9 @@ package activitystreamer.message.serverhandlers;
 
 import activitystreamer.message.MessageGenerator;
 import activitystreamer.message.MessageHandler;
-import activitystreamer.server.Connection;
-import activitystreamer.server.Control;
+import activitystreamer.server.networklayer.Connection;
+import activitystreamer.server.application.Control;
+import activitystreamer.server.networklayer.NetworkLayer;
 import activitystreamer.util.Settings;
 import com.google.gson.JsonObject;
 
@@ -15,12 +16,6 @@ import com.google.gson.JsonObject;
  */
 
 public class ServerAuthenRequestHandler extends MessageHandler {
-
-	private final Control control;
-
-	public ServerAuthenRequestHandler(Control control) {
-		this.control = control;
-	}
 
 	@Override
 	public boolean processMessage(JsonObject json, Connection connection) {
@@ -48,19 +43,19 @@ public class ServerAuthenRequestHandler extends MessageHandler {
 			connection.sendInvalidMsg("Already authenticated");
 			Control.log.info("Already authenticated");
 			connection.closeCon();
-			this.control.connectionClosed(connection);
+			NetworkLayer.getNetworkLayer().connectionClosed(connection);
 			return false;
 		} else if (connection.isAuthedClient()) {
 			connection.sendInvalidMsg("Authenticate message is for server, not client");
 			Control.log.info("Authenticate message is for server, not client");
 			connection.closeCon();
-			this.control.connectionClosed(connection);
+			NetworkLayer.getNetworkLayer().connectionClosed(connection);
 			return false;
 		} else if (secret == null) {
 			connection.sendInvalidMsg("No secret present");
 			Control.log.info("No secret present");
 			connection.closeCon();
-			this.control.connectionClosed(connection);
+			NetworkLayer.getNetworkLayer().connectionClosed(connection);
 			return false;
 		}
 
@@ -69,7 +64,7 @@ public class ServerAuthenRequestHandler extends MessageHandler {
 			connection.sendAuthFailedMsg(String.format("The supplied secret is incorrect: %s", secret));
 			Control.log.info(String.format("The supplied secret is incorrect: %s", secret));
 			connection.closeCon();
-			this.control.connectionClosed(connection);
+			NetworkLayer.getNetworkLayer().connectionClosed(connection);
 			return false;
 		}
 
@@ -78,8 +73,8 @@ public class ServerAuthenRequestHandler extends MessageHandler {
 		connection.setAuthed(true, remoteServiceHost, remoteServicePort);
 		connection.setServer(true);
 
-		String userList = MessageGenerator.authenSucc(control.getUserList());
-		connection.writeMsg(userList);
+		String authSucc = MessageGenerator.authenSucc();
+		connection.writeMsg(authSucc);
 		return true;
 	}
 }

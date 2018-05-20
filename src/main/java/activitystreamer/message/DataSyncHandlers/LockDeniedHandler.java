@@ -1,9 +1,11 @@
-package activitystreamer.message.serverhandlers;
+package activitystreamer.message.DataSyncHandlers;
 
 import activitystreamer.message.MessageHandler;
-import activitystreamer.server.Connection;
-import activitystreamer.server.Control;
-import activitystreamer.server.User;
+import activitystreamer.message.serverhandlers.UserRegisterHandler;
+import activitystreamer.server.datalayer.UserRow;
+import activitystreamer.server.networklayer.Connection;
+import activitystreamer.server.application.Control;
+import activitystreamer.server.networklayer.NetworkLayer;
 import com.google.gson.JsonObject;
 
 /**
@@ -15,11 +17,6 @@ import com.google.gson.JsonObject;
 
 public class LockDeniedHandler extends MessageHandler {
 
-	private final Control control;
-
-	public LockDeniedHandler(Control control) {
-		this.control = control;
-	}
 	/**
 	 * |- validate message
 	 * |- whether owner is the server itself
@@ -66,7 +63,7 @@ public class LockDeniedHandler extends MessageHandler {
 		if (!l.getFrom().isAuthedServer()) {
 			try {
 				BroadcastResult.LOCK_STATUS searchStatus = l.getResult();
-				return BroadcastResult.processLock(searchStatus,l,new User(username,secret));
+				return BroadcastResult.processLock(searchStatus,l,new UserRow(username,secret));
 			} catch (Exception e) {
 				Control.log.info("The client sending register request is disconnected");
 				return true; // do not close any connection as closing connection should be handled in other way
@@ -94,6 +91,6 @@ public class LockDeniedHandler extends MessageHandler {
 		Control.log.info(error);
 		connection.sendInvalidMsg(error);
 		connection.closeCon();
-		this.control.connectionClosed(connection);
+		NetworkLayer.getNetworkLayer().connectionClosed(connection);
 	}
 }

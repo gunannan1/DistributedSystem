@@ -1,9 +1,7 @@
 package activitystreamer.message;
 
-import activitystreamer.server.Connection;
+import activitystreamer.server.networklayer.Connection;
 import com.google.gson.JsonObject;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
  * ClientHandler

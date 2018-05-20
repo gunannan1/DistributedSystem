@@ -1,14 +1,37 @@
 # Improvement For DS Project 2
 
-Check detail instructure of project 1 [here](../Readme.md)
+## Project instruction
 
-### Improvement instructure
+This is an improvement for DS project 1, the instruction of project 1 can be find [here](../Readme.md).
 
-A three layered structure is applied in this project
+#### How to set up development environment
 
-### How this software works
+If you already clone any other branch from this git, just run:
 
-There are three layers in this design. 
+```bash
+git checkout layered
+```
+
+If this is your first time to clone this respository:
+
+```bash
+git clone https://kangnwh.visualstudio.com/DistributedSystem/_git/DistributedSystem
+git checkout layered
+```
+
+## Improvement instruction
+
+In this improved project, a three layered structure is applied in this project.
+
+### How these three layers work
+
+#### Network layer
+
+This is the communication layer for the whole system and is responsible for maintaining connections, sending/receiving data and delivering different types of message to different data consumer. 
+
+The reconnection will be conducted in this layer and will not impact the other layers.
+
+#### Data Layer
 
 Data layer is used to store all local data and sync its data with other servers' data layer, which means there is a **distributed database** accross the whole server system. In order to ensure eventually consistency , two ways are applide:
 
@@ -67,13 +90,6 @@ This laye is responsible for maintaining connections, sending/receiving data and
 |                    |                               |                                                              |
 
 
-
-### How to set up development environment
-
-```bash
-git clone https://kangnwh.visualstudio.com/DistributedSystem/_git/DistributedSystem
-git checkout layered
-```
 
 
 

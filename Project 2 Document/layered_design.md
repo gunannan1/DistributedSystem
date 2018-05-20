@@ -25,6 +25,8 @@ In this improved project, a three layered structure is applied in this project.
 
 ### How these three layers work
 
+![hight_level_design](hight_level_design.png)
+
 #### Network layer
 
 This is the communication layer for the whole system and is responsible for maintaining connections, sending/receiving data and delivering different types of message to different data consumer. 
@@ -41,7 +43,7 @@ Data layer is used to store all local data and sync its data with other servers'
 - Transcations happen in one server will be synced to all other servers. As some communication may be lost and servers may join and leave, this design cannot ensure all data is synced among whole servers.
 - Periodical sync messages will be broadcasted from every server. All servers received this kind of message from others will update its local data accordingly (only when `local.updateTime < remote.updateTime`.
 
-![hight_level_design](/Users/eric/Documents/projects/DistributedSystem/Project 2 Document/hight_level_design.png)
+
 
 
 

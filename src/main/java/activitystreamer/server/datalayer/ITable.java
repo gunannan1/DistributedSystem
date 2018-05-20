@@ -15,7 +15,7 @@ public interface ITable<T> {
 	boolean unlockRow(T row);
 	boolean insert(T row);
 	T updateOrInsert(T row);
-	boolean delete(T row);
+	boolean delete(String id);
 	T selectById(String id);
 	HashMap<String, T> getAll();
 

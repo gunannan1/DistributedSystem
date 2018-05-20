@@ -37,13 +37,14 @@ public class ServerTable implements ITable<ServerRow>{
 
 	@Override
 	public ServerRow updateOrInsert(ServerRow row) {
-		serverList.put(row.getId(),row);
+		serverList.put(row.getId(), row);
 		return row;
 	}
 
 	@Override
-	public boolean delete(ServerRow row) {
-		return false;
+	public boolean delete(String id) {
+		serverList.remove(id);
+		return true;
 	}
 
 	@Override

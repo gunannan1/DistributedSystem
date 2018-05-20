@@ -48,8 +48,9 @@ public class UserTable implements ITable<UserRow> {
 	}
 
 	@Override
-	public boolean delete(UserRow row) {
-		return false;
+	public boolean delete(String id) {
+		userList.remove(id);
+		return true;
 	}
 
 	@Override

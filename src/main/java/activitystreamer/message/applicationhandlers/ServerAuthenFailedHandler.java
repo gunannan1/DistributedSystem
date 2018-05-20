@@ -1,7 +1,6 @@
-package activitystreamer.message.serverhandlers;
+package activitystreamer.message.applicationhandlers;
 
 import activitystreamer.message.MessageHandler;
-import activitystreamer.server.datalayer.DataLayer;
 import activitystreamer.server.networklayer.Connection;
 import activitystreamer.server.application.Control;
 import activitystreamer.server.networklayer.NetworkLayer;
@@ -14,15 +13,16 @@ import com.google.gson.JsonObject;
  * Date 9/4/18
  */
 
-public class UserLogoutHandler extends MessageHandler {
+public class ServerAuthenFailedHandler extends MessageHandler {
 
 	@Override
 	public boolean processMessage(JsonObject json,Connection connection) {
-		Control.log.info("Logout request from {} is received.",connection.getSocket().getRemoteSocketAddress());
-		Control.log.info("User {} logout, close connection.",connection.getUser().getUsername());
-		DataLayer.getInstance().markUserOnline(connection.getUser().getUsername(),false);
+		Control.log.info("Authen Failed message received from {}",  connection.getSocket().getRemoteSocketAddress());
+		Control.log.info(json.get("info").getAsString());
+		Control.log.info("Close connection to {}", connection.getSocket().getRemoteSocketAddress());
 		connection.closeCon();
 		NetworkLayer.getNetworkLayer().connectionClosed(connection);
-		return true;
+		// return false to close related connection and thread
+		return false;
 	}
 }

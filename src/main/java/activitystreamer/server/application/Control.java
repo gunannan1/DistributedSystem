@@ -5,7 +5,7 @@ import activitystreamer.message.MessageGenerator;
 import activitystreamer.message.MessageHandler;
 import activitystreamer.message.MessageType;
 import activitystreamer.message.networklayerhandlers.ServerInvalidHandler;
-import activitystreamer.message.serverhandlers.*;
+import activitystreamer.message.applicationhandlers.*;
 import activitystreamer.server.datalayer.*;
 import activitystreamer.server.networklayer.Connection;
 import activitystreamer.server.networklayer.IMessageConsumer;
@@ -15,9 +15,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import sun.nio.ch.Net;
 
-import javax.xml.crypto.Data;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -75,47 +73,9 @@ public class Control extends Thread implements IMessageConsumer {
 		start();
 	}
 
-//	public void startListener() {
-//		// start a listener
-//		try {
-//			if(listener == null) {
-//				listener = new Listener();
-//			}
-//			// Show UI for testing
-//			startUI();
-//		} catch (IOException e1) {
-//			log.fatal("failed to startup a listening thread: " + e1);
-//			System.exit(-1);
-//		}
-//	}
-
-
-//	public void initiateConnection() {
-//		// make a connection to another server if remote hostname is supplied
-//		try {
-//			String remoteHost = Settings.getRemoteHostname();
-//			int remotePort = Settings.getRemotePort();
-//			Socket s = new Socket(remoteHost, remotePort);
-//			Connection c = outgoingConnection(s);
-//			c.setServer(true);
-//			c.setAuthed(false, remoteHost, remotePort);
-////			c.setMain(true);
-//			// Authen itself to remote server
-//			c.sendAuthMsg(Settings.getSecret());
-////			String serverRegister = MessageGenerator.authen(Settings.getSecret());
-////			c.writeMsg(serverRegister);
-////			identifier = Settings.getLocalHostname() + Settings.getLocalPort();
-//		} catch (IOException e) {
-//			log.error("failed to make connection to " + Settings.getRemoteHostname() + ":" + Settings.getRemotePort() + " :" + e);
-//			listener.setTerm(true);
-//			System.exit(-1);
-//		}
-//
-//	}
 
 	private void initialHandlers() {
 		this.handlerMap = new HashMap<>();
-		this.handlerMap.put(MessageType.INVALID_MESSAGE, new ServerInvalidHandler());
 
 		// Message from Clients
 		this.handlerMap.put(MessageType.REGISTER, new UserRegisterHandler());
@@ -134,7 +94,7 @@ public class Control extends Thread implements IMessageConsumer {
 
 //		this.handlerMap.put(MessageType.ACTIVITY_BROADCAST, new ActivityBroadcastHandler());
 
-		NetworkLayer.getNetworkLayer().registerConsumer(handlerMap.keySet(), this);
+		networkLayer.registerConsumer(handlerMap.keySet(), this);
 	}
 
 	/*
@@ -191,7 +151,7 @@ public class Control extends Thread implements IMessageConsumer {
 				break;
 			}
 		}
-		networkLayer.closeAllConnections();
+		networkLayer.setTerm(true);
 	}
 
 	private void scheduleActivityCheck() {
@@ -224,12 +184,19 @@ public class Control extends Thread implements IMessageConsumer {
 	}
 
 	public final void setTerm(boolean t) {
-		term = t;
 		if(t) {
-			DataLayer.getInstance().setTerm(true);
-			NetworkLayer.getNetworkLayer().setTerm(true);
+			dataLayer.setTerm(true);
+			networkLayer.setTerm(true);
 			uiRefresher.interrupt();
+			term = t;
 		}
+	}
+
+	public final void terminalAll(){
+		dataLayer.interrupt();
+		networkLayer.terminate();
+		uiRefresher.interrupt();
+		this.interrupt();
 	}
 
 
@@ -280,13 +247,6 @@ public class Control extends Thread implements IMessageConsumer {
 		}
 	}
 
-//	public void closeAll() {
-//		uiRefresher.interrupt();
-//		term = true;
-//		DataLayer.getInstance().setTerm(true);
-//		NetworkLayer.getNetworkLayer().setTerm(true);
-//	}
-
 	private class UIRefresher extends Thread {
 		private boolean isRun;
 
@@ -303,7 +263,7 @@ public class Control extends Thread implements IMessageConsumer {
 			while (isRun) {
 				refreshUI();
 				try {
-					sleep(1000);
+					sleep(2000);
 				} catch (InterruptedException e) {
 					log.info("refresh ui thread ends");
 				}

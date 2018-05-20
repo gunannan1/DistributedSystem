@@ -1,7 +1,7 @@
 package activitystreamer.message.datasynchandlers;
 
 import activitystreamer.message.MessageHandler;
-import activitystreamer.message.serverhandlers.UserRegisterHandler;
+import activitystreamer.message.applicationhandlers.UserRegisterHandler;
 import activitystreamer.server.datalayer.UserRow;
 import activitystreamer.server.networklayer.Connection;
 import activitystreamer.server.application.Control;

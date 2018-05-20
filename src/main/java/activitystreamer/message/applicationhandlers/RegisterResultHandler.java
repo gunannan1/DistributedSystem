@@ -1,4 +1,4 @@
-package activitystreamer.message.serverhandlers;
+package activitystreamer.message.applicationhandlers;
 
 import activitystreamer.message.datasynchandlers.BroadcastResult;
 import activitystreamer.message.MessageHandler;

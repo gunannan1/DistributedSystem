@@ -1,10 +1,11 @@
-package activitystreamer.message.serverhandlers;
+package activitystreamer.message.applicationhandlers;
 
 import activitystreamer.message.MessageHandler;
 import activitystreamer.server.datalayer.DataLayer;
 import activitystreamer.server.networklayer.Connection;
 import activitystreamer.server.application.Control;
 import activitystreamer.server.networklayer.NetworkLayer;
+import activitystreamer.util.Settings;
 import com.google.gson.JsonObject;
 
 /**
@@ -36,9 +37,19 @@ public class ServerAuthenSuccHandler extends MessageHandler {
 //				userList.put(username,new User(username,secret));
 //			}
 //			control.setUserList(userList);
-			// TODO datalayer sync data
+
+			// Set this server is an authened server
+
+			String serverId = json.get("serverid").getAsString();
+			connection.setAuthed(true,serverId, Settings.getRemoteHostname(),Settings.getRemotePort());
+//			connection.setRemoteServerId(serverId);
+
+			/* sync user info */
 			DataLayer.getInstance().syncAllUserData(json.get("user_list").getAsJsonArray());
-			connection.setAuthed(true);
+
+			/* sync activity info*/
+			DataLayer.getInstance().syncAllActivityData(json.get("activity_entity").getAsJsonArray());
+
 			Control.getInstance().setProvideService(true); // begin to provide services to clients/servers
 			NetworkLayer.getNetworkLayer().startListener();
 			Control.getInstance().startUI();

@@ -56,7 +56,7 @@ public class NetworkLayer extends Thread implements IMessageConsumer {
 			Socket s = new Socket(remoteServer, remotePort);
 			Connection c = outgoingConnection(s);
 			c.setServer(true);
-			c.setAuthed(false, remoteServer, remotePort);
+			c.setAuthed(false);
 			return c;
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -73,7 +73,23 @@ public class NetworkLayer extends Thread implements IMessageConsumer {
 
 	@Override
 	public synchronized boolean process(Connection con, JsonObject json) {
-		return false;
+		boolean isSucc = false;
+		try {
+			MessageType m = MessageType.valueOf(json.get("command").getAsString());
+			MessageHandler h = handlerMap.get(m);
+			if (h != null) {
+				isSucc = h.processMessage(json, con);
+			} else {
+				log.error("Cannot find message handler for message type [{}]", m.name());
+			}
+		} catch (IllegalStateException e) {
+			String info = String.format("Invalid message [%s] in ", json.toString());
+			log.error(info);
+			isSucc = false;
+			String invalidMsg = MessageGenerator.invalid(info);
+			con.writeMsg(invalidMsg);
+		}
+		return isSucc;
 	}
 
 	public ArrayList<Connection> getConnectionList() {
@@ -176,6 +192,7 @@ public class NetworkLayer extends Thread implements IMessageConsumer {
 		networkLayer.closeAllConnections();
 	}
 
+	/* normal quit */
 	public synchronized void closeAllConnections() {
 		log.info("closing " + connectionList.size() + " connections");
 		// clean up
@@ -183,6 +200,18 @@ public class NetworkLayer extends Thread implements IMessageConsumer {
 			connection.closeCon();
 		}
 		listener.setTerm(true);
+	}
+
+	/* Force quit */
+	public synchronized void terminate() {
+		log.info("Terminate " + connectionList.size() + " connections");
+		// clean up
+		for (Connection connection : connectionList) {
+			connection.interrupt();
+		}
+		listener.interrupt();
+		term = true;
+		this.interrupt();
 	}
 
 	public void setTerm(boolean term){

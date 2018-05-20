@@ -59,8 +59,9 @@ public class ActivityTable implements ITable<ActivityRow>{
 		}
 	}
 	@Override
-	public boolean delete(ActivityRow row) {
-		return false;
+	public boolean delete(String id) {
+		activityMap.remove(id);
+		return true;
 	}
 
 	@Override

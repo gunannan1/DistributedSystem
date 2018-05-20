@@ -1,4 +1,4 @@
-package activitystreamer.message.serverhandlers;
+package activitystreamer.message.applicationhandlers;
 
 import activitystreamer.message.MessageGenerator;
 import activitystreamer.message.MessageHandler;
@@ -28,8 +28,10 @@ public class ServerAuthenRequestHandler extends MessageHandler {
 
 		String secret;
 		String remoteServiceHost;
+		String remoteServerId;
 		int remoteServicePort;
 		try {
+			remoteServerId = json.get("serverid").getAsString();
 			secret = json.get("secret").getAsString();
 			remoteServiceHost = json.get("host").getAsString();
 			remoteServicePort = json.get("port").getAsInt();
@@ -68,9 +70,9 @@ public class ServerAuthenRequestHandler extends MessageHandler {
 			return false;
 		}
 
+		connection.setAuthed(true,remoteServerId, remoteServiceHost, remoteServicePort);
+		Control.log.info("Auth successfully, accept new server {}:{}", remoteServiceHost,remoteServicePort);
 
-		Control.log.info("Auth successfully, accept new server {}", connection.getSocket().getRemoteSocketAddress());
-		connection.setAuthed(true, remoteServiceHost, remoteServicePort);
 		connection.setServer(true);
 
 		String authSucc = MessageGenerator.authenSucc();

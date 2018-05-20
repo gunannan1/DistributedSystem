@@ -100,9 +100,6 @@ public class ActivityRow implements IRow {
 		return null;
 	}
 
-
-
-
 	@Override
 	public String getId() {
 		return owner;

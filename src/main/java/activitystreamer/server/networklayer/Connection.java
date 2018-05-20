@@ -4,6 +4,8 @@ package activitystreamer.server.networklayer;
 import activitystreamer.BackupServerInfo;
 import activitystreamer.message.MessageGenerator;
 import activitystreamer.server.application.Control;
+import activitystreamer.server.datalayer.DataLayer;
+import activitystreamer.server.datalayer.ServerRow;
 import activitystreamer.server.datalayer.UserRow;
 import activitystreamer.util.Settings;
 import com.google.gson.JsonObject;
@@ -26,6 +28,7 @@ public class Connection extends Thread {
 
 	private String remoteServerHost;
 	private int remoteServerPort;
+	private String remoteServerId;
 
 	private ArrayList<BackupServerInfo> backupServers;
 
@@ -56,11 +59,11 @@ public class Connection extends Thread {
 		}
 	}
 
-	public String connectionFrom(){
-		if(isAuthed){
-			if(isAuthedServer()){
+	public String connectionFrom() {
+		if (isAuthed) {
+			if (isAuthedServer()) {
 				return this.remoteServerHost + this.remoteServerPort;
-			}else{
+			} else {
 				return this.user.getUsername();
 			}
 		}
@@ -82,49 +85,53 @@ public class Connection extends Thread {
 
 
 	public void run() {
-		try {
-			String data;
-			while (!term) {
+
+		String data;
+		while (!term) {
+			try {
 				while (!term && (data = inreader.readLine()) != null) {
-					Control.log.debug("receive data {} from {}", data,connectionFrom());
+					Control.log.debug("receive data {} from {}", data, connectionFrom());
 					JsonParser parser = new JsonParser();
 
 					JsonObject json = parser.parse(data).getAsJsonObject();
 					String m = json.get("command").getAsString();
 					IMessageConsumer h = NetworkLayer.getNetworkLayer().getConsumer(m);
-					if(h!=null) {
+					if (h != null) {
 						h.process(this, json);
-					}else{
-						Control.log.error("No layer can conduct messaget type=[{}]",m);
+					} else {
+						Control.log.error("No layer can conduct messaget type=[{}]", m);
 					}
 				}
 				Control.log.debug("connection closed to " + Settings.socketAddress(socket));
-
-				if (isAuthedServer()) {
-					Control.log.info("This server is authened, " +
-							"need to connect to backup servers if there is any.");
-					// Set this connect to false as the connection between servers is not authened
-					isAuthed = false;
-					if (reConnectBackupServer()) {
-						String info = String.format("Reconnect to backup server %s:%s, sending AUTHENTICATE message",
-								Settings.getRemoteHostname(), Settings.getRemotePort());
-						Control.log.info(info);
-						sendAuthMsg(Settings.getSecret());
-					} else {
-						Control.log.error("All backup servers are out of service, server terminates");
-						this.closeCon();
-						NetworkLayer.getNetworkLayer().connectionClosed(this);
-					}
-				} else {
-					term = true;
-				}
+				ServerRow deleteRow = new ServerRow(this.remoteServerId, false);
+				deleteRow.notifyChange(this);
+			} catch (IOException e) {
+				Control.log.error("connection " + Settings.socketAddress(socket) + " closed with exception: " + e);
 			}
+			DataLayer.getInstance().deleteServer(remoteServerId);
+			doReconnection();
 
-		} catch (IOException e) {
-			Control.log.error("connection " + Settings.socketAddress(socket) + " closed with exception: " + e);
-			NetworkLayer.getNetworkLayer().connectionClosed(this);
 		}
+		NetworkLayer.getNetworkLayer().connectionClosed(this);
 		open = false;
+	}
+
+	private void doReconnection() {
+		if (isAuthedServer() && !term) {
+			Control.log.info("Disconnection is and authened server, " +
+					"need to connect to backup servers if there is any.");
+			// Set this connect to false as the connection between servers is not authened
+			isAuthed = false;
+			remoteServerId = null;
+			if (reConnectBackupServer()) {
+				String info = String.format("Reconnect to backup server %s:%s, sending AUTHENTICATE message",
+						Settings.getRemoteHostname(), Settings.getRemotePort());
+				Control.log.info(info);
+				sendAuthMsg(Settings.getSecret());
+			}
+		} else {
+			term = true;
+		}
 	}
 
 	private boolean reConnectBackupServer() {
@@ -138,6 +145,10 @@ public class Connection extends Thread {
 						return true;
 					}
 				}
+				Control.log.error("All backup servers are out of service, server terminates");
+				this.closeCon();
+				NetworkLayer.getNetworkLayer().connectionClosed(this);
+				return false;
 			} else {
 				Control.log.info("This server is the primary backup server, no need do reconnection.Wait for other servers.");
 				return false;
@@ -167,14 +178,25 @@ public class Connection extends Thread {
 		return socket;
 	}
 
-	public void setAuthed(boolean isAuthed, String host, int port) {
+//	public void setAuthed(boolean isAuthed,String host, int port) {
+//		this.remoteServerHost = host;
+//		this.remoteServerPort = port;
+//		this.isAuthed = isAuthed;
+//	}
+
+	public void setAuthed(boolean isAuthed, String serverId, String host, int port) {
 		this.remoteServerHost = host;
 		this.remoteServerPort = port;
+		this.remoteServerId = serverId;
 		this.isAuthed = isAuthed;
 	}
 
 	public void setAuthed(boolean isAuthed) {
 		this.isAuthed = isAuthed;
+	}
+
+	public void setRemoteServerId(String serverId) {
+		this.remoteServerId = serverId;
 	}
 
 	public String getRemoteServerHost() {

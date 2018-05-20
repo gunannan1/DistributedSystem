@@ -4,7 +4,7 @@ import activitystreamer.message.datasynchandlers.*;
 import activitystreamer.message.MessageGenerator;
 import activitystreamer.message.MessageHandler;
 import activitystreamer.message.MessageType;
-import activitystreamer.message.serverhandlers.UserRegisterHandler;
+import activitystreamer.message.applicationhandlers.UserRegisterHandler;
 import activitystreamer.server.application.Control;
 import activitystreamer.server.networklayer.Connection;
 import activitystreamer.server.networklayer.IMessageConsumer;
@@ -115,10 +115,10 @@ public class DataLayer extends Thread implements IMessageConsumer {
 		return serverTable.getMinLoadServer();
 	}
 
-	public void maintainServerState(String id, String host, int load, int port) {
-		ServerRow newRow = new ServerRow(id, load, host, port);
-		serverTable.updateOrInsert(newRow);
-	}
+//	public void maintainServerState(String id, String host, int load, int port) {
+//		ServerRow newRow = new ServerRow(id, load, host, port);
+//		serverTable.updateOrInsert(newRow);
+//	}
 
 	public HashMap<String, ServerRow> getServerStateList() {
 		return serverTable.getAll();
@@ -126,6 +126,9 @@ public class DataLayer extends Thread implements IMessageConsumer {
 
 	public ServerRow updateOrInsert(ServerRow server) {
 		return serverTable.updateOrInsert(server);
+	}
+	public boolean deleteServer(String id) {
+		return serverTable.delete(id);
 	}
 
 
@@ -198,5 +201,17 @@ public class DataLayer extends Thread implements IMessageConsumer {
 
 	public ActivityRow pendingActivity(String name) {
 		return activityTable.selectById(name);
+	}
+
+	public void syncAllActivityData(JsonArray json) throws Exception {
+//		for (JsonElement je : json) {
+//			UserRow userRow = new UserRow(je.getAsJsonObject());
+//			userTable.updateOrInsert(userRow);
+//		}
+		//TODO pending
+	}
+
+	public HashMap<String, ActivityRow> getAllActivities() {
+		return activityTable.getAll();
 	}
 }

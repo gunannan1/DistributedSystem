@@ -1,6 +1,8 @@
 package activitystreamer.server.datalayer;
 
 import activitystreamer.message.MessageType;
+import activitystreamer.message.datasynchandlers.ServerAnnounceHandler;
+import activitystreamer.message.datasynchandlers.ServerAnnounceHandler.AnnounceType;
 import activitystreamer.server.networklayer.Connection;
 import activitystreamer.server.networklayer.NetworkLayer;
 import com.google.gson.JsonObject;
@@ -22,6 +24,7 @@ public class ServerRow implements IRow {
 	private String ip;
 	private int port;
 	private long updateTime;
+	private boolean online;
 
 	public ServerRow(String serverId, int load, String ip, int port) {
 		this.serverId = serverId;
@@ -29,6 +32,11 @@ public class ServerRow implements IRow {
 		this.ip = ip;
 		this.port = port;
 		this.updateTime = Calendar.getInstance().getTimeInMillis();
+		this.online = true;
+	}
+	public ServerRow(String serverId, boolean online) {
+		this.serverId = serverId;
+		this.online = online;
 	}
 
 	public String getServerId() {
@@ -84,7 +92,12 @@ public class ServerRow implements IRow {
 		String resultBroadcastStr = serverUpdateJsonString();
 		NetworkLayer.getNetworkLayer().broadcastToServers(resultBroadcastStr, connection);
 	}
-
+//
+//	public void notifyChange(AnnounceType announceType,Connection connection){
+//		String resultBroadcastStr = serverUpdateJsonString(announceType);
+//		NetworkLayer.getNetworkLayer().broadcastToServers(resultBroadcastStr, connection);
+//	}
+//
 	private String serverUpdateJsonString(){
 		JsonObject json = this.toJson();
 		json.addProperty("command", MessageType.SERVER_ANNOUNCE.name());
@@ -94,9 +107,17 @@ public class ServerRow implements IRow {
 	public JsonObject toJson(){
 		JsonObject json = new JsonObject();
 		json.addProperty("serverId",serverId);
-		json.addProperty("load",load);
-		json.addProperty("ip",ip);
-		json.addProperty("port",port);
+		if(online) {
+			json.addProperty("load", load);
+			json.addProperty("ip", ip);
+			json.addProperty("port", port);
+			json.addProperty("action",AnnounceType.UPDATE.name());
+		}else{
+			json.addProperty("load", 0);
+			json.addProperty("ip", "");
+			json.addProperty("port", 0);
+			json.addProperty("action",AnnounceType.DELETE.name());
+		}
 		return json;
 	}
 }

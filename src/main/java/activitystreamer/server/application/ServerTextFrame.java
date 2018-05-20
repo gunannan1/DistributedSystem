@@ -46,13 +46,12 @@ public class ServerTextFrame extends JFrame implements ActionListener {
 		add(mainPanel);
 		setLocationRelativeTo(null);
 		setSize(640, 640);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setVisible(true);
-
 		this.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				Control.getInstance().setTerm(true);
+				Control.getInstance().terminalAll();
 			}
 		});
 	}
@@ -82,16 +81,6 @@ public class ServerTextFrame extends JFrame implements ActionListener {
 			}
 		}
 	}
-//	public void setServerArea(ArrayList<Connection> connections) {
-//		serverArea.setText("");
-//		for (Connection c : connections) {
-//			if (c.isAuthedServer()) {
-//				String host = c.getRemoteServerHost();
-//				String port = Integer.toString(c.getRemoteServerPort());
-//				this.serverArea.append(host + ":" + port);
-//			}
-//		}
-//	}
 
 	public void setLoadArea(Collection<ServerRow> serverStates) {
 		loadArea.setRowCount(0);

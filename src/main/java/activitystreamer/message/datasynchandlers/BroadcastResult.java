@@ -1,4 +1,4 @@
-package activitystreamer.message.DataSyncHandlers;
+package activitystreamer.message.datasynchandlers;
 
 import activitystreamer.message.MessageGenerator;
 import activitystreamer.message.serverhandlers.UserRegisterHandler;
@@ -8,7 +8,7 @@ import activitystreamer.server.datalayer.UserRow;
 import activitystreamer.server.networklayer.Connection;
 import activitystreamer.server.networklayer.NetworkLayer;
 
-import static activitystreamer.message.DataSyncHandlers.BroadcastResult.LOCK_STATUS.USER_NOT_FOUND;
+import static activitystreamer.message.datasynchandlers.BroadcastResult.LOCK_STATUS.USER_NOT_FOUND;
 
 /**
  * BroadcastResult

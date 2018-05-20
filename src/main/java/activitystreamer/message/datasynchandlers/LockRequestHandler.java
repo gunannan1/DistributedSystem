@@ -1,4 +1,4 @@
-package activitystreamer.message.DataSyncHandlers;
+package activitystreamer.message.datasynchandlers;
 
 import activitystreamer.message.MessageGenerator;
 import activitystreamer.message.MessageHandler;

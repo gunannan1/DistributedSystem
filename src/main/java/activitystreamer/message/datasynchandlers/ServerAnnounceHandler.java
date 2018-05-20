@@ -1,4 +1,4 @@
-package activitystreamer.message.DataSyncHandlers;
+package activitystreamer.message.datasynchandlers;
 
 import activitystreamer.message.MessageHandler;
 import activitystreamer.server.datalayer.DataLayer;

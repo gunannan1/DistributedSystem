@@ -1,6 +1,6 @@
 package activitystreamer.message;
 
-import activitystreamer.message.DataSyncHandlers.BroadcastResult;
+import activitystreamer.message.datasynchandlers.BroadcastResult;
 import activitystreamer.server.datalayer.DataLayer;
 import activitystreamer.server.datalayer.UserRow;
 import activitystreamer.server.networklayer.Connection;

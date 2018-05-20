@@ -1,6 +1,6 @@
 package activitystreamer.message.serverhandlers;
 
-import activitystreamer.message.DataSyncHandlers.BroadcastResult;
+import activitystreamer.message.datasynchandlers.BroadcastResult;
 import activitystreamer.message.MessageHandler;
 import activitystreamer.server.networklayer.Connection;
 import com.google.gson.JsonObject;

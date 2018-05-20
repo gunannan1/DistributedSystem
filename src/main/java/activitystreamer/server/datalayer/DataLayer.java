@@ -1,6 +1,6 @@
 package activitystreamer.server.datalayer;
 
-import activitystreamer.message.DataSyncHandlers.*;
+import activitystreamer.message.datasynchandlers.*;
 import activitystreamer.message.MessageGenerator;
 import activitystreamer.message.MessageHandler;
 import activitystreamer.message.MessageType;

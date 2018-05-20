@@ -1,38 +1,42 @@
-package activitystreamer.message.DataSyncHandlers;
+package activitystreamer.message.datasynchandlers;
 
 import activitystreamer.message.MessageHandler;
 import activitystreamer.server.datalayer.DataLayer;
 import activitystreamer.server.datalayer.UserRow;
 import activitystreamer.server.networklayer.Connection;
+import activitystreamer.server.networklayer.NetworkLayer;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 /**
- * UserUpdate
+ * UserSyncHandler
  * <p>
  * Author Ning Kang
  * Date 18/5/18
  */
 
-public class UserUpdateHandler extends MessageHandler {
+public class UserSyncHandler extends MessageHandler {
+
 	@Override
 	public boolean processMessage(JsonObject json, Connection connection) {
-		DataLayer.log.info("Update single user info");
+		DataLayer.log.info("Sync user info");
+		JsonArray user_list = null;
 
 		// Validate message
 		try {
-			UserRow userRow = new UserRow(json);
-			DataLayer.getInstance().updateOrInsert(userRow);
-			userRow.notifyChange(connection);
+			user_list = json.get("user_list").getAsJsonArray();
+			for(JsonElement userJson:user_list){
+				UserRow userRow = DataLayer.getInstance().updateOrInsert(new UserRow(userJson.getAsJsonObject()));
+			}
+			NetworkLayer.getNetworkLayer().broadcastToServers(json.getAsString(),connection);
 
 		} catch (Exception e) {
-			String error = "USER_UPDATE message invalid";
+			String error = "User sync message invalid";
 			DataLayer.log.error(error);
 			connection.sendInvalidMsg(error);
 			return false;
 		}
-
 		return true;
 	}
 }

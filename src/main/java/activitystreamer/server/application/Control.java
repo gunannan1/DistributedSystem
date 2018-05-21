@@ -168,6 +168,7 @@ public class Control extends Thread implements IMessageConsumer {
 							json.addProperty("command", MessageType.ACTIVITY_BROADCAST.name());
 							conn.sendActivityBroadcastMsg(json.toString());
 							activity.setDelivered(true);
+							//TODO broadcast this change
 							isChange += 1;
 						}
 					}

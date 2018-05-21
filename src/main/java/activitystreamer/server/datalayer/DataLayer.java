@@ -152,7 +152,6 @@ public class DataLayer extends Thread implements IMessageConsumer {
 		}
 
 		// 2.1.1 check if any remote servers exists
-		// TODO a time-out limition should be set
 		int serverLoads = NetworkLayer.getNetworkLayer().getServerLoads(null);
 		if (serverLoads > 0) {
 			BroadcastResult lockResult = new BroadcastResult(from, serverLoads, new UserRow(username, secret));

@@ -213,3 +213,12 @@ This laye is responsible for maintaining connections, sending/receiving data and
 ```
 
 - BACKUP_LIST
+```json
+{
+    "command":"BACKUP_LIST",
+    "servers":[
+        {"host":"host_ip","port":"prot_num"},
+        {"host":"host_ip2","port":"port_num2"}
+    ]
+}
+```

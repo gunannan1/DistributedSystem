@@ -12,7 +12,7 @@ import java.util.Calendar;
  */
 
 public class Activity implements Comparable<Activity> {
-	//TODO an ID should be speficed
+
 	private JsonObject originalJson;
 	private String authenticated_user;
 	private long sendTime;
@@ -124,5 +124,11 @@ public class Activity implements Comparable<Activity> {
 			return 1;
 		}
 		return 0;
+	}
+	//TODO overwirte hashcode
+
+	@Override
+	public int hashCode() {
+		return originalJson.toString().hashCode();
 	}
 }

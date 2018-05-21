@@ -129,7 +129,11 @@ public class Connection extends Thread {
 				Control.log.info(info);
 				sendAuthMsg(Settings.getSecret());
 			}
-		} else {
+		}//TODO what if a client crash
+		else if(isAuthedClient() && !term){
+			DataLayer.getInstance().markUserOnline(getUser().getUsername(),false);
+			term = true;
+		}else{
 			term = true;
 		}
 	}

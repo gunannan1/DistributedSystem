@@ -1,5 +1,8 @@
 package activitystreamer.server.datalayer;
 
+import activitystreamer.message.MessageType;
+import activitystreamer.server.networklayer.Connection;
+import activitystreamer.server.networklayer.NetworkLayer;
 import com.google.gson.JsonObject;
 
 import java.util.Calendar;
@@ -19,7 +22,7 @@ public class Activity implements Comparable<Activity> {
 	private boolean isDelivered;
 	private long updateTime;
 
-	public Activity(JsonObject json, String username) {
+	private Activity(JsonObject json, String username) {
 		originalJson = json;
 		authenticated_user = username;
 		sendTime = Calendar.getInstance().getTimeInMillis();
@@ -27,12 +30,20 @@ public class Activity implements Comparable<Activity> {
 		isDelivered = false;
 	}
 
-	public Activity(JsonObject json) {
+	public static Activity createActivityFromClientJson(JsonObject json, String username){
+		return new Activity(json,username);
+	}
+
+	private Activity(JsonObject json) {
 		this.originalJson = json.get("activity").getAsJsonObject();
 		this.authenticated_user = originalJson.get("authenticated_user").getAsString();
 		this.sendTime = Long.parseLong(json.get("sendTime").getAsString());
 		this.updateTime = Long.parseLong(json.get("updateTime").getAsString());
 		this.isDelivered = Boolean.valueOf(json.get("isDelivered").getAsString());
+	}
+
+	public static Activity createActivityFromServerJson(JsonObject json){
+		return new Activity(json);
 	}
 
 	public Activity(Activity activity) {
@@ -59,6 +70,7 @@ public class Activity implements Comparable<Activity> {
 
 	public JsonObject toJson() {
 		JsonObject json = new JsonObject();
+		json.addProperty("id",this.hashCode());
 		originalJson.remove("authenticated_user");
 		originalJson.addProperty("authenticated_user", authenticated_user);
 		json.add("activity", originalJson);
@@ -91,6 +103,7 @@ public class Activity implements Comparable<Activity> {
 
 	public void setDelivered(boolean delivered) {
 		isDelivered = delivered;
+
 	}
 
 	public long getUpdateTime() {
@@ -131,4 +144,5 @@ public class Activity implements Comparable<Activity> {
 	public int hashCode() {
 		return originalJson.toString().hashCode();
 	}
+
 }

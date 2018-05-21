@@ -213,4 +213,9 @@ public class DataLayer extends Thread implements IMessageConsumer {
 	public HashMap<String, ActivityRow> getAllActivities() {
 		return activityTable.getAll();
 	}
+
+	public void setActivityDelivered(String username,Activity activity){
+		activity.setDelivered(true);
+		activityTable.selectById(username).notifyActivityChange(activity);
+	}
 }

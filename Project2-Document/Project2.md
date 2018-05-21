@@ -152,27 +152,19 @@ This laye is responsible for maintaining connections, sending/receiving data and
 }
 ```
 
-- ACTIVITY_UPDATE
+- ACTIVITY_UPDATE (activit id = activity.hashcode())
 
 ```json
 {
     "command":"ACTIVITY_UPDATE",
     "owner":"username",
-    "activity_list":[
+    "activity_row":
         {
          "udpateTime":"updateTime",
          "sendTime":"sendTime",
          "isDelivered":"false/ture",
          "activity":{"authenticated_user":"authenticated_user","other":"other"}
-        },
-        { 
-         "udpateTime":"updateTime",
-         "sendTime":"sendTime",
-         "isDelivered":"false/ture",
-         "activity":{"authenticated_user":"authenticated_user","other":"other"}
         }
-        ...
-    ]
 }
 ```
 

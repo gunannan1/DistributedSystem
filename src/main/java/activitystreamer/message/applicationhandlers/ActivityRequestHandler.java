@@ -26,7 +26,7 @@ public class ActivityRequestHandler extends MessageHandler {
 
 	@Override
 	public boolean processMessage(JsonObject json, Connection connection) {
-		Control.log.info("Activity request received from {}", connection.getSocket().getRemoteSocketAddress());
+		Control.log.info("Activity request received from {}", connection.connectionFrom());
 
 		String username = json.get("username").getAsString();
 		String secret = null;
@@ -74,11 +74,9 @@ public class ActivityRequestHandler extends MessageHandler {
 
 		Control.log.info("Process activity from user {}", username);
 		JsonObject actJson = json.get("activity").getAsJsonObject();
-		Activity activity = new Activity(actJson, connection.getUser().getUsername());
+		Activity activity = Activity.createActivityFromClientJson(actJson, connection.getUser().getUsername());
 		DataLayer.getInstance().insertActivity(activity,null);
 
-//		Control.log.info("Broadcast activity from user {} to all clients/servers", username);
-//		NetworkLayer.getNetworkLayer().broadcastToAll(activity.toString(),null);
 
 		return true;
 	}

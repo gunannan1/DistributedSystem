@@ -31,7 +31,7 @@ public class ActivityRow implements IRow {
 		this.owner = actJson.get("owner").getAsString();
 		JsonArray actArray = actJson.get("activity_list").getAsJsonArray();
 		for(JsonElement je:actArray){
-			Activity act = new Activity(je.getAsJsonObject());
+			Activity act = Activity.createActivityFromServerJson(je.getAsJsonObject());
 			activityList.add(act);
 		}
 		Collections.sort(this.activityList);
@@ -107,6 +107,13 @@ public class ActivityRow implements IRow {
 
 	public void notifyChange(){
 		notifyChange(null);
+	}
+
+	public void notifyActivityChange(Activity activity){
+		JsonObject json = activity.toJson();
+		json.addProperty("owner",owner);
+		json.addProperty("command",MessageType.ACTIVITY_UPDATE.name());
+		NetworkLayer.getNetworkLayer().broadcastToServers(json.toString(), null);
 	}
 
 	@Override

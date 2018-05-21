@@ -12,6 +12,7 @@ import java.util.Calendar;
  */
 
 public class Activity implements Comparable<Activity> {
+	//TODO an ID should be speficed
 	private JsonObject originalJson;
 	private String authenticated_user;
 	private long sendTime;

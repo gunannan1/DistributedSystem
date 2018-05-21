@@ -1,4 +1,4 @@
-# Improvement For DS Project 2
+# Project 2 (improvement version of project 1)
 
 ## Project instruction
 
@@ -18,6 +18,12 @@ If this is your first time to clone this respository:
 git clone https://kangnwh.visualstudio.com/DistributedSystem/_git/DistributedSystem
 git checkout layered
 ```
+
+#### How to start this system
+
+Check [here](../HowToStart.md) for detail.
+
+
 
 ## Improvement instruction
 
@@ -103,7 +109,7 @@ This laye is responsible for maintaining connections, sending/receiving data and
 
 
 
-#### New/Updated protocols 
+#### New/Updated protocols
 
 - SERVER_ANNOUNCE
 
@@ -145,6 +151,7 @@ This laye is responsible for maintaining connections, sending/receiving data and
     ]
 }
 ```
+
 - ACTIVITY_UPDATE
 
 ```json
@@ -206,13 +213,3 @@ This laye is responsible for maintaining connections, sending/receiving data and
 ```
 
 - BACKUP_LIST
-
-```json
-{
-    "command":"BACKUP_LIST",
-    "servers":[
-        {"host":"host_ip","port":"prot_num"},
-        {"host":"host_ip2","port":"port_num2"}
-    ]
-}
-```

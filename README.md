@@ -24,7 +24,7 @@ There are two versions for this software:
 
 This version did not all servers to join after the system begins to provide service and not recover strategy is applied when a server crashes.
 
-Check [here](Project 1 Document/Project1.md) to see how this version works.
+Check [here](./Project 1 Document/Project1.md) to see how this version works.
 
 How to check out this version(branch)
 
@@ -41,7 +41,7 @@ git checkout Aaron_Solution
 
 This version improves the design of project 1 to allow server to quit/join at any time and a strategy is applied to recover the system if a server crashes. Data eventually consistency can also be conducted.
 
-Check [here](Project 2 Document/Project2.md) to see how this version works.
+Check [here](./Project 2 Document/Project2.md) to see how this version works.
 
 How to check out this version(branch)
 
@@ -51,8 +51,6 @@ git clone https://kangnwh.visualstudio.com/DistributedSystem/_git/DistributedSys
 # change to simple version
 git checkout layered
 ```
-
-
 
 
 

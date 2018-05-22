@@ -2,6 +2,7 @@ package activitystreamer.server.datalayer;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * ServerTable
@@ -17,8 +18,19 @@ public class ServerTable extends Table<ServerRow> implements Serializable {
 		this.serverList = new HashMap<>();
 	}
 
-	ServerRow getMinLoadServer(){
-		return new ServerRow("!",1,"!",1);
+	public ServerRow getMinLoadServer(){
+		int minload=Integer.MAX_VALUE;
+		String minloadServerId=null;
+		for(Map.Entry entry:serverList.entrySet()){
+			ServerRow serverRow=(ServerRow) entry.getValue();
+			if(serverRow.getLoad()<minload){
+				minload=serverRow.getLoad();
+				minloadServerId=serverRow.getId();
+			}
+		}
+
+		return new ServerRow(serverList.get(minloadServerId).getServerId(), serverList.get(minloadServerId).getLoad(),
+				serverList.get(minloadServerId).getIp(), serverList.get(minloadServerId).getPort());
 	}
 
 	@Override

@@ -201,6 +201,7 @@ This laye is responsible for maintaining connections, sending/receiving data and
 {
     "command":"AUTHETICSTE_SUCC",
     "serverid":"serverid",
+    “server_list":SERVER_SYNC_JSON
     "user_list":USER_SYNC_JSON,
     "activity_entity":ACTIVITY_SYNC_JSON
 }

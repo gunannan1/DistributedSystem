@@ -67,9 +67,6 @@ public class ClientSkeleton extends Thread {
 		//updateOrInsert Activity Broadcast
 		clientSolution.handlerMap.put(MessageType.ACTIVITY_BROADCAST, new ClientActivityBroadcastHandler(this));
 
-		//backup list for high available
-		clientSolution.handlerMap.put(MessageType.BACKUP_LIST, new ClientBackupListHandler(this));
-
 	}
 
 	private Socket connectToServer(String host, int port) {

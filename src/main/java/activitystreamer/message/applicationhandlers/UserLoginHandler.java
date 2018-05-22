@@ -51,8 +51,6 @@ public class UserLoginHandler extends MessageHandler {
 				connection.sendLoginSuccMsg(String.format("login successfully as user '%s '", username));
 
 				//check redirect
-				ServerRow server = Control.getInstance().findRedirectServer();
-
 				if (redirectCheck(connection, username)) {
 					return true;
 				}

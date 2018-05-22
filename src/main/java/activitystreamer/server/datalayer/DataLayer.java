@@ -1,15 +1,16 @@
 package activitystreamer.server.datalayer;
 
-import activitystreamer.message.datasynchandlers.*;
 import activitystreamer.message.MessageGenerator;
 import activitystreamer.message.MessageHandler;
 import activitystreamer.message.MessageType;
 import activitystreamer.message.applicationhandlers.UserRegisterHandler;
+import activitystreamer.message.datasynchandlers.*;
 import activitystreamer.server.application.Control;
 import activitystreamer.server.networklayer.Connection;
 import activitystreamer.server.networklayer.IMessageConsumer;
 import activitystreamer.server.networklayer.NetworkLayer;
 import activitystreamer.util.Settings;
+import activitystreamer.util.Tools;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -19,6 +20,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class DataLayer extends Thread implements IMessageConsumer {
+	public enum OperationType {
+		UPDATE_OR_INSERT,
+		DELETE,
+		INSERT,
+		UPDATE
+
+	}
+
 	public static final Logger log = Control.log;
 	private static DataLayer dataLayer;
 	private UserTable userTable;
@@ -54,6 +63,7 @@ public class DataLayer extends Thread implements IMessageConsumer {
 		this.handlerMap.put(MessageType.USER_UPDATE, new UserUpdateHandler());
 		this.handlerMap.put(MessageType.USER_SYNC, new UserSyncHandler());
 		this.handlerMap.put(MessageType.ACTIVITY_BROADCAST, new ActivityBroadcastHandler());
+		this.handlerMap.put(MessageType.ACTIVITY_SYNC,new ActivitySyncHandler());
 
 		NetworkLayer.getNetworkLayer().registerConsumer(handlerMap.keySet(), this);
 	}
@@ -86,6 +96,8 @@ public class DataLayer extends Thread implements IMessageConsumer {
 			// do something with 5 second intervals in between
 			try {
 				updateCurrentLoad();
+				syncUserData();
+				syncActivityData();
 				Thread.sleep(Settings.getAnnounceInterval());
 			} catch (InterruptedException e) {
 				log.info("received an interrupt, system is shutting down");
@@ -97,50 +109,92 @@ public class DataLayer extends Thread implements IMessageConsumer {
 	public void setTerm(boolean term) {
 		this.term = term;
 	}
+	private void syncUserData(){
+		String syncString = MessageGenerator.userSyncCommand();
+		NetworkLayer.getNetworkLayer().broadcastToServers(syncString,null);
+	}
 
-	private void updateCurrentLoad() {
-		ServerRow info = DataLayer.getInstance().updateOrInsert(
-				new ServerRow(
-						Settings.getServerId(),
-						NetworkLayer.getNetworkLayer().getClientLoads(),
-						Settings.getLocalHostname(),
-						Settings.getLocalPort())
-		);
-		info.notifyChange();
+	private void syncActivityData(){
+		String syncString = MessageGenerator.activitySyncCommand();
+		NetworkLayer.getNetworkLayer().broadcastToServers(syncString,null);
 	}
 
 	/************************************************************************************************************************/
 	/* Server related API */
-	public ServerRow getMinLoadServer() {
-		return serverTable.getMinLoadServer();
+	public synchronized ServerRow updateServerTable(OperationType operationType,ServerRow serverRow, boolean notify) {
+		ServerRow row = null;
+		switch (operationType) {
+			case DELETE:
+				row = deleteServer(serverRow.getId());
+				break;
+			case UPDATE_OR_INSERT:
+				row = updateOrInsert(serverRow);
+				break;
+		}
+		if (notify && row != null) {
+			row.notifyChange();
+		}
+		return row;
 	}
 
-//	public void maintainServerState(String id, String host, int load, int port) {
-//		ServerRow newRow = new ServerRow(id, load, host, port);
-//		serverTable.updateOrInsert(newRow);
-//	}
+	public ServerRow getMinLoadServer() {
+		return (ServerRow) Tools.deepClone(serverTable.getMinLoadServer());
+	}
+
+	private void updateCurrentLoad() {
+		DataLayer.getInstance().updateServerTable(OperationType.UPDATE_OR_INSERT,
+				new ServerRow(
+						Settings.getServerId(),
+						NetworkLayer.getNetworkLayer().getClientLoads(),
+						Settings.getLocalHostname(),
+						Settings.getLocalPort()),
+				true
+		);
+	}
+
 
 	public HashMap<String, ServerRow> getServerStateList() {
-		return serverTable.getAll();
+		return (HashMap<String, ServerRow>) Tools.deepClone(serverTable.getAll());
 	}
 
-	public ServerRow updateOrInsert(ServerRow server) {
+
+	private ServerRow updateOrInsert(ServerRow server) {
 		return serverTable.updateOrInsert(server);
 	}
-	public boolean deleteServer(String id) {
+
+	private ServerRow deleteServer(String id) {
 		return serverTable.delete(id);
+	}
+
+	public ServerRow getServerById(String id){
+		return (ServerRow)Tools.deepClone(serverTable.selectById(id));
 	}
 
 
 	/************************************************************************************************************************/
 	/* User Related API */
-	public UserRow updateOrInsert(UserRow user) {
+	public synchronized UserRow updateUserTable(OperationType operationType, UserRow userRow, boolean notify) {
+		UserRow row = null;
+		switch (operationType) {
+			case DELETE:
+				break;
+			case UPDATE_OR_INSERT:
+				row = updateOrInsert(userRow);
+				break;
+		}
+		if (notify && row != null) {
+			row.notifyChange();
+		}
+		return row;
+	}
+
+	private UserRow updateOrInsert(UserRow user) {
 		return userTable.updateOrInsert(user);
 	}
 
 
 	public UserRow getUserByName(String username) {
-		return userTable.selectById(username);
+		return (UserRow) Tools.deepClone(userTable.selectById(username));
 
 	}
 
@@ -158,7 +212,7 @@ public class DataLayer extends Thread implements IMessageConsumer {
 			UserRegisterHandler.registerLockHashMap.put(username, lockResult);
 			// broadcastToAll lock request and then waiting for lock_allow & lock_denied, this register process will be handled by LockAllowedHandler & LockDeniedHandler
 			String lockRequest = MessageGenerator.lockRequest(username, secret);
-			NetworkLayer.getNetworkLayer().broadcastToServers(lockRequest, from);
+			NetworkLayer.getNetworkLayer().broadcastToServers(lockRequest, null);
 			return BroadcastResult.REGISTER_RESULT.PROCESSING;
 		}
 
@@ -166,43 +220,66 @@ public class DataLayer extends Thread implements IMessageConsumer {
 		DataLayer.log.info("No additional server connected, send REGISTER_SUCC for user:{} ", username);
 		DataLayer.log.info("Add user {} into local register user list", username);
 		UserRow newUser = new UserRow(username, secret);
-		DataLayer.getInstance().updateOrInsert(newUser);
+		DataLayer.getInstance().updateUserTable(OperationType.UPDATE_OR_INSERT, newUser, false);
 		return BroadcastResult.REGISTER_RESULT.SUCC;
 	}
 
 	public HashMap<String, UserRow> getAllUsers() {
-		return userTable.getAll();
+		return (HashMap<String, UserRow>) Tools.deepClone(userTable.getAll());
 	}
 
 	public ArrayList<UserRow> getConnectedUsers() {
-		return userTable.connectedUserList();
+		return (ArrayList<UserRow>) Tools.deepClone(userTable.connectedUserList());
 	}
 
-	public void syncAllUserData(JsonArray json) throws Exception {
+	public void mergeAllUserData(JsonArray json) throws Exception {
 		for (JsonElement je : json) {
 			UserRow userRow = new UserRow(je.getAsJsonObject());
-			userTable.updateOrInsert(userRow);
+			updateUserTable(OperationType.UPDATE_OR_INSERT, userRow, false);
 		}
 	}
 
 	public void markUserOnline(String username, boolean online) {
-		userTable.markUserOnline(username, online);
+		UserRow row = getUserByName(username);
+		row.login(online);
+		updateUserTable(OperationType.UPDATE_OR_INSERT, row, true);
 	}
 
 	/************************************************************************************************************************/
 	/* Activity Related API */
-	public void insertActivity(Activity activity, Connection from) {
-		activityTable.insertActivity(activity);
-		JsonObject actJson = activity.toJson();
-		actJson.addProperty("command", MessageType.ACTIVITY_BROADCAST.name());
-		NetworkLayer.getNetworkLayer().broadcastToServers(actJson.toString(), from);
+	public synchronized ActivityRow updateActivityTable(OperationType operationType,String username, Activity activity, boolean notify) {
+		switch (operationType) {
+			case DELETE:
+				break;
+			case UPDATE_OR_INSERT:
+				updateOrInsert(activity);
+				if (notify) {
+					JsonObject actJson = activity.toJson();
+					actJson.addProperty("command", MessageType.ACTIVITY_BROADCAST.name());
+					NetworkLayer.getNetworkLayer().broadcastToServers(actJson.toString(),null);;
+				}
+				break;
+			case UPDATE:
+				setActivityDelivered(username,activity);
+				if (notify) activityTable.selectById(username).notifyActivityChange(activity);
+				break;
+		}
+
+		return null;
+	}
+
+	private void updateOrInsert(Activity activity) {
+		activityTable.updateOrInsert(activity);
+//		JsonObject actJson = activity.toJson();
+//		actJson.addProperty("command", MessageType.ACTIVITY_BROADCAST.name());
+//		NetworkLayer.getNetworkLayer().broadcastToServers(actJson.toString(), from);
 	}
 
 	public ActivityRow pendingActivity(String name) {
-		return activityTable.selectById(name);
+		return (ActivityRow) Tools.deepClone(activityTable.selectById(name));
 	}
 
-	public void syncAllActivityData(JsonArray json) throws Exception {
+	public void mergeAllActivityData(JsonArray json) throws Exception {
 //		for (JsonElement je : json) {
 //			UserRow userRow = new UserRow(je.getAsJsonObject());
 //			userTable.updateOrInsert(userRow);
@@ -211,11 +288,11 @@ public class DataLayer extends Thread implements IMessageConsumer {
 	}
 
 	public HashMap<String, ActivityRow> getAllActivities() {
-		return activityTable.getAll();
+		return (HashMap<String, ActivityRow>) Tools.deepClone(activityTable.getAll());
 	}
 
-	public void setActivityDelivered(String username,Activity activity){
+	private void setActivityDelivered(String username, Activity activity) {
+		activityTable.selectById(username).updateOrInsert(activity);
 		activity.setDelivered(true);
-		activityTable.selectById(username).notifyActivityChange(activity);
 	}
 }

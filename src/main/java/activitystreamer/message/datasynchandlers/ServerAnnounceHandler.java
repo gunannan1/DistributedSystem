@@ -5,10 +5,10 @@ import activitystreamer.server.datalayer.DataLayer;
 import activitystreamer.server.datalayer.ServerRow;
 import activitystreamer.server.networklayer.Connection;
 import activitystreamer.server.application.Control;
-import com.google.gson.JsonElement;
+import activitystreamer.server.networklayer.NetworkLayer;
 import com.google.gson.JsonObject;
 
-import static activitystreamer.message.datasynchandlers.ServerAnnounceHandler.AnnounceType.UPDATE;
+import static activitystreamer.message.datasynchandlers.ServerAnnounceHandler.AnnounceType.UPDATE_OR_INSERT;
 
 /**
  * RegisterMessage
@@ -19,7 +19,7 @@ import static activitystreamer.message.datasynchandlers.ServerAnnounceHandler.An
 
 public class ServerAnnounceHandler extends MessageHandler {
 	public enum AnnounceType{
-		UPDATE,
+		UPDATE_OR_INSERT,
 		DELETE
 	}
 
@@ -28,20 +28,22 @@ public class ServerAnnounceHandler extends MessageHandler {
 		Control.log.debug("Announcement received from {}" , connection.getSocket().getRemoteSocketAddress());
 		try {
 			AnnounceType announceType = AnnounceType.valueOf(json.get("action").getAsString());
-			if(announceType == UPDATE) {
+			if(announceType == UPDATE_OR_INSERT) {
 				String serverId = json.get("serverId").getAsString();
 				int load = json.get("load").getAsInt();
 				String host = json.get("ip").getAsString();
 				int port = json.get("port").getAsInt();
 
 				ServerRow receivedInfo = new ServerRow(serverId, load, host, port);
-				DataLayer.getInstance().updateOrInsert(receivedInfo);
-				receivedInfo.notifyChange(connection);
+				DataLayer.getInstance().updateServerTable(DataLayer.OperationType.UPDATE_OR_INSERT,receivedInfo,false);
 				return true;
 			}else{
 				String serverId = json.get("serverId").getAsString();
-				DataLayer.getInstance().deleteServer(serverId);
+				ServerRow deleteRwo = new ServerRow(serverId,false);
+				DataLayer.getInstance().updateServerTable(DataLayer.OperationType.DELETE,deleteRwo,false);
 			}
+
+			NetworkLayer.getNetworkLayer().broadcastToServers(json.toString(),connection);
 		}catch (Exception e){
 			DataLayer.log.error("Invalid ServerAnnounce message:[{}]",json.getAsString());
 			e.printStackTrace();

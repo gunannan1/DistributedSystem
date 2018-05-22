@@ -1,5 +1,6 @@
 package activitystreamer.server.datalayer;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 
@@ -10,27 +11,27 @@ import java.util.HashMap;
  * Date 18/5/18
  */
 
-public class ActivityTable implements ITable<ActivityRow>{
+public class ActivityTable extends Table<ActivityRow> implements Serializable {
 	private HashMap<String,ActivityRow> activityMap;
 
 	public ActivityTable() {
 		this.activityMap = new HashMap<>();
 	}
 
-	@Override
-	public boolean lockRow(ActivityRow row) {
-		return false;
-	}
-
-	@Override
-	public boolean unlockRow(ActivityRow row) {
-		return false;
-	}
-
-	@Override
-	public boolean insert(ActivityRow row) {
-		return false;
-	}
+//	@Override
+//	public boolean lockRow(ActivityRow row) {
+//		return false;
+//	}
+//
+//	@Override
+//	public boolean unlockRow(ActivityRow row) {
+//		return false;
+//	}
+//
+//	@Override
+//	public boolean insert(ActivityRow row) {
+//		return false;
+//	}
 
 	@Override
 	public ActivityRow updateOrInsert(ActivityRow newRow) {
@@ -43,25 +44,26 @@ public class ActivityTable implements ITable<ActivityRow>{
 		return newRow;
 	}
 
-	public void insertActivity(Activity activity){
+	public void updateOrInsert(Activity activity){
 		Collection<UserRow> allUsers = DataLayer.getInstance().getAllUsers().values();
 		for(UserRow user:allUsers){
 			if(user.isOnline()){
 				ActivityRow activityRow = activityMap.get(user.getUsername());
 				if(activityRow == null){
 					ActivityRow newActivityRow = new ActivityRow(user.getUsername());
-					newActivityRow.updateOrInsert(activity.copy());
+					newActivityRow.updateOrInsert(activity);
 					activityMap.put(user.getUsername(),newActivityRow);
 				}else{
-					activityRow.updateOrInsert(activity.copy());
+					activityRow.updateOrInsert(activity);
 				}
 			}
 		}
 	}
 	@Override
-	public boolean delete(String id) {
+	public ActivityRow delete(String id) {
+		ActivityRow row = activityMap.get(id);
 		activityMap.remove(id);
-		return true;
+		return row;
 	}
 
 	@Override

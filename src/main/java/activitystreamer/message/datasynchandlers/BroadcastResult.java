@@ -88,18 +88,18 @@ public class BroadcastResult {
 				UserRegisterHandler.registerLockHashMap.remove(username);
 
 				UserRow userRow = new UserRow(username, secret);
-				DataLayer.getInstance().updateOrInsert(userRow);
-				userRow.notifyChange();
+				DataLayer.getInstance().updateUserTable(DataLayer.OperationType.UPDATE_OR_INSERT, userRow, true);
 
 				String resultStr = MessageGenerator.registerResult(REGISTER_RESULT.SUCC, username, secret);
 				Control.getInstance().process(lockRequest.from, resultStr);
 				break;
 			case USER_FOUND:
 				Control.log.info("User [{}] exists in this system, register failed.", username);
-				//lockRequest.getFrom().sendRegisterFailedMsg(username);
 				UserRegisterHandler.registerLockHashMap.remove(username);
+
 				lockRequest.getFrom().closeCon();
 				NetworkLayer.getNetworkLayer().connectionClosed(lockRequest.getFrom());
+
 				resultStr = MessageGenerator.registerResult(REGISTER_RESULT.FAIL, username, secret);
 				NetworkLayer.getNetworkLayer().broadcastToServers(resultStr, null);
 				Control.getInstance().process(lockRequest.from, resultStr);

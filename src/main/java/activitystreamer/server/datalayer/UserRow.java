@@ -8,6 +8,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.PriorityQueue;
@@ -19,7 +20,7 @@ import java.util.PriorityQueue;
  * Date 18/5/18
  */
 
-public class UserRow implements IRow {
+public class UserRow implements IRow, Serializable {
 	private String username;
 	private String secret;
 //	private ArrayList<Activity> activityQueue;
@@ -100,14 +101,15 @@ public class UserRow implements IRow {
 	}
 
 	public void notifyChange(){
-		notifyChange(null);
+		String resultBroadcastStr = userUpdateJsonString();
+		NetworkLayer.getNetworkLayer().broadcastToServers(resultBroadcastStr, null);;
 	}
 
-	@Override
-	public void notifyChange(Connection connection) {
-		String resultBroadcastStr = userUpdateJsonString();
-		NetworkLayer.getNetworkLayer().broadcastToServers(resultBroadcastStr, connection);
-	}
+//	@Override
+//	public void notifyChange(Connection connection) {
+//		String resultBroadcastStr = userUpdateJsonString();
+//		NetworkLayer.getNetworkLayer().broadcastToServers(resultBroadcastStr, connection);
+//	}
 
 	private String userUpdateJsonString(){
 		JsonObject json = this.toJson();

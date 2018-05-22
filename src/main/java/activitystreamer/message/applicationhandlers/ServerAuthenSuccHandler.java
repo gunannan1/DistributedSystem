@@ -45,10 +45,10 @@ public class ServerAuthenSuccHandler extends MessageHandler {
 //			connection.setRemoteServerId(serverId);
 
 			/* sync user info */
-			DataLayer.getInstance().syncAllUserData(json.get("user_list").getAsJsonArray());
+			DataLayer.getInstance().mergeAllUserData(json.get("user_list").getAsJsonArray());
 
 			/* sync activity info*/
-			DataLayer.getInstance().syncAllActivityData(json.get("activity_entity").getAsJsonArray());
+			DataLayer.getInstance().mergeAllActivityData(json.get("activity_entity").getAsJsonArray());
 
 			Control.getInstance().setProvideService(true); // begin to provide services to clients/servers
 			NetworkLayer.getNetworkLayer().startListener();

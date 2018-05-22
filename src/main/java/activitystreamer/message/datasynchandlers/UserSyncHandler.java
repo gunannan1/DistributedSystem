@@ -26,13 +26,17 @@ public class UserSyncHandler extends MessageHandler {
 		// Validate message
 		try {
 			user_list = json.get("user_list").getAsJsonArray();
-			for(JsonElement userJson:user_list){
-				UserRow userRow = DataLayer.getInstance().updateOrInsert(new UserRow(userJson.getAsJsonObject()));
+			for (JsonElement userJson : user_list) {
+				UserRow userRow = DataLayer.getInstance().updateUserTable(
+						DataLayer.OperationType.UPDATE_OR_INSERT,
+						new UserRow(userJson.getAsJsonObject()),
+						false
+				);
 			}
-			NetworkLayer.getNetworkLayer().broadcastToServers(json.getAsString(),connection);
+			NetworkLayer.getNetworkLayer().broadcastToServers(json.toString(), connection);
 
 		} catch (Exception e) {
-			String error = "User sync message invalid";
+			String error = "User sync message invalid:" + json.toString();
 			DataLayer.log.error(error);
 			connection.sendInvalidMsg(error);
 			return false;

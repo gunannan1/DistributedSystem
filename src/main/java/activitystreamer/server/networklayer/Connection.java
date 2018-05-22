@@ -103,12 +103,16 @@ public class Connection extends Thread {
 					}
 				}
 				Control.log.debug("connection closed to " + Settings.socketAddress(socket));
-				ServerRow deleteRow = new ServerRow(this.remoteServerId, false);
-				deleteRow.notifyChange(this);
+				ServerRow deleteRow = new ServerRow(remoteServerId,false);
+				DataLayer.getInstance().updateServerTable(DataLayer.OperationType.DELETE,deleteRow,true);
+				sleep(Settings.getTimeBeforeReconnect());
 			} catch (IOException e) {
 				Control.log.error("connection " + Settings.socketAddress(socket) + " closed with exception: " + e);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+				System.exit(-1);
 			}
-			DataLayer.getInstance().deleteServer(remoteServerId);
+
 			doReconnection();
 
 		}

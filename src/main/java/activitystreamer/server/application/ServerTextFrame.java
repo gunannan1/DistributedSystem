@@ -51,7 +51,7 @@ public class ServerTextFrame extends JFrame implements ActionListener {
 		this.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				Control.getInstance().terminalAll();
+				Control.getInstance().setTerm(true);
 			}
 		});
 	}

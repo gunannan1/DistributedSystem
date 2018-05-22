@@ -3,6 +3,8 @@ package activitystreamer.server.datalayer;
 import activitystreamer.server.networklayer.Connection;
 import com.google.gson.JsonObject;
 
+import java.io.Serializable;
+
 /**
  * IRow
  * <p>
@@ -18,5 +20,6 @@ public interface IRow {
 	String getId();
 	long getUpdateTime();
 	void notifyChange();
-	void notifyChange(Connection connection);
+//	void notifyChange(Connection connection);
+
 }

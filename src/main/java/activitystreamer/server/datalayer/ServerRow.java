@@ -1,15 +1,13 @@
 package activitystreamer.server.datalayer;
 
 import activitystreamer.message.MessageType;
-import activitystreamer.message.datasynchandlers.ServerAnnounceHandler;
 import activitystreamer.message.datasynchandlers.ServerAnnounceHandler.AnnounceType;
-import activitystreamer.server.networklayer.Connection;
 import activitystreamer.server.networklayer.NetworkLayer;
 import com.google.gson.JsonObject;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 /**
  * ServerRow
@@ -18,7 +16,7 @@ import java.util.Date;
  * Date 18/5/18
  */
 
-public class ServerRow implements IRow {
+public class ServerRow implements IRow , Serializable {
 	private String serverId;
 	private int load;
 	private String ip;
@@ -85,13 +83,14 @@ public class ServerRow implements IRow {
 	}
 
 	public void notifyChange(){
-		notifyChange(null);
-	}
-
-	public void notifyChange(Connection connection){
 		String resultBroadcastStr = serverUpdateJsonString();
-		NetworkLayer.getNetworkLayer().broadcastToServers(resultBroadcastStr, connection);
+		NetworkLayer.getNetworkLayer().broadcastToServers(resultBroadcastStr, null);
 	}
+//
+//	public void notifyChange(Connection connection){
+//		String resultBroadcastStr = serverUpdateJsonString();
+//		NetworkLayer.getNetworkLayer().broadcastToServers(resultBroadcastStr, connection);
+//	}
 //
 //	public void notifyChange(AnnounceType announceType,Connection connection){
 //		String resultBroadcastStr = serverUpdateJsonString(announceType);
@@ -111,7 +110,7 @@ public class ServerRow implements IRow {
 			json.addProperty("load", load);
 			json.addProperty("ip", ip);
 			json.addProperty("port", port);
-			json.addProperty("action",AnnounceType.UPDATE.name());
+			json.addProperty("action",AnnounceType.UPDATE_OR_INSERT.name());
 		}else{
 			json.addProperty("load", 0);
 			json.addProperty("ip", "");

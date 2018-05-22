@@ -16,6 +16,8 @@ public class Settings {
 	private static int remotePort = 3780;
 	private static int announceInterval = 5000; // milliseconds
 	private static int activityCheckInterval = 1000; // milliseconds
+	private static int timeBeforeReconnect = 0; // milliseconds
+	private static int syncInterval = 5000; // milliseconds
 	private static String secret = null;
 	private static String username = "anonymous";
 	private static String serverId=null;
@@ -74,6 +76,25 @@ public class Settings {
 	public static void setActivityCheckInterval(int activityCheckInterval) {
 		Settings.activityCheckInterval = activityCheckInterval;
 	}
+
+	public static int getTimeBeforeReconnect() {
+		return timeBeforeReconnect;
+	}
+
+	public static void setTimeBeforeReconnect(int timeBeforeReconnect) {
+		Settings.timeBeforeReconnect = timeBeforeReconnect;
+	}
+
+	public static int getSyncInterval() {
+		return syncInterval;
+	}
+
+	public static void setSyncInterval(int syncInterval) {
+		Settings.syncInterval = syncInterval;
+	}
+
+
+
 
 	public static String getSecret() {
 		return secret;

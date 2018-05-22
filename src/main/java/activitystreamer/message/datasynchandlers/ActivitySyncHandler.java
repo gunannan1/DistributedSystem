@@ -1,5 +1,9 @@
 package activitystreamer.message.datasynchandlers;
 
+import activitystreamer.message.MessageHandler;
+import activitystreamer.server.networklayer.Connection;
+import com.google.gson.JsonObject;
+
 /**
  * ActivitySyncHandler
  * <p>
@@ -7,6 +11,11 @@ package activitystreamer.message.datasynchandlers;
  * Date 20/5/18
  */
 
-//TODO pending
-public class ActivitySyncHandler {
+
+public class ActivitySyncHandler extends MessageHandler {
+	@Override
+	public boolean processMessage(JsonObject json, Connection connection) {
+		//TODO pending
+		return false;
+	}
 }

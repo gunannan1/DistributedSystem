@@ -39,8 +39,8 @@ public class ActivityBroadcastHandler extends MessageHandler {
 
 		Control.log.info("Broadcast received activity message:{}",json);
 		Activity activity = Activity.createActivityFromServerJson(json);
-		DataLayer.getInstance().insertActivity(activity,connection);
-//		NetworkLayer.getNetworkLayer().broadcastToAll(json.toString(),connection);
+		DataLayer.getInstance().updateActivityTable(DataLayer.OperationType.UPDATE_OR_INSERT,null,activity,false);
+		NetworkLayer.getNetworkLayer().broadcastToAll(json.toString(),connection);
 
 		return true;
 	}

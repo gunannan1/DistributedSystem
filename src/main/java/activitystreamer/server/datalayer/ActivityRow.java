@@ -8,6 +8,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -17,7 +18,7 @@ import java.util.*;
  * Date 18/5/18
  */
 
-public class ActivityRow implements IRow {
+public class ActivityRow implements IRow, Serializable {
 	private String owner;
 	private ArrayList<Activity> activityList;
 
@@ -59,7 +60,7 @@ public class ActivityRow implements IRow {
 		return json;
 	}
 
-	public ActivityRow updateOrInsert(Activity activity){
+	public Activity updateOrInsert(Activity activity){
 		int index = activityList.indexOf(activity);
 		int changedCount = 0 ;
 		if(index == -1) {
@@ -70,7 +71,7 @@ public class ActivityRow implements IRow {
 		}
 
 		if(changedCount > 0) {
-			return this;
+			return activityList.get(index);
 		}
 		return null;
 	}
@@ -106,7 +107,8 @@ public class ActivityRow implements IRow {
 	}
 
 	public void notifyChange(){
-		notifyChange(null);
+		String notifytStr = notifyJsonString();
+		NetworkLayer.getNetworkLayer().broadcastToServers(notifytStr, null);
 	}
 
 	public void notifyActivityChange(Activity activity){
@@ -116,11 +118,11 @@ public class ActivityRow implements IRow {
 		NetworkLayer.getNetworkLayer().broadcastToServers(json.toString(), null);
 	}
 
-	@Override
-	public void notifyChange(Connection connection) {
-		String notifytStr = notifyJsonString();
-		NetworkLayer.getNetworkLayer().broadcastToServers(notifytStr, connection);
-	}
+//	@Override
+//	public void notifyChange(Connection connection) {
+//		String notifytStr = notifyJsonString();
+//		NetworkLayer.getNetworkLayer().broadcastToServers(notifytStr, connection);
+//	}
 
 	private String notifyJsonString(){
 		JsonObject json = this.toJson();

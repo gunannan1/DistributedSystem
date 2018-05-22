@@ -4,6 +4,7 @@ import activitystreamer.message.MessageHandler;
 import activitystreamer.server.datalayer.DataLayer;
 import activitystreamer.server.datalayer.UserRow;
 import activitystreamer.server.networklayer.Connection;
+import activitystreamer.server.networklayer.NetworkLayer;
 import com.google.gson.JsonObject;
 
 /**
@@ -21,8 +22,8 @@ public class UserUpdateHandler extends MessageHandler {
 		// Validate message
 		try {
 			UserRow userRow = new UserRow(json);
-			DataLayer.getInstance().updateOrInsert(userRow);
-			userRow.notifyChange(connection);
+			DataLayer.getInstance().updateUserTable(DataLayer.OperationType.UPDATE_OR_INSERT,userRow,false);
+			NetworkLayer.getNetworkLayer().broadcastToServers(json.toString(),connection);
 
 		} catch (Exception e) {
 			String error = "USER_UPDATE message invalid";

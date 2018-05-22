@@ -1,9 +1,6 @@
 package activitystreamer.server.datalayer;
 
-import activitystreamer.message.MessageGenerator;
-import activitystreamer.server.networklayer.Connection;
-import activitystreamer.server.networklayer.NetworkLayer;
-
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -14,30 +11,30 @@ import java.util.HashMap;
  * Date 18/5/18
  */
 
-public class UserTable implements ITable<UserRow> {
+public class UserTable extends Table<UserRow> implements Serializable {
 	private HashMap<String,UserRow> userList;
 
 	public UserTable() {
 		userList = new HashMap<>();
 	}
 
-	@Override
-	public boolean lockRow(UserRow row) {
-		return false;
-	}
+//	@Override
+//	public boolean lockRow(UserRow row) {
+//		return false;
+//	}
+//
+//	@Override
+//	public boolean unlockRow(UserRow row) {
+//		return false;
+//	}
+//
+//	@Override
+//	public boolean insert(UserRow row) {
+//		return false;
+//	}
 
 	@Override
-	public boolean unlockRow(UserRow row) {
-		return false;
-	}
-
-	@Override
-	public boolean insert(UserRow row) {
-		return false;
-	}
-
-	@Override
-	public UserRow updateOrInsert(UserRow row) {
+	protected UserRow updateOrInsert(UserRow row) {
 		UserRow existRow = userList.get(row.getUsername());
 		if(existRow == null){
 			userList.put(row.getUsername(),row);
@@ -48,27 +45,28 @@ public class UserTable implements ITable<UserRow> {
 	}
 
 	@Override
-	public boolean delete(String id) {
+	protected UserRow delete(String id) {
+		UserRow row = userList.get(id);
 		userList.remove(id);
-		return true;
+		return row;
 	}
 
 	@Override
-	public UserRow selectById(String id) {
+	protected UserRow selectById(String id) {
 		return userList.get(id);
 	}
 
 	@Override
-	public HashMap<String, UserRow> getAll() {
+	protected HashMap<String, UserRow> getAll() {
 		return userList;
 	}
 
 
-	public void markUserOnline(String username,boolean online){
+	protected void markUserOnline(String username,boolean online){
 		userList.get(username).login(online);
 	}
 
-	public ArrayList<UserRow> connectedUserList(){
+	protected ArrayList<UserRow> connectedUserList(){
 		ArrayList<UserRow> connectUsers = new ArrayList<>();
 		for(UserRow user:userList.values()){
 			if(user.isOnline()){

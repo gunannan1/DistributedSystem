@@ -5,6 +5,7 @@ import activitystreamer.server.networklayer.Connection;
 import activitystreamer.server.networklayer.NetworkLayer;
 import com.google.gson.JsonObject;
 
+import java.io.Serializable;
 import java.util.Calendar;
 
 /**
@@ -14,7 +15,7 @@ import java.util.Calendar;
  * Date 9/4/18
  */
 
-public class Activity implements Comparable<Activity> {
+public class Activity implements Comparable<Activity>, Serializable {
 
 	private JsonObject originalJson;
 	private String authenticated_user;

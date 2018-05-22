@@ -3,6 +3,7 @@ package activitystreamer.message;
 import activitystreamer.message.datasynchandlers.BroadcastResult;
 import activitystreamer.server.datalayer.ActivityRow;
 import activitystreamer.server.datalayer.DataLayer;
+import activitystreamer.server.datalayer.ServerRow;
 import activitystreamer.server.datalayer.UserRow;
 import activitystreamer.server.networklayer.Connection;
 import activitystreamer.util.Settings;
@@ -30,7 +31,7 @@ public class MessageGenerator {
 
 
 	public static String registerFail(String username) {
-		return generate(MessageType.REGISTER_FAILED, String.format("%s is already registered with the system",username));
+		return generate(MessageType.REGISTER_FAILED, String.format("%s is already registered with the system", username));
 	}
 
 	public static String loginFail(String info) {
@@ -38,7 +39,7 @@ public class MessageGenerator {
 	}
 
 	public static String registerSucc(String username) {
-		return generate(MessageType.REGISTER_SUCCESS, String.format("register success for %s",username));
+		return generate(MessageType.REGISTER_SUCCESS, String.format("register success for %s", username));
 	}
 
 	public static String loginSucc(String info) {
@@ -54,47 +55,52 @@ public class MessageGenerator {
 		json.addProperty("command", MessageType.AUTHENTICATE.name());
 		json.addProperty("serverid", Settings.getServerId());
 		json.addProperty("secret", secret);
-		json.addProperty("host",Settings.getLocalHostname());
-		json.addProperty("port",Settings.getLocalPort());
+		json.addProperty("host", Settings.getLocalHostname());
+		json.addProperty("port", Settings.getLocalPort());
 		return json.toString();
 	}
 
 	public static String authenSucc() {
 		JsonObject json = new JsonObject();
 		json.addProperty("command", MessageType.AUTHENTICATION_SUCC.name());
-		json.addProperty("serverid",Settings.getServerId());
+		json.addProperty("serverid", Settings.getServerId());
+
+		JsonArray serverSync = serverSyncJson();
+		json.add("server_list", serverSync);
 
 		JsonArray userSync = userSyncJson();
-		json.add("user_list",userSync);
+		json.add("user_list", userSync);
 
 		JsonArray activitySync = activitySyncJson();
-		json.add("activity_entity",activitySync);
+		json.add("activity_entity", activitySync);
 		return json.toString();
 	}
 
-	
+
 	// LOCK Message types
 	public static String lockRequest(String username, String secret) {
-		return generate(MessageType.LOCK_REQUEST,username,secret);
+		return generate(MessageType.LOCK_REQUEST, username, secret);
 	}
+
 	public static String lockDenied(String username, String secret, String info) {
 		JsonObject json = new JsonObject();
-		json.addProperty("command",MessageType.LOCK_DENIED.name());
-		json.addProperty("username",username);
-		json.addProperty("secret",secret);
+		json.addProperty("command", MessageType.LOCK_DENIED.name());
+		json.addProperty("username", username);
+		json.addProperty("secret", secret);
 		return json.toString();
 	}
+
 	public static String lockDenied(String username, String secret) {
 		JsonObject json = new JsonObject();
-		json.addProperty("command",MessageType.LOCK_DENIED.name());
-		json.addProperty("username",username);
-		json.addProperty("secret",secret);
-		json.addProperty("info","Username already exists in the system");
+		json.addProperty("command", MessageType.LOCK_DENIED.name());
+		json.addProperty("username", username);
+		json.addProperty("secret", secret);
+		json.addProperty("info", "Username already exists in the system");
 		return json.toString();
 	}
 
 	public static String lockAllowed(String username, String secret) {
-		return generate(MessageType.LOCK_ALLOWED,username,secret);
+		return generate(MessageType.LOCK_ALLOWED, username, secret);
 	}
 
 	public static String register(String username, String secret) {
@@ -111,12 +117,13 @@ public class MessageGenerator {
 		json.addProperty("username", username);
 		return json.toString();
 	}
-	public static String registerResult(BroadcastResult.REGISTER_RESULT result, String username, String secret){
+
+	public static String registerResult(BroadcastResult.REGISTER_RESULT result, String username, String secret) {
 		JsonObject json = new JsonObject();
-		json.addProperty("command",MessageType.USER_REGISTER_RESULT.name());
-		json.addProperty("result",result.toString());
-		json.addProperty("username",username);
-		json.addProperty("secret",secret);
+		json.addProperty("command", MessageType.USER_REGISTER_RESULT.name());
+		json.addProperty("result", result.toString());
+		json.addProperty("username", username);
+		json.addProperty("secret", secret);
 		return json.toString();
 	}
 
@@ -177,7 +184,7 @@ public class MessageGenerator {
 	// for REDIRECT
 	public static String redirect(String hostname, int port) {
 		JsonObject json = new JsonObject();
-		json.addProperty("command",MessageType.REDIRECT.name());
+		json.addProperty("command", MessageType.REDIRECT.name());
 		json.addProperty("hostname", hostname);
 		json.addProperty("port", port);
 		return json.toString();
@@ -204,25 +211,26 @@ public class MessageGenerator {
 
 		return json.toString();
 	}
-  public static String backupList(ArrayList<Connection> serverList){
-      JsonObject json = new JsonObject();
 
-      json.addProperty("command", MessageType.BACKUP_LIST.name());
-	  JsonArray backupList = new JsonArray();
-	  for( Connection c : serverList){
-	  	if(c.isAuthedServer()) {
-			JsonObject oneServer = new JsonObject();
-			oneServer.addProperty("host", c.getRemoteServerHost());
-			oneServer.addProperty("port", c.getRemoteServerPort());
-			backupList.add(oneServer);
+	public static String backupList(ArrayList<Connection> serverList) {
+		JsonObject json = new JsonObject();
+
+		json.addProperty("command", MessageType.BACKUP_LIST.name());
+		JsonArray backupList = new JsonArray();
+		for (Connection c : serverList) {
+			if (c.isAuthedServer()) {
+				JsonObject oneServer = new JsonObject();
+				oneServer.addProperty("host", c.getRemoteServerHost());
+				oneServer.addProperty("port", c.getRemoteServerPort());
+				backupList.add(oneServer);
+			}
 		}
-	  }
 
-	  json.add("servers",backupList);
+		json.add("servers", backupList);
 
-	  return json.toString();
+		return json.toString();
 
-  }
+	}
 
 	// for ACTIVITY_MESSAGE
 	public static String actMessage(String username, String secret, JsonObject act) {
@@ -236,38 +244,51 @@ public class MessageGenerator {
 		return json.toString();
 	}
 
+	/*======================================= sync message generatorz =======================================*/
+	public static String userSyncCommand() {
+		JsonObject json = new JsonObject();
+		json.addProperty("command", MessageType.USER_SYNC.name());
 
-//	public static String userSync(){
-//
-//		JsonObject json = new JsonObject();
-//		json.addProperty("command",MessageType.USER_SYNC.name());
-//		JsonArray userArray = userSyncJson();
-//		json.add("user_list",userArray);
-//		return json.toString();
-//	}
+		JsonArray userSync = userSyncJson();
+		json.add("user_list", userSync);
 
-	private static JsonArray userSyncJson(){
-			HashMap<String, UserRow> allUsers = DataLayer.getInstance().getAllUsers();
-			JsonArray userArray = new JsonArray();
-			for(UserRow userRow:allUsers.values()){
-				userArray.add(userRow.toJson());
-			}
-			return userArray;
+		return json.toString();
 	}
 
-//	public static String activitySync(){
-//
-//		JsonObject json = new JsonObject();
-//		json.addProperty("command",MessageType.USER_SYNC.name());
-//		JsonArray userArray = userSyncJson();
-//		json.add("user_list",userArray);
-//		return json.toString();
-//	}
+	public static String activitySyncCommand() {
+		JsonObject json = new JsonObject();
+		json.addProperty("command", MessageType.ACTIVITY_SYNC.name());
 
-	private static JsonArray activitySyncJson(){
+		JsonArray activitySync = activitySyncJson();
+		json.add("activity_entity", activitySync);
+
+		return json.toString();
+	}
+
+
+	private static JsonArray userSyncJson() {
+		HashMap<String, UserRow> allUsers = DataLayer.getInstance().getAllUsers();
+		JsonArray userArray = new JsonArray();
+		for (UserRow userRow : allUsers.values()) {
+			userArray.add(userRow.toJson());
+		}
+		return userArray;
+	}
+
+	private static JsonArray serverSyncJson() {
+		HashMap<String, ServerRow> allServers = DataLayer.getInstance().getServerStateList();
+		JsonArray serverArray = new JsonArray();
+		for (ServerRow serverRow : allServers.values()) {
+			serverArray.add(serverRow.toJson());
+		}
+		return serverArray;
+	}
+
+
+	private static JsonArray activitySyncJson() {
 		HashMap<String, ActivityRow> allActivities = DataLayer.getInstance().getAllActivities();
 		JsonArray activityArray = new JsonArray();
-		for(ActivityRow row:allActivities.values()){
+		for (ActivityRow row : allActivities.values()) {
 			activityArray.add(row.toJson());
 		}
 		return activityArray;

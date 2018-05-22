@@ -1,5 +1,6 @@
 package activitystreamer.server.datalayer;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 /**
@@ -9,51 +10,38 @@ import java.util.HashMap;
  * Date 18/5/18
  */
 
-public class ServerTable implements ITable<ServerRow>{
+public class ServerTable extends Table<ServerRow> implements Serializable {
 	private HashMap<String,ServerRow> serverList;
 
 	public ServerTable() {
 		this.serverList = new HashMap<>();
 	}
 
-	public ServerRow getMinLoadServer(){
+	ServerRow getMinLoadServer(){
 		return new ServerRow("!",1,"!",1);
 	}
 
 	@Override
-	public boolean lockRow(ServerRow row) {
-		return false;
-	}
-
-	@Override
-	public boolean unlockRow(ServerRow row) {
-		return false;
-	}
-
-	@Override
-	public boolean insert(ServerRow row) {
-		return false;
-	}
-
-	@Override
-	public ServerRow updateOrInsert(ServerRow row) {
+	protected ServerRow updateOrInsert(ServerRow row) {
 		serverList.put(row.getId(), row);
 		return row;
 	}
 
 	@Override
-	public boolean delete(String id) {
+	protected ServerRow delete(String id) {
+		ServerRow deletedRow = serverList.get(id);
 		serverList.remove(id);
-		return true;
+		return deletedRow;
 	}
 
+
 	@Override
-	public ServerRow selectById(String id) {
+	protected ServerRow selectById(String id) {
 		return serverList.get(id);
 	}
 
 	@Override
-	public HashMap<String, ServerRow> getAll() {
+	protected HashMap<String, ServerRow> getAll() {
 		return serverList;
 	}
 }

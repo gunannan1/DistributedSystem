@@ -20,7 +20,7 @@ public class UserSyncHandler extends MessageHandler {
 
 	@Override
 	public boolean processMessage(JsonObject json, Connection connection) {
-		DataLayer.log.info("User sync message received");
+		DataLayer.log.info("User sync message received {}",connection.connectionFrom());
 		JsonArray user_list = null;
 
 		// Validate message

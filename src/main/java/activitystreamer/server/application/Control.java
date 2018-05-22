@@ -164,17 +164,17 @@ public class Control extends Thread implements IMessageConsumer {
 				if (activityRow != null) {
 					for (Activity activity : activityRow.getActivityList()) {
 						if (!activity.isDelivered()) {
-							JsonObject json = activity.toJson();
+							JsonObject json = activity.toClientJson();
 							json.addProperty("command", MessageType.ACTIVITY_BROADCAST.name());
 							conn.sendActivityBroadcastMsg(json.toString());
 							/* Set this activity delivered in data layer, data layer will sync this with other servers*/
 							activity.setDelivered(true);
-							DataLayer.getInstance().updateActivityTable(DataLayer.OperationType.UPDATE,user.getUsername(),activity,true);
+							DataLayer.getInstance().updateActivityTable(DataLayer.OperationType.MARK_AS_DELIVERED,user.getUsername(),activity,true);
 							isChange += 1;
 						}
 					}
 				}
-				if(isChange > 0) activityRow.notifyChange();
+//				if(isChange > 0) activityRow.notifyChange();
 			}
 		}
 	}
@@ -265,7 +265,12 @@ public class Control extends Thread implements IMessageConsumer {
 			while (isRun) {
 				refreshUI();
 				try {
-					sleep(2000);
+					sleep(3000);
+					ActivityRow row = DataLayer.getInstance().getAllActivities().get("u_a");
+					if(row != null){
+						Control.log.debug("Activity count:{}",row.getActivityList().size());
+					}
+
 				} catch (InterruptedException e) {
 					log.info("refresh ui thread ends");
 				}

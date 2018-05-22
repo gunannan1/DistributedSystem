@@ -16,7 +16,7 @@ import java.util.Calendar;
 public class Activity implements Comparable<Activity>, Serializable {
 
 	private String originalJsonString;
-	private String authenticated_user;
+//	private String authenticated_user;
 	private long sendTime;
 	private boolean isDelivered;
 	private long updateTime;
@@ -28,9 +28,9 @@ public class Activity implements Comparable<Activity>, Serializable {
 //		isDelivered = false;
 //	}
 
-	private Activity(String activityJsonStr, String username,long sendTime,long updateTime,boolean isDelivered){
+	private Activity(String activityJsonStr, long sendTime,long updateTime,boolean isDelivered){
 		this.originalJsonString = activityJsonStr;
-		this.authenticated_user = username;
+//		this.authenticated_user = username;
 		this.sendTime = sendTime;
 		this.isDelivered = isDelivered;
 		this.updateTime = updateTime;
@@ -38,7 +38,7 @@ public class Activity implements Comparable<Activity>, Serializable {
 
 	public Activity(Activity activity) {
 		this.originalJsonString = activity.getOriginalJsonString();
-		this.authenticated_user = activity.getAuthenticated_user();
+//		this.authenticated_user = activity.getAuthenticated_user();
 		sendTime = activity.getSendTime();
 		isDelivered = activity.isDelivered();
 		updateTime = activity.getUpdateTime();
@@ -46,11 +46,11 @@ public class Activity implements Comparable<Activity>, Serializable {
 
 	private Activity(JsonObject json) {
 		JsonObject activityJson = json.get("activity").getAsJsonObject();
-		this.originalJsonString = json.toString();
-		this.authenticated_user = activityJson.get("authenticated_user").getAsString();
-		this.sendTime = Long.parseLong(json.get("sendTime").getAsString());
-		this.updateTime = Long.parseLong(json.get("updateTime").getAsString());
-		this.isDelivered = Boolean.valueOf(json.get("isDelivered").getAsString());
+		this.originalJsonString = activityJson.toString();
+//		this.authenticated_user = activityJson.get("authenticated_user").getAsString();
+		this.sendTime = json.get("sendTime").getAsLong();
+		this.updateTime = json.get("updateTime").getAsLong();
+		this.isDelivered = json.get("isDelivered").getAsBoolean();
 	}
 
 	public static Activity createActivityFromClientJson(JsonObject clientActivityJson, String username){
@@ -59,7 +59,7 @@ public class Activity implements Comparable<Activity>, Serializable {
 
 		long sendTime = Calendar.getInstance().getTimeInMillis();
 		long updateTime = Calendar.getInstance().getTimeInMillis();
-		return new Activity(clientActivityJson.toString(),username,sendTime,updateTime,false);
+		return new Activity(clientActivityJson.toString(),sendTime,updateTime,false);
 	}
 
 	public static Activity createActivityFromServerJson(JsonObject json){
@@ -72,9 +72,9 @@ public class Activity implements Comparable<Activity>, Serializable {
 	}
 
 
-	public void setAuthenticated_user(String authenticated_user) {
-		this.authenticated_user = authenticated_user;
-	}
+//	public void setAuthenticated_user(String authenticated_user) {
+//		this.authenticated_user = authenticated_user;
+//	}
 
 //	public JsonObject innerJson() {
 //		originalJsonString.remove("authenticated_user");
@@ -95,14 +95,21 @@ public class Activity implements Comparable<Activity>, Serializable {
 		return json;
 	}
 
+	public JsonObject toClientJson(){
+		JsonObject json = new JsonObject();
+		JsonParser parser = new JsonParser();
+		json.add("activity", parser.parse(originalJsonString));
+		return json;
+	}
+
 
 	public String getOriginalJsonString() {
 		return originalJsonString;
 	}
 
-	public String getAuthenticated_user() {
-		return authenticated_user;
-	}
+//	public String getAuthenticated_user() {
+//		return authenticated_user;
+//	}
 
 	public long getSendTime() {
 		return sendTime;
@@ -137,7 +144,7 @@ public class Activity implements Comparable<Activity>, Serializable {
 			return false;
 		}
 		Activity other = (Activity) obj;
-		if (other.originalJsonString.equals(other.originalJsonString) && authenticated_user.equals(other.authenticated_user) && sendTime == other.sendTime) {
+		if (other.originalJsonString.equals(other.originalJsonString) && sendTime == other.sendTime) {
 			return true;
 		}
 		return false;
@@ -146,7 +153,7 @@ public class Activity implements Comparable<Activity>, Serializable {
 	public Activity update(Activity other) {
 		if (other.getUpdateTime() > this.getUpdateTime()) {
 			this.originalJsonString = other.originalJsonString;
-			this.setAuthenticated_user(other.authenticated_user);
+//			this.setAuthenticated_user(other.authenticated_user);
 			this.sendTime = other.sendTime;
 			this.isDelivered = other.isDelivered;
 			this.updateTime = other.updateTime;

@@ -1,6 +1,6 @@
 package activitystreamer.client;
 
-import activitystreamer.BackupServerInfo;
+import activitystreamer.server.networklayer.BackupServerInfo;
 import activitystreamer.message.MessageGenerator;
 import activitystreamer.message.MessageHandler;
 import activitystreamer.message.MessageType;

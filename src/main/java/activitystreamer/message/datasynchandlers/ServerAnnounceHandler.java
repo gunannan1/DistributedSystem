@@ -25,7 +25,7 @@ public class ServerAnnounceHandler extends MessageHandler {
 
 	@Override
 	public boolean processMessage(JsonObject json, Connection connection) {
-		Control.log.debug("Announcement received from {}" , connection.getSocket().getRemoteSocketAddress());
+		Control.log.debug("Announcement received from {}" , connection.connectionFrom());
 		try {
 			AnnounceType announceType = AnnounceType.valueOf(json.get("action").getAsString());
 			if(announceType == UPDATE_OR_INSERT) {

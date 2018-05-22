@@ -28,7 +28,7 @@ public class LockDeniedHandler extends MessageHandler {
 	 */
 	@Override
 	public boolean processMessage(JsonObject json,Connection connection) {
-		Control.log.info("Lock Denied message is recieved");
+		Control.log.info("Lock Denied message is recieved {}",connection.connectionFrom());
 		String username = null;
 		String secret = null;
 
@@ -88,7 +88,7 @@ public class LockDeniedHandler extends MessageHandler {
 
 	}
 	private void failHandler(String error, Connection connection) {
-		Control.log.info(error);
+		Control.log.error(error);
 		connection.sendInvalidMsg(error);
 		connection.closeCon();
 		NetworkLayer.getNetworkLayer().connectionClosed(connection);

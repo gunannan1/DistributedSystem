@@ -19,11 +19,11 @@ public class ServerAuthenSuccHandler extends MessageHandler {
 
 	@Override
 	public boolean processMessage(JsonObject json,Connection connection) {
-		Control.log.info("Authen Succ message received from {}:{}",
-				connection.getRemoteServerHost(),connection.getRemoteServerPort());
+		Control.log.info("Authen Succ message received from {}",
+				connection.connectionFrom());
 		try{
 
-			Control.log.info("Initialise user list when joining this system");
+			Control.log.info("Initialise data layer when joining this system");
 //			HashMap<String, User> userList = new HashMap<>();
 //			JsonArray userJsonArray = json.getAsJsonArray("user_list");
 //			if (userJsonArray == null) {
@@ -40,15 +40,21 @@ public class ServerAuthenSuccHandler extends MessageHandler {
 
 			// Set this server is an authened server
 
-			String serverId = json.get("serverid").getAsString();
+			String serverId = json.get("serverId").getAsString();
 			connection.setAuthed(true,serverId, Settings.getRemoteHostname(),Settings.getRemotePort());
-//			connection.setRemoteServerId(serverId);
+
+
+			/* sync server info */
+			DataLayer.getInstance().mergeAllServerData(json.get("server_list").getAsJsonArray());
+			DataLayer.log.info("Sync server status successfully");
 
 			/* sync user info */
 			DataLayer.getInstance().mergeAllUserData(json.get("user_list").getAsJsonArray());
+			DataLayer.log.info("Sync user infomation successfully");
 
 			/* sync activity info*/
 			DataLayer.getInstance().mergeAllActivityData(json.get("activity_entity").getAsJsonArray());
+			DataLayer.log.info("Sync activities successfully");
 
 			Control.getInstance().setProvideService(true); // begin to provide services to clients/servers
 			NetworkLayer.getNetworkLayer().startListener();
@@ -56,7 +62,7 @@ public class ServerAuthenSuccHandler extends MessageHandler {
 			return true;
 		}catch (Exception e) {
 			String error = String.format("Invaid AUTHENTICATION_SUCC  message received:%s", json.toString());
-			Control.log.info(error);
+			Control.log.error(error);
 			return false;
 		}
 	}

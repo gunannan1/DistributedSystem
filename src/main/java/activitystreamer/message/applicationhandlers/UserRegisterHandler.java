@@ -92,8 +92,7 @@ public class UserRegisterHandler extends MessageHandler {
 				Control.log.info("Remote servers exist, need to get confirmation from remote servers for user register [{}] ", username);
 				return true;
 		}
-////
-//		connection.sendRegisterSuccMsg(username);
+
 		return false;
 
 	}

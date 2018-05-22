@@ -1,4 +1,4 @@
-package activitystreamer;
+package activitystreamer.server.networklayer;
 
 /**
  * BackupServerInfo
@@ -8,10 +8,12 @@ package activitystreamer;
  */
 
 public class BackupServerInfo {
+	private String serverId;
 	private String host;
 	private int prot;
 
-	public BackupServerInfo(String host, int prot) {
+	public BackupServerInfo(String serverId,String host, int prot) {
+		this.serverId = serverId;
 		this.host = host;
 		this.prot = prot;
 	}
@@ -30,5 +32,13 @@ public class BackupServerInfo {
 
 	public void setProt(int prot) {
 		this.prot = prot;
+	}
+
+	public String getServerId() {
+		return serverId;
+	}
+
+	public void setServerId(String serverId) {
+		this.serverId = serverId;
 	}
 }

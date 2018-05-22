@@ -1,7 +1,6 @@
 package activitystreamer.server.networklayer;
 
 
-import activitystreamer.BackupServerInfo;
 import activitystreamer.message.MessageGenerator;
 import activitystreamer.server.application.Control;
 import activitystreamer.server.datalayer.DataLayer;
@@ -92,7 +91,6 @@ public class Connection extends Thread {
 				while (!term && (data = inreader.readLine()) != null) {
 					Control.log.debug("receive data {} from {}", data, connectionFrom());
 					JsonParser parser = new JsonParser();
-
 					JsonObject json = parser.parse(data).getAsJsonObject();
 					String m = json.get("command").getAsString();
 					IMessageConsumer h = NetworkLayer.getNetworkLayer().getConsumer(m);
@@ -122,7 +120,7 @@ public class Connection extends Thread {
 
 	private void doReconnection() {
 		if (isAuthedServer() && !term) {
-			Control.log.info("Disconnection is and authened server, " +
+			Control.log.info("Disconnection is from an authened server, " +
 					"need to connect to backup servers if there is any.");
 			// Set this connect to false as the connection between servers is not authened
 			isAuthed = false;
@@ -145,7 +143,7 @@ public class Connection extends Thread {
 	private boolean reConnectBackupServer() {
 		if (backupServers != null && backupServers.size() > 0) {
 			BackupServerInfo first = backupServers.get(0);
-			if (!first.getHost().equals(Settings.getLocalHostname()) || first.getProt() != Settings.getLocalPort()) {
+			if (!first.getServerId().equals(Settings.getServerId())) {
 				for (BackupServerInfo sInfo : backupServers) {
 					if (tryOneBackupServer(sInfo.getHost(), sInfo.getProt())) {
 						Settings.setRemoteHostname(sInfo.getHost());
@@ -205,6 +203,10 @@ public class Connection extends Thread {
 
 	public void setRemoteServerId(String serverId) {
 		this.remoteServerId = serverId;
+	}
+
+	public String getRemoteServerId() {
+		return remoteServerId;
 	}
 
 	public String getRemoteServerHost() {

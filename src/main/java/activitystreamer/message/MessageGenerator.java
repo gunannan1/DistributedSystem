@@ -53,7 +53,7 @@ public class MessageGenerator {
 	public static String authen(String secret) {
 		JsonObject json = new JsonObject();
 		json.addProperty("command", MessageType.AUTHENTICATE.name());
-		json.addProperty("serverid", Settings.getServerId());
+		json.addProperty("serverId", Settings.getServerId());
 		json.addProperty("secret", secret);
 		json.addProperty("host", Settings.getLocalHostname());
 		json.addProperty("port", Settings.getLocalPort());
@@ -63,7 +63,7 @@ public class MessageGenerator {
 	public static String authenSucc() {
 		JsonObject json = new JsonObject();
 		json.addProperty("command", MessageType.AUTHENTICATION_SUCC.name());
-		json.addProperty("serverid", Settings.getServerId());
+		json.addProperty("serverId", Settings.getServerId());
 
 		JsonArray serverSync = serverSyncJson();
 		json.add("server_list", serverSync);
@@ -220,6 +220,7 @@ public class MessageGenerator {
 		for (Connection c : serverList) {
 			if (c.isAuthedServer()) {
 				JsonObject oneServer = new JsonObject();
+				oneServer.addProperty("serverId",c.getRemoteServerId());
 				oneServer.addProperty("host", c.getRemoteServerHost());
 				oneServer.addProperty("port", c.getRemoteServerPort());
 				backupList.add(oneServer);

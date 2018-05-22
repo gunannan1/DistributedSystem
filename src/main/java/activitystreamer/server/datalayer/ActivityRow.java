@@ -29,6 +29,7 @@ public class ActivityRow implements IRow, Serializable {
 
 
 	public ActivityRow(JsonObject actJson){
+		activityList = new ArrayList<>();
 		this.owner = actJson.get("owner").getAsString();
 		JsonArray actArray = actJson.get("activity_list").getAsJsonArray();
 		for(JsonElement je:actArray){
@@ -112,8 +113,8 @@ public class ActivityRow implements IRow, Serializable {
 	}
 
 	public void notifyChange(){
-		String notifytStr = notifyJsonString();
-		NetworkLayer.getNetworkLayer().broadcastToServers(notifytStr, null);
+//		String notifytStr = notifyJsonString();
+//		NetworkLayer.getNetworkLayer().broadcastToServers(notifytStr, null);
 	}
 
 	public void notifyActivityChange(Activity activity){
@@ -129,11 +130,11 @@ public class ActivityRow implements IRow, Serializable {
 //		NetworkLayer.getNetworkLayer().broadcastToServers(notifytStr, connection);
 //	}
 
-	private String notifyJsonString(){
-		JsonObject json = this.toJson();
-		json.addProperty("command", MessageType.ACTIVITY_UPDATE.name());
-		return json.toString();
-	}
+//	private String notifyJsonString(){
+//		JsonObject json = this.toJson();
+//		json.addProperty("command", MessageType.ACTIVITY_UPDATE.name());
+//		return json.toString();
+//	}
 
 
 }

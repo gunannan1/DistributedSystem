@@ -1,6 +1,6 @@
 package activitystreamer.message.networklayerhandlers;
 
-import activitystreamer.BackupServerInfo;
+import activitystreamer.server.networklayer.BackupServerInfo;
 import activitystreamer.message.MessageHandler;
 import activitystreamer.server.networklayer.Connection;
 import activitystreamer.server.application.Control;
@@ -34,7 +34,8 @@ public class ServerBackupListHandler extends MessageHandler {
 				JsonObject info = oneServer.getAsJsonObject();
 				String host = info.get("host").getAsString();
 				int ip = info.get("port").getAsInt();
-				bsList.add(new BackupServerInfo(host, ip));
+				String serverId = info.get("serverId").getAsString();
+				bsList.add(new BackupServerInfo(serverId,host, ip));
 			}
 			Control.log.debug("Update backup list for server {}:{}",
 					connection.getRemoteServerHost(), connection.getRemoteServerPort());

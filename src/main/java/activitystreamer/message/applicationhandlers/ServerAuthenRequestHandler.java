@@ -31,13 +31,13 @@ public class ServerAuthenRequestHandler extends MessageHandler {
 		String remoteServerId;
 		int remoteServicePort;
 		try {
-			remoteServerId = json.get("serverid").getAsString();
+			remoteServerId = json.get("serverId").getAsString();
 			secret = json.get("secret").getAsString();
 			remoteServiceHost = json.get("host").getAsString();
 			remoteServicePort = json.get("port").getAsInt();
 			Control.log.info("process authentication for server{} with secret {}", connection.getSocket().getRemoteSocketAddress(), secret);
 		} catch (NullPointerException | UnsupportedOperationException e) {
-			String error = String.format("Invaid AUTHEN message received:%s. Need {secret,host,port}", json.toString());
+			String error = String.format("Invaid AUTHEN message received:%s. Need {serverId,secret,host,port}", json.toString());
 			Control.log.info(error);
 			return false;
 		}

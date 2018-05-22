@@ -20,7 +20,7 @@ public class LockRequestHandler extends MessageHandler {
 
 	@Override
 	public boolean processMessage(JsonObject json, Connection connection) {
-		Control.log.info("Lock request received from {}", connection.getSocket().getRemoteSocketAddress());
+		Control.log.info("Lock request received from {}", connection.connectionFrom());
 		UserRow newUser = null;
 		String username = null;
 		String secret = null;
@@ -76,7 +76,7 @@ public class LockRequestHandler extends MessageHandler {
 	}
 
 	private void failHandler(String error, Connection connection) {
-		Control.log.info(error);
+		Control.log.error(error);
 		connection.sendInvalidMsg(error);
 		connection.closeCon();
 		NetworkLayer.getNetworkLayer().connectionClosed(connection);

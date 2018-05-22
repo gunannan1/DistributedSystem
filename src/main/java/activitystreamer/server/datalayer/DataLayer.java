@@ -25,7 +25,8 @@ public class DataLayer extends Thread implements IMessageConsumer {
 		DELETE,
 		INSERT,
 		UPDATE,
-		SYNC
+		SYNC,
+		MARK_AS_DELIVERED,
 	}
 
 	public static final Logger log = Control.log;
@@ -63,6 +64,7 @@ public class DataLayer extends Thread implements IMessageConsumer {
 		this.handlerMap.put(MessageType.USER_UPDATE, new UserUpdateHandler());
 		this.handlerMap.put(MessageType.USER_SYNC, new UserSyncHandler());
 		this.handlerMap.put(MessageType.ACTIVITY_BROADCAST, new ActivityBroadcastHandler());
+		this.handlerMap.put(MessageType.ACTIVITY_UPDATE,new ActivityUpdateHandler());
 		this.handlerMap.put(MessageType.ACTIVITY_SYNC,new ActivitySyncHandler());
 
 		NetworkLayer.getNetworkLayer().registerConsumer(handlerMap.keySet(), this);
@@ -175,7 +177,12 @@ public class DataLayer extends Thread implements IMessageConsumer {
 		return (ServerRow)Tools.deepClone(serverTable.selectById(id));
 	}
 
-
+	public void mergeAllServerData(JsonArray json) throws Exception {
+		for (JsonElement je : json) {
+			ServerRow serverRow = new ServerRow(je.getAsJsonObject());
+			updateServerTable(OperationType.UPDATE_OR_INSERT,serverRow,false);
+		}
+	}
 	/*======================================= User Related API  =======================================*/
 	/* User Related API */
 	public synchronized UserRow updateUserTable(OperationType operationType, UserRow userRow, boolean notify) {
@@ -267,7 +274,7 @@ public class DataLayer extends Thread implements IMessageConsumer {
 					NetworkLayer.getNetworkLayer().broadcastToServers(actJson.toString(),null);;
 				}
 				break;
-			case UPDATE:
+			case MARK_AS_DELIVERED:
 				setActivityDelivered(username,activity);
 				if (notify) activityTable.selectById(username).notifyActivityChange(activity);
 				break;
@@ -285,9 +292,6 @@ public class DataLayer extends Thread implements IMessageConsumer {
 
 	private void updateOrInsert(Activity activity) {
 		activityTable.updateOrInsert(activity);
-//		JsonObject actJson = activity.toJson();
-//		actJson.addProperty("command", MessageType.ACTIVITY_BROADCAST.name());
-//		NetworkLayer.getNetworkLayer().broadcastToServers(actJson.toString(), from);
 	}
 
 	public ActivityRow pendingActivity(String name) {
@@ -297,9 +301,11 @@ public class DataLayer extends Thread implements IMessageConsumer {
 	public void mergeAllActivityData(JsonArray json) throws Exception {
 		for (JsonElement je : json) {
 			ActivityRow activityRow = new ActivityRow(je.getAsJsonObject());
-			activityTable.updateOrInsert(activityRow);
+			for(Activity activity:activityRow.getActivityList()) {
+				updateActivityTable(OperationType.SYNC, activityRow.getOwner(),activity,false);
+			}
 		}
-		//TODO pending
+
 	}
 
 	public HashMap<String, ActivityRow> getAllActivities() {

@@ -172,7 +172,7 @@ public class NetworkLayer extends Thread implements IMessageConsumer {
 	public synchronized void broadcastToAll(String msg, Connection from) {
 		for (Connection c : connectionList) {
 			if ((c.isAuthedServer() || c.isAuthedClient()) && c != from) {
-				c.sendActivityBroadcastMsg(msg);
+				c.writeMsg(msg);
 			}
 		}
 	}

@@ -1,6 +1,6 @@
 package activitystreamer.client;
 
-import activitystreamer.BackupServerInfo;
+import activitystreamer.server.networklayer.BackupServerInfo;
 import activitystreamer.UIPanelCreator;
 import activitystreamer.util.Settings;
 import com.google.gson.*;

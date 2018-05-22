@@ -21,7 +21,7 @@ import com.google.gson.JsonObject;
 public class ActivitySyncHandler extends MessageHandler {
 	@Override
 	public boolean processMessage(JsonObject json, Connection connection) {
-		DataLayer.log.info("Activity sync message received");
+		DataLayer.log.info("Activity sync message received from {}",connection.connectionFrom());
 		JsonArray activity_list = null;
 
 		// Validate message
@@ -45,6 +45,7 @@ public class ActivitySyncHandler extends MessageHandler {
 			String error = "Activity sync message invalid:" + json.toString();
 			DataLayer.log.error(error);
 			connection.sendInvalidMsg(error);
+			e.printStackTrace();
 			return false;
 		}
 		return true;

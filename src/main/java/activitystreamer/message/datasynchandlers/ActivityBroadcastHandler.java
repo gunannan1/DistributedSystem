@@ -31,7 +31,7 @@ public class ActivityBroadcastHandler extends MessageHandler {
 
 		else if(json.get("activity")==null){
 			connection.sendInvalidMsg("The message does not have activity");
-			Control.log.info("The message does not have activity");
+			Control.log.error("The message does not have activity");
 			connection.closeCon();
 			NetworkLayer.getNetworkLayer().connectionClosed(connection);
 			return false;
@@ -40,7 +40,7 @@ public class ActivityBroadcastHandler extends MessageHandler {
 		Control.log.info("Broadcast received activity message:{}",json);
 		Activity activity = Activity.createActivityFromServerJson(json);
 		DataLayer.getInstance().updateActivityTable(DataLayer.OperationType.INSERT,null,activity,false);
-		NetworkLayer.getNetworkLayer().broadcastToAll(json.toString(),connection);
+		NetworkLayer.getNetworkLayer().broadcastToServers(json.toString(),connection);
 
 		return true;
 	}

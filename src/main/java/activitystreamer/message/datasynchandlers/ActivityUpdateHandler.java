@@ -1,8 +1,8 @@
 package activitystreamer.message.datasynchandlers;
 
 import activitystreamer.message.MessageHandler;
+import activitystreamer.server.datalayer.Activity;
 import activitystreamer.server.datalayer.DataLayer;
-import activitystreamer.server.datalayer.UserRow;
 import activitystreamer.server.networklayer.Connection;
 import activitystreamer.server.networklayer.NetworkLayer;
 import com.google.gson.JsonObject;
@@ -14,19 +14,20 @@ import com.google.gson.JsonObject;
  * Date 18/5/18
  */
 
-public class UserUpdateHandler extends MessageHandler {
+public class ActivityUpdateHandler extends MessageHandler {
 	@Override
 	public boolean processMessage(JsonObject json, Connection connection) {
-		DataLayer.log.info("Update single user info {}",connection.connectionFrom());
+		DataLayer.log.info("Update single activity info {}",connection.connectionFrom());
 
 		// Validate message
 		try {
-			UserRow userRow = new UserRow(json);
-			DataLayer.getInstance().updateUserTable(DataLayer.OperationType.UPDATE_OR_INSERT,userRow,false);
-			NetworkLayer.getNetworkLayer().broadcastToServers(json.toString(),connection);
+			Activity newActivity = Activity.createActivityFromServerJson(json);
+			String owner = json.get("owner").getAsString();
+			DataLayer.getInstance().updateActivityTable(DataLayer.OperationType.MARK_AS_DELIVERED, owner, newActivity, false);
+			NetworkLayer.getNetworkLayer().broadcastToServers(json.toString(), connection);
 
 		} catch (Exception e) {
-			String error = "USER_UPDATE message invalid:" + json.toString();
+			String error = "ACTIVITY_UPDATE message invalid:" + json.toString();
 			DataLayer.log.error(error);
 			connection.sendInvalidMsg(error);
 			return false;

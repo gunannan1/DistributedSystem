@@ -42,7 +42,17 @@ public class ServerRow implements IRow , Serializable {
 		this.load = serverRow.load;
 		this.ip = serverRow.ip;
 		this.port = serverRow.port;
+		this.online = true;
 	}
+
+	public ServerRow(JsonObject json){
+		this.serverId = json.get("serverId").getAsString();
+		this.load = json.get("load").getAsInt();
+		this.ip = json.get("ip").getAsString();
+		this.port = json.get("port").getAsInt();
+		this.online = true;
+	}
+
 	public String getServerId() {
 		return serverId;
 	}

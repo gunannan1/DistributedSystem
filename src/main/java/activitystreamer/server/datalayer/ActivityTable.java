@@ -48,15 +48,22 @@ public class ActivityTable extends Table<ActivityRow> implements Serializable {
 	public Activity syncActivityForUser(String username, Activity newActivity) {
 		ActivityRow oldRow = activityMap.get(username);
 		Activity updatedRow;
-		int index = oldRow.getActivityList().indexOf(newActivity);
-		if (index >= 0) {
-			updatedRow = oldRow.getActivityList().get(index).update(newActivity);
-		} else {
-			oldRow.getActivityList().add(newActivity.copy());
-			updatedRow = newActivity;
-		}
+		if(oldRow != null) {
+			int index = oldRow.getActivityList().indexOf(newActivity);
+			if (index >= 0) {
+				updatedRow = oldRow.getActivityList().get(index).update(newActivity);
+			} else {
+				oldRow.getActivityList().add(newActivity.copy());
+				updatedRow = newActivity;
+			}
 
-		return updatedRow;
+			return updatedRow;
+		}else{
+			ActivityRow activityRow = new ActivityRow(username);
+			activityRow.getActivityList().add(newActivity.copy());
+			activityMap.put(username,activityRow);
+			return newActivity;
+		}
 	}
 
 	@Override

@@ -37,6 +37,12 @@ public class ServerRow implements IRow , Serializable {
 		this.online = online;
 	}
 
+	public ServerRow(ServerRow serverRow){
+		this.serverId = serverRow.serverId;
+		this.load = serverRow.load;
+		this.ip = serverRow.ip;
+		this.port = serverRow.port;
+	}
 	public String getServerId() {
 		return serverId;
 	}
@@ -77,6 +83,10 @@ public class ServerRow implements IRow , Serializable {
 		return null;
 	}
 
+	public ServerRow copy(){
+		return new ServerRow(this);
+	}
+
 	@Override
 	public String getId() {
 		return serverId;
@@ -86,17 +96,7 @@ public class ServerRow implements IRow , Serializable {
 		String resultBroadcastStr = serverUpdateJsonString();
 		NetworkLayer.getNetworkLayer().broadcastToServers(resultBroadcastStr, null);
 	}
-//
-//	public void notifyChange(Connection connection){
-//		String resultBroadcastStr = serverUpdateJsonString();
-//		NetworkLayer.getNetworkLayer().broadcastToServers(resultBroadcastStr, connection);
-//	}
-//
-//	public void notifyChange(AnnounceType announceType,Connection connection){
-//		String resultBroadcastStr = serverUpdateJsonString(announceType);
-//		NetworkLayer.getNetworkLayer().broadcastToServers(resultBroadcastStr, connection);
-//	}
-//
+
 	private String serverUpdateJsonString(){
 		JsonObject json = this.toJson();
 		json.addProperty("command", MessageType.SERVER_ANNOUNCE.name());

@@ -26,7 +26,6 @@ public class DataLayer extends Thread implements IMessageConsumer {
 		INSERT,
 		UPDATE,
 		SYNC
-
 	}
 
 	public static final Logger log = Control.log;
@@ -90,6 +89,7 @@ public class DataLayer extends Thread implements IMessageConsumer {
 		return isSucc;
 	}
 
+	/*======================================= data sync  =======================================*/
 	@Override
 	public void run() {
 		log.info("using announce interval period of " + Settings.getAnnounceInterval() + " milliseconds");
@@ -120,8 +120,18 @@ public class DataLayer extends Thread implements IMessageConsumer {
 		NetworkLayer.getNetworkLayer().broadcastToServers(syncString,null);
 	}
 
-	/************************************************************************************************************************/
-	/* Server related API */
+	private void updateCurrentLoad() {
+		DataLayer.getInstance().updateServerTable(OperationType.UPDATE_OR_INSERT,
+				new ServerRow(
+						Settings.getServerId(),
+						NetworkLayer.getNetworkLayer().getClientLoads(),
+						Settings.getLocalHostname(),
+						Settings.getLocalPort()),
+				true
+		);
+	}
+
+	/*======================================= Server related API =======================================*/
 	public synchronized ServerRow updateServerTable(OperationType operationType,ServerRow serverRow, boolean notify) {
 		ServerRow row = null;
 		switch (operationType) {
@@ -131,6 +141,9 @@ public class DataLayer extends Thread implements IMessageConsumer {
 			case UPDATE_OR_INSERT:
 				row = updateOrInsert(serverRow);
 				break;
+			default:
+				DataLayer.log.error("Miss branch for type [{}]",operationType);
+				System.exit(-1);
 		}
 		if (notify && row != null) {
 			row.notifyChange();
@@ -142,16 +155,7 @@ public class DataLayer extends Thread implements IMessageConsumer {
 		return (ServerRow) Tools.deepClone(serverTable.getMinLoadServer());
 	}
 
-	private void updateCurrentLoad() {
-		DataLayer.getInstance().updateServerTable(OperationType.UPDATE_OR_INSERT,
-				new ServerRow(
-						Settings.getServerId(),
-						NetworkLayer.getNetworkLayer().getClientLoads(),
-						Settings.getLocalHostname(),
-						Settings.getLocalPort()),
-				true
-		);
-	}
+
 
 
 	public HashMap<String, ServerRow> getServerStateList() {
@@ -172,7 +176,7 @@ public class DataLayer extends Thread implements IMessageConsumer {
 	}
 
 
-	/************************************************************************************************************************/
+	/*======================================= User Related API  =======================================*/
 	/* User Related API */
 	public synchronized UserRow updateUserTable(OperationType operationType, UserRow userRow, boolean notify) {
 		UserRow row = null;
@@ -182,6 +186,9 @@ public class DataLayer extends Thread implements IMessageConsumer {
 			case UPDATE_OR_INSERT:
 				row = updateOrInsert(userRow);
 				break;
+			default:
+				DataLayer.log.error("Miss branch for type [{}]",operationType);
+				System.exit(-1);
 		}
 		if (notify && row != null) {
 			row.notifyChange();
@@ -266,7 +273,11 @@ public class DataLayer extends Thread implements IMessageConsumer {
 				break;
 			case SYNC:
 				Activity updatedActivity = activityTable.syncActivityForUser(username,activity);
-				// never need notificaion for this situation
+				break;
+			default:
+				DataLayer.log.error("Miss branch for type [{}]",operationType);
+				System.exit(-1);
+
 		}
 
 		return null;
@@ -284,10 +295,10 @@ public class DataLayer extends Thread implements IMessageConsumer {
 	}
 
 	public void mergeAllActivityData(JsonArray json) throws Exception {
-//		for (JsonElement je : json) {
-//			UserRow userRow = new UserRow(je.getAsJsonObject());
-//			userTable.updateOrInsert(userRow);
-//		}
+		for (JsonElement je : json) {
+			ActivityRow activityRow = new ActivityRow(je.getAsJsonObject());
+			activityTable.updateOrInsert(activityRow);
+		}
 		//TODO pending
 	}
 
@@ -297,6 +308,6 @@ public class DataLayer extends Thread implements IMessageConsumer {
 
 	private void setActivityDelivered(String username, Activity activity) {
 		activityTable.selectById(username).updateOrInsert(activity);
-		activity.setDelivered(true);
+//		activity.setDelivered(true);
 	}
 }

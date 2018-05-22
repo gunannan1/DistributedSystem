@@ -23,7 +23,7 @@ public class ServerTable extends Table<ServerRow> implements Serializable {
 
 	@Override
 	protected ServerRow updateOrInsert(ServerRow row) {
-		serverList.put(row.getId(), row);
+		serverList.put(row.getId(), row.copy());
 		return row;
 	}
 

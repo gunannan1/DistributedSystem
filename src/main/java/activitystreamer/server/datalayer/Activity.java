@@ -1,9 +1,7 @@
 package activitystreamer.server.datalayer;
 
-import activitystreamer.message.MessageType;
-import activitystreamer.server.networklayer.Connection;
-import activitystreamer.server.networklayer.NetworkLayer;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.io.Serializable;
 import java.util.Calendar;
@@ -17,77 +15,89 @@ import java.util.Calendar;
 
 public class Activity implements Comparable<Activity>, Serializable {
 
-	private JsonObject originalJson;
+	private String originalJsonString;
 	private String authenticated_user;
 	private long sendTime;
 	private boolean isDelivered;
 	private long updateTime;
 
-	private Activity(JsonObject json, String username) {
-		originalJson = json;
-		authenticated_user = username;
-		sendTime = Calendar.getInstance().getTimeInMillis();
-		updateTime = Calendar.getInstance().getTimeInMillis();
-		isDelivered = false;
-	}
+//	private Activity(JsonObject json, String username) {
+//		]
+//		sendTime = Calendar.getInstance().getTimeInMillis();
+//		updateTime = Calendar.getInstance().getTimeInMillis();
+//		isDelivered = false;
+//	}
 
-	public static Activity createActivityFromClientJson(JsonObject json, String username){
-		return new Activity(json,username);
-	}
-
-	private Activity(JsonObject json) {
-		this.originalJson = json.get("activity").getAsJsonObject();
-		this.authenticated_user = originalJson.get("authenticated_user").getAsString();
-		this.sendTime = Long.parseLong(json.get("sendTime").getAsString());
-		this.updateTime = Long.parseLong(json.get("updateTime").getAsString());
-		this.isDelivered = Boolean.valueOf(json.get("isDelivered").getAsString());
-	}
-
-	public static Activity createActivityFromServerJson(JsonObject json){
-		return new Activity(json);
+	private Activity(String activityJsonStr, String username,long sendTime,long updateTime,boolean isDelivered){
+		this.originalJsonString = activityJsonStr;
+		this.authenticated_user = username;
+		this.sendTime = sendTime;
+		this.isDelivered = isDelivered;
+		this.updateTime = updateTime;
 	}
 
 	public Activity(Activity activity) {
-		this.originalJson = activity.getOriginalJson();
+		this.originalJsonString = activity.getOriginalJsonString();
 		this.authenticated_user = activity.getAuthenticated_user();
 		sendTime = activity.getSendTime();
 		isDelivered = activity.isDelivered();
 		updateTime = activity.getUpdateTime();
 	}
 
+	private Activity(JsonObject json) {
+		JsonObject activityJson = json.get("activity").getAsJsonObject();
+		this.originalJsonString = json.toString();
+		this.authenticated_user = activityJson.get("authenticated_user").getAsString();
+		this.sendTime = Long.parseLong(json.get("sendTime").getAsString());
+		this.updateTime = Long.parseLong(json.get("updateTime").getAsString());
+		this.isDelivered = Boolean.valueOf(json.get("isDelivered").getAsString());
+	}
+
+	public static Activity createActivityFromClientJson(JsonObject clientActivityJson, String username){
+		clientActivityJson.remove("authenticated_user");
+		clientActivityJson.addProperty("authenticated_user",username);
+
+		long sendTime = Calendar.getInstance().getTimeInMillis();
+		long updateTime = Calendar.getInstance().getTimeInMillis();
+		return new Activity(clientActivityJson.toString(),username,sendTime,updateTime,false);
+	}
+
+	public static Activity createActivityFromServerJson(JsonObject json){
+
+		return new Activity(json);
+	}
+
 	public Activity copy() {
 		return new Activity(this);
 	}
+
 
 	public void setAuthenticated_user(String authenticated_user) {
 		this.authenticated_user = authenticated_user;
 	}
 
-	public JsonObject innerJson() {
-		originalJson.remove("authenticated_user");
-		originalJson.addProperty("authenticated_user", this.authenticated_user);
-		return originalJson;
-	}
+//	public JsonObject innerJson() {
+//		originalJsonString.remove("authenticated_user");
+//		originalJsonString.addProperty("authenticated_user", this.authenticated_user);
+//		return originalJsonString;
+//	}
 
 	public JsonObject toJson() {
 		JsonObject json = new JsonObject();
 		json.addProperty("id",this.hashCode());
-		originalJson.remove("authenticated_user");
-		originalJson.addProperty("authenticated_user", authenticated_user);
-		json.add("activity", originalJson);
+		JsonParser parser = new JsonParser();
+//		originalJsonString.remove("authenticated_user");
+//		originalJsonString.addProperty("authenticated_user", authenticated_user);
+		json.add("activity", parser.parse(originalJsonString));
 		json.addProperty("updateTime", this.updateTime);
 		json.addProperty("sendTime", this.sendTime);
 		json.addProperty("isDelivered", this.isDelivered);
 		return json;
 	}
 
-//	public String toJsonString()
-//	{
-//		return toJson().toString();
-//	}
 
-	public JsonObject getOriginalJson() {
-		return originalJson;
+	public String getOriginalJsonString() {
+		return originalJsonString;
 	}
 
 	public String getAuthenticated_user() {
@@ -104,7 +114,12 @@ public class Activity implements Comparable<Activity>, Serializable {
 
 	public void setDelivered(boolean delivered) {
 		isDelivered = delivered;
+		setUpdateTime();
 
+	}
+
+	public void setUpdateTime() {
+		this.updateTime = Calendar.getInstance().getTimeInMillis();
 	}
 
 	public long getUpdateTime() {
@@ -122,7 +137,7 @@ public class Activity implements Comparable<Activity>, Serializable {
 			return false;
 		}
 		Activity other = (Activity) obj;
-		if (other.originalJson.equals(other.originalJson) && authenticated_user.equals(other.authenticated_user) && sendTime == other.sendTime) {
+		if (other.originalJsonString.equals(other.originalJsonString) && authenticated_user.equals(other.authenticated_user) && sendTime == other.sendTime) {
 			return true;
 		}
 		return false;
@@ -130,7 +145,7 @@ public class Activity implements Comparable<Activity>, Serializable {
 
 	public Activity update(Activity other) {
 		if (other.getUpdateTime() > this.getUpdateTime()) {
-			this.originalJson = other.originalJson;
+			this.originalJsonString = other.originalJsonString;
 			this.setAuthenticated_user(other.authenticated_user);
 			this.sendTime = other.sendTime;
 			this.isDelivered = other.isDelivered;
@@ -143,7 +158,7 @@ public class Activity implements Comparable<Activity>, Serializable {
 
 	@Override
 	public int hashCode() {
-		return originalJson.toString().hashCode();
+		return originalJsonString.toString().hashCode();
 	}
 
 }

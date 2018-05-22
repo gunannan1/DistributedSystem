@@ -27,19 +27,21 @@ Check [here](../HowToStart.md) for detail.
 
 ## Improvement instruction
 
-In this improved project, a three layered structure is applied in this project.
+In this project, two parts (High Available & Eventually Consistency) of privious are improved by a three-layer deisgn:
 
-### How these three layers work
+
 
 ![hight_level_design](hight_level_design.png)
 
-#### Network layer
+#### Network layer - High Available
 
 This is the communication layer for the whole system and is responsible for maintaining connections, sending/receiving data and delivering different types of message to different data consumer. 
 
 The reconnection will be conducted in this layer and will not impact the other layers.
 
-#### Data Layer
+![high_available](/Users/eric/Documents/projects/DistributedSystem/Project2-Document/high_available.png)
+
+#### Data Layer - Eventually Consistency
 
 Data layer is used to store all local data and sync its data with other servers' data layer, which means there is a **distributed database** accross the whole server system. The main idea to store is something like database **Table**. There are 3 tables designed in this projcet:
 
@@ -158,7 +160,7 @@ This laye is responsible for maintaining connections, sending/receiving data and
 {
     "command":"ACTIVITY_UPDATE",
     "owner":"username",
-    "activity_row":
+    "activity_list":
         {
          "udpateTime":"updateTime",
          "sendTime":"sendTime",

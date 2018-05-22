@@ -36,10 +36,10 @@ public class ActivityTable extends Table<ActivityRow> implements Serializable {
 				ActivityRow activityRow = activityMap.get(user.getUsername());
 				if (activityRow == null) {
 					ActivityRow newActivityRow = new ActivityRow(user.getUsername());
-					newActivityRow.updateOrInsert(activity);
+					newActivityRow.updateOrInsert(activity.copy());
 					activityMap.put(user.getUsername(), newActivityRow);
 				} else {
-					activityRow.updateOrInsert(activity);
+					activityRow.updateOrInsert(activity.copy());
 				}
 			}
 		}
@@ -52,7 +52,7 @@ public class ActivityTable extends Table<ActivityRow> implements Serializable {
 		if (index >= 0) {
 			updatedRow = oldRow.getActivityList().get(index).update(newActivity);
 		} else {
-			oldRow.getActivityList().add(newActivity);
+			oldRow.getActivityList().add(newActivity.copy());
 			updatedRow = newActivity;
 		}
 

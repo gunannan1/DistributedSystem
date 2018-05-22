@@ -168,7 +168,8 @@ public class Control extends Thread implements IMessageConsumer {
 							json.addProperty("command", MessageType.ACTIVITY_BROADCAST.name());
 							conn.sendActivityBroadcastMsg(json.toString());
 							/* Set this activity delivered in data layer, data layer will sync this with other servers*/
-							DataLayer.getInstance().updateActivityTable(DataLayer.OperationType.UPDATE_OR_INSERT,user.getUsername(),activity,true);
+							activity.setDelivered(true);
+							DataLayer.getInstance().updateActivityTable(DataLayer.OperationType.UPDATE,user.getUsername(),activity,true);
 							isChange += 1;
 						}
 					}

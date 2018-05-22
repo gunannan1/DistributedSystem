@@ -62,9 +62,9 @@ public class UserTable extends Table<UserRow> implements Serializable {
 	}
 
 
-	protected void markUserOnline(String username,boolean online){
-		userList.get(username).login(online);
-	}
+//	protected void markUserOnline(String username,boolean online){
+//		userList.get(username).login(online);
+//	}
 
 	protected ArrayList<UserRow> connectedUserList(){
 		ArrayList<UserRow> connectUsers = new ArrayList<>();

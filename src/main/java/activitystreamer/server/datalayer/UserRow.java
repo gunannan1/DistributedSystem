@@ -49,9 +49,6 @@ public class UserRow implements IRow, Serializable {
 		return secret;
 	}
 
-//	public ArrayList<Activity> getActivityList() {
-//		return activityQueue;
-//	}
 
 	public boolean isOnline() {
 		return this.online;

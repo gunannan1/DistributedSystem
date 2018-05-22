@@ -64,13 +64,15 @@ public class ActivityRow implements IRow, Serializable {
 
 	public Activity updateOrInsert(Activity activity){
 		int index = activityList.indexOf(activity);
-		int changedCount = 0 ;
 		if(index == -1) {
 			activityList.add(activity);
-			changedCount = 1;
+			Collections.sort(this.activityList);
 			return activity;
 		}else{
-			return activityList.get(index).update(activity);
+			Activity needUpdate = activityList.get(index);
+			needUpdate.update(activity);
+			Collections.sort(this.activityList);
+			return needUpdate;
 		}
 	}
 
@@ -93,7 +95,7 @@ public class ActivityRow implements IRow, Serializable {
 				Activity oldActivity = activityList.get(index);
 				Long oldUpdtTime = oldActivity.getUpdateTime();
 				Activity updatedActivity = activityList.get(index).update(newOne);
-				if(oldUpdtTime != updatedActivity.getUpdateTime()){
+				if(oldUpdtTime < updatedActivity.getUpdateTime()){
 					changedCount+=1;
 				}
 			}

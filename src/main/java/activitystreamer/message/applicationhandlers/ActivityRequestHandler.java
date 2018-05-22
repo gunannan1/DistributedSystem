@@ -75,7 +75,7 @@ public class ActivityRequestHandler extends MessageHandler {
 		Control.log.info("Process activity from user {}", username);
 		JsonObject actJson = json.get("activity").getAsJsonObject();
 		Activity activity = Activity.createActivityFromClientJson(actJson, connection.getUser().getUsername());
-		DataLayer.getInstance().updateActivityTable(DataLayer.OperationType.UPDATE_OR_INSERT,null,activity,true);
+		DataLayer.getInstance().updateActivityTable(DataLayer.OperationType.INSERT,null,activity,true);
 
 
 		return true;

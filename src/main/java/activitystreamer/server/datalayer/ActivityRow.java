@@ -42,7 +42,9 @@ public class ActivityRow implements IRow, Serializable {
 		return activityList;
 	}
 
-
+	public String getOwner() {
+		return owner;
+	}
 
 	@Override
 	public long getUpdateTime() {
@@ -66,14 +68,10 @@ public class ActivityRow implements IRow, Serializable {
 		if(index == -1) {
 			activityList.add(activity);
 			changedCount = 1;
+			return activity;
 		}else{
-			changedCount += activityList.get(index).update(activity);
+			return activityList.get(index).update(activity);
 		}
-
-		if(changedCount > 0) {
-			return activityList.get(index);
-		}
-		return null;
 	}
 
 	@Override
@@ -92,7 +90,12 @@ public class ActivityRow implements IRow, Serializable {
 		for(Activity newOne:((ActivityRow)newRow).getActivityList()){
 			int index = activityList.indexOf(newOne);
 			if(index >=0){
-				changedCount += activityList.get(index).update(newOne);
+				Activity oldActivity = activityList.get(index);
+				Long oldUpdtTime = oldActivity.getUpdateTime();
+				Activity updatedActivity = activityList.get(index).update(newOne);
+				if(oldUpdtTime != updatedActivity.getUpdateTime()){
+					changedCount+=1;
+				}
 			}
 		}
 		if(changedCount > 0){

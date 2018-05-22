@@ -128,16 +128,16 @@ public class Activity implements Comparable<Activity>, Serializable {
 		return false;
 	}
 
-	public int update(Activity other) {
+	public Activity update(Activity other) {
 		if (other.getUpdateTime() > this.getUpdateTime()) {
 			this.originalJson = other.originalJson;
 			this.setAuthenticated_user(other.authenticated_user);
 			this.sendTime = other.sendTime;
 			this.isDelivered = other.isDelivered;
 			this.updateTime = other.updateTime;
-			return 1;
+			return other;
 		}
-		return 0;
+		return this;
 	}
 	//TODO overwirte hashcode
 

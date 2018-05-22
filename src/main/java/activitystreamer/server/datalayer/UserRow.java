@@ -97,7 +97,7 @@ public class UserRow implements IRow, Serializable {
 
 	public void login(boolean online){
 		this.online = online;
-		notifyChange();
+		this.updateTime = Calendar.getInstance().getTimeInMillis();
 	}
 
 	public void notifyChange(){

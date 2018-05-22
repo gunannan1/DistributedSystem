@@ -24,7 +24,8 @@ public class DataLayer extends Thread implements IMessageConsumer {
 		UPDATE_OR_INSERT,
 		DELETE,
 		INSERT,
-		UPDATE
+		UPDATE,
+		SYNC
 
 	}
 
@@ -251,7 +252,7 @@ public class DataLayer extends Thread implements IMessageConsumer {
 		switch (operationType) {
 			case DELETE:
 				break;
-			case UPDATE_OR_INSERT:
+			case INSERT:
 				updateOrInsert(activity);
 				if (notify) {
 					JsonObject actJson = activity.toJson();
@@ -263,6 +264,9 @@ public class DataLayer extends Thread implements IMessageConsumer {
 				setActivityDelivered(username,activity);
 				if (notify) activityTable.selectById(username).notifyActivityChange(activity);
 				break;
+			case SYNC:
+				Activity updatedActivity = activityTable.syncActivityForUser(username,activity);
+				// never need notificaion for this situation
 		}
 
 		return null;

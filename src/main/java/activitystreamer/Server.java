@@ -143,10 +143,10 @@ public class Server {
 		// cleanup all of our connections before the jvm is terminated.
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			public void run() {
-				c.setTerm(true);
-				c.interrupt();
-				DataLayer.getInstance().setTerm(true);
-				NetworkLayer.getNetworkLayer().setTerm(true);
+//				c.setTerm(true);
+//				c.interrupt();
+//				DataLayer.getInstance().setTerm(true);
+//				NetworkLayer.getNetworkLayer().setTerm(true);
 			}
 		});
 	}

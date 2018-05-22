@@ -12,53 +12,53 @@ import java.util.HashMap;
  */
 
 public class ActivityTable extends Table<ActivityRow> implements Serializable {
-	private HashMap<String,ActivityRow> activityMap;
+	private HashMap<String, ActivityRow> activityMap;
 
 	public ActivityTable() {
 		this.activityMap = new HashMap<>();
 	}
 
-//	@Override
-//	public boolean lockRow(ActivityRow row) {
-//		return false;
-//	}
-//
-//	@Override
-//	public boolean unlockRow(ActivityRow row) {
-//		return false;
-//	}
-//
-//	@Override
-//	public boolean insert(ActivityRow row) {
-//		return false;
-//	}
-
 	@Override
 	public ActivityRow updateOrInsert(ActivityRow newRow) {
 		ActivityRow row = activityMap.get(newRow.getId());
-		if(row != null){
+		if (row != null) {
 			row.update(row);
-		}else{
-			activityMap.put(newRow.getId(),newRow);
+		} else {
+			activityMap.put(newRow.getId(), newRow);
 		}
 		return newRow;
 	}
 
-	public void updateOrInsert(Activity activity){
+	public void updateOrInsert(Activity activity) {
 		Collection<UserRow> allUsers = DataLayer.getInstance().getAllUsers().values();
-		for(UserRow user:allUsers){
-			if(user.isOnline()){
+		for (UserRow user : allUsers) {
+			if (user.isOnline()) {
 				ActivityRow activityRow = activityMap.get(user.getUsername());
-				if(activityRow == null){
+				if (activityRow == null) {
 					ActivityRow newActivityRow = new ActivityRow(user.getUsername());
 					newActivityRow.updateOrInsert(activity);
-					activityMap.put(user.getUsername(),newActivityRow);
-				}else{
+					activityMap.put(user.getUsername(), newActivityRow);
+				} else {
 					activityRow.updateOrInsert(activity);
 				}
 			}
 		}
 	}
+
+	public Activity syncActivityForUser(String username, Activity newActivity) {
+		ActivityRow oldRow = activityMap.get(username);
+		Activity updatedRow;
+		int index = oldRow.getActivityList().indexOf(newActivity);
+		if (index >= 0) {
+			updatedRow = oldRow.getActivityList().get(index).update(newActivity);
+		} else {
+			oldRow.getActivityList().add(newActivity);
+			updatedRow = newActivity;
+		}
+
+		return updatedRow;
+	}
+
 	@Override
 	public ActivityRow delete(String id) {
 		ActivityRow row = activityMap.get(id);

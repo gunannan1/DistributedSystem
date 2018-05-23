@@ -151,7 +151,7 @@ In order to simulate message disorder case, let us use a ***telnet session*** to
 1. Start 1 server with `activity_check_interval=10000 (10 seconds)` 
 
 ```bash
-java -jar ActivityStreamerServer.jar -activity_check_interval 5000 -lh localhost -lp 8001 -s abc
+java -jar ActivityStreamerServer.jar -activity_check_interval 10000 -lh localhost -lp 8001 -s abc
 ```
 
 2. Start a normal client connecting to server 1
@@ -183,13 +183,13 @@ telnet localhost 8001
 Message 1: a "fake" message that send 1 second ago
 
 ```json
-{"id":0,"activity":{"message_num":2,"authenticated_user":"user2"},"isDelivered":false,"command":"ACTIVITY_BROADCAST","timeBack":1000}
+{"id":0,"activity":{"message_num":2,"authenticated_user":"user2"},"isDelivered":false,"command":"ACTIVITY_BROADCAST","timeBack":0}
 ```
 
 Message 2: a "fake" message that send 5 second ago, which is early than preious one.
 
 ```json
-{"id":0,"activity":{"message_num":1,"authenticated_user":"user2"},"isDelivered":false,"command":"ACTIVITY_BROADCAST","timeBack":5000}
+{"id":0,"activity":{"message_num":1,"authenticated_user":"user2"},"isDelivered":false,"command":"ACTIVITY_BROADCAST","timeBack":10000}
 ```
 
 ##### Expected Result

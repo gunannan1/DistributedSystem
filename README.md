@@ -151,7 +151,11 @@ In order to simulate message disorder case, let us use a ***telnet session*** to
 1. Start 4 servers with `activity_check_interval=10000 (10 seconds)` 
 
 ```bash
-java -jar ActivityStreamerServer.jar -activity_check_interval 5000 -lh localhost -lp 8001 -s abc 
+java -jar ActivityStreamerServer.jar -activity_check_interval 5000 -lh localhost -lp 8001 -s abc
+java -jar ActivityStreamerServer.jar -activity_check_interval 5000 -lh localhost -lp 8002 -s abc -rh localhost -rp 8001
+java -jar ActivityStreamerServer.jar -activity_check_interval 5000 -lh localhost -lp 8003 -s abc -rh localhost -rp 8001
+java -jar ActivityStreamerServer.jar -activity_check_interval 5000 -lh localhost -lp 8006 -s abc -rh localhost -rp 8001
+
 ```
 
 2. Start a normal client connecting to server 1
@@ -160,7 +164,7 @@ java -jar ActivityStreamerServer.jar -activity_check_interval 5000 -lh localhost
 java -jar ActivityStreamerClient.jar -u user1 -rp 8001 -rh localhost
 ```
 
-3. Start a terminate and useing telnet to simulate a client in following steps
+3. Start a terminate and using telnet to simulate a client in following steps
 
 - start telent session
 

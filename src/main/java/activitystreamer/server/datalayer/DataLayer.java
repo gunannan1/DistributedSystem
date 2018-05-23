@@ -214,6 +214,11 @@ public class DataLayer extends Thread implements IMessageConsumer {
 
 	public BroadcastResult.REGISTER_RESULT registerUser(String username, String secret, Connection from) {
 
+		// 2.1 check if username exists
+		if (DataLayer.getInstance().getUserByName(username) != null) {
+			return BroadcastResult.REGISTER_RESULT.FAIL;
+		}
+
 		// 2.1 check if username under register process( in the register list but not approved)
 		if (UserRegisterHandler.registerLockHashMap.containsKey(username)) {
 			return BroadcastResult.REGISTER_RESULT.FAIL_UNDER_REGISTER;

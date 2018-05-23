@@ -36,10 +36,10 @@ public class ServerTextFrame extends JFrame implements ActionListener {
 		upPanel.setLayout(new GridLayout(2, 2));
 		mainPanel.add(upPanel);
 
-		registeredUserArea = UIPanelCreator.addTablePanel(upPanel, "Users Registered at this server", new String[]{"Username", "Secret"});
-		loginUserArea = UIPanelCreator.addTablePanel(upPanel, "Users Logged in this server", new String[]{"Username", "Secret"});
-		serverArea = UIPanelCreator.addTablePanel(upPanel, "Servers directly connected to this server", new String[]{"Host", "Port"});
-		loadArea = UIPanelCreator.addTablePanel(upPanel, "Online Server Status", new String[]{"IP", "Port", "Load", "Update Time"});
+		registeredUserArea = UIPanelCreator.addTablePanel(upPanel, "Registered User List", new String[]{"Username", "Secret"});
+		loginUserArea = UIPanelCreator.addTablePanel(upPanel, "Online User List", new String[]{"Username", "Secret"});
+		serverArea = UIPanelCreator.addTablePanel(upPanel, "Neighbor  Servers", new String[]{"Host", "Port"});
+		loadArea = UIPanelCreator.addTablePanel(upPanel, "Server Loads", new String[]{"IP", "Port", "Load", "Update Time"});
 
 		logText = UIPanelCreator.addTextPanel(mainPanel, "Log");
 

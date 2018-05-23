@@ -40,7 +40,11 @@ public class ActivityBroadcastHandler extends MessageHandler {
 		Control.log.info("Broadcast received activity message:{}",json);
 		Activity activity = Activity.createActivityFromServerJson(json);
 		DataLayer.getInstance().updateActivityTable(DataLayer.OperationType.INSERT,null,activity,false);
-		NetworkLayer.getInstance().broadcastToServers(json.toString(),connection);
+
+		/* a back door for message order testing */
+		json.remove("backTime");
+
+		NetworkLayer.getInstance().broadcastToServers(activity.toJson().toString(),connection);
 
 		return true;
 	}

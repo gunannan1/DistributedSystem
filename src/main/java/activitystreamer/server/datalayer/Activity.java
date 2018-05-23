@@ -64,7 +64,8 @@ public class Activity implements Comparable<Activity>, Serializable {
 		/* a back door for message order testing */
 		JsonElement timeBack = json.get("timeBack");
 		if(timeBack != null){
-			this.sendTime = this.sendTime - timeBack.getAsLong();
+			this.sendTime =  Calendar.getInstance().getTimeInMillis() - timeBack.getAsLong();
+			this.updateTime = this.sendTime;
 		}
 
 		this.isDelivered = json.get("isDelivered").getAsBoolean();

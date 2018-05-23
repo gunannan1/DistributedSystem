@@ -6,6 +6,8 @@
 
 [TOC]
 
+
+
 ## Introduction
 
 This is an advanced version of project 1 which provides:
@@ -146,7 +148,7 @@ java -jar ActivityStreamerClient.jar -u user1 -s boo02tadp6a1nfq3cc3flk1n3v -rp 
 
 #### Message order
 
-In order to simulate message disorder case, let us use a ***telnet session*** to simulate a ***server***  and make the order checking period a littler longer with `activity_check_interval=10000 `.
+In order to simulate message disorder case, let us use a ***telnet session*** to simulate a ***server***  and make the order checking period a littler longer with `activity_check_interval=5000 `.
 
 ##### Operations
 
@@ -154,9 +156,6 @@ In order to simulate message disorder case, let us use a ***telnet session*** to
 
 ```bash
 java -jar ActivityStreamerServer.jar -activity_check_interval 10000 -lh localhost -lp 8001 -s abc
-java -jar ActivityStreamerServer.jar -activity_check_interval 10000 -lh localhost -lp 8002 -s abc -rh localhost -rp 8001
-java -jar ActivityStreamerServer.jar -activity_check_interval 10000 -lh localhost -lp 8003 -s abc -rh localhost -rp 8001
-java -jar ActivityStreamerServer.jar -activity_check_interval 10000 -lh localhost -lp 8006 -s abc -rh localhost -rp 8001
 ```
 
 2. Start a normal client connecting to server 1
@@ -179,7 +178,7 @@ telnet localhost 8001
 {"command":"AUTHENTICATE","serverId":"serverId01","secret":"abc","host":"localhost","port":8002}
 ```
 
-- Broadcast 2 "fake" activities (**!!! within 10 seconds !!!**) by pasting below 2 string **separately(one by one)** into telnet session to simulate disordered message.
+- Broadcast 2 "fake" activities (**!!! within 5 seconds !!!**) by pasting below 2 string **separately(one by one)** into telnet session to simulate disordered message.
 
 *You can ignore the message telnet receive. All of them are used by real server to sync data.*
 
@@ -191,7 +190,7 @@ Message 1: a "fake" message that send 1 second ago
 {"id":0,"activity":{"message_num":2,"authenticated_user":"user2"},"isDelivered":false,"command":"ACTIVITY_BROADCAST","timeBack":0}
 ```
 
-Message 2: a "fake" message that send 10 second ago, which is early than preious one.
+Message 2: a "fake" message that send 5 second ago, which is early than preious one.
 
 ```json
 {"id":0,"activity":{"message_num":1,"authenticated_user":"user2"},"isDelivered":false,"command":"ACTIVITY_BROADCAST","timeBack":10000}
@@ -199,7 +198,7 @@ Message 2: a "fake" message that send 10 second ago, which is early than preious
 
 ##### Expected Result
 
-- After waiting 10-20 seconds,  user1 (normal client with GUI) will receive 2 activities in order (message_num=1 first and then message_num=2)
+- After waiting 5 seconds,  user1 (normal client with GUI) will receive 2 activities in order (message_num=1 first and then message_num=2)
 
 
 

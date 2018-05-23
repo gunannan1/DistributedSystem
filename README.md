@@ -59,8 +59,6 @@ An ActivityStream Client for Unimelb COMP90015
 
 ## Test cases 
 
-You may need 7 terminals for some cases.
-
 #### High Available
 
 ##### Operations
@@ -150,10 +148,10 @@ In order to simulate message disorder case, let us use a ***telnet session*** to
 
 ##### Operations
 
-1. Start 1 server  with `activity_check_interval=5000 (5 seconds)` 
+1. Start 1 server with `activity_check_interval=10000 (10 seconds)` 
 
 ```bash
-java -jar ActivityStreamerServer.jar -activity_check_interval 5000 -lh localhost -lp 8001 -s abc 
+java -jar ActivityStreamerServer.jar -activity_check_interval 5000 -lh localhost -lp 8001 -s abc
 ```
 
 2. Start a normal client connecting to server 1
@@ -162,7 +160,7 @@ java -jar ActivityStreamerServer.jar -activity_check_interval 5000 -lh localhost
 java -jar ActivityStreamerClient.jar -u user1 -rp 8001 -rh localhost
 ```
 
-3. Start a terminate and useing telnet to simulate a client in following steps
+3. Start a terminate and using telnet to simulate a client in following steps
 
 - start telent session
 

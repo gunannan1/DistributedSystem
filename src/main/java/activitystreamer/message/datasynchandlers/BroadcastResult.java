@@ -98,10 +98,10 @@ public class BroadcastResult {
 				UserRegisterHandler.registerLockHashMap.remove(username);
 
 				lockRequest.getFrom().closeCon();
-				NetworkLayer.getNetworkLayer().connectionClosed(lockRequest.getFrom());
+				NetworkLayer.getInstance().connectionClosed(lockRequest.getFrom());
 
 				resultStr = MessageGenerator.registerResult(REGISTER_RESULT.FAIL, username, secret);
-				NetworkLayer.getNetworkLayer().broadcastToServers(resultStr, null);
+				NetworkLayer.getInstance().broadcastToServers(resultStr, null);
 				Control.getInstance().process(lockRequest.from, resultStr);
 
 				break;

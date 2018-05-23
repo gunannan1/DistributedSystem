@@ -17,8 +17,6 @@ import com.google.gson.JsonObject;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 
 public class DataLayer extends Thread implements IMessageConsumer {
@@ -32,7 +30,7 @@ public class DataLayer extends Thread implements IMessageConsumer {
 	}
 
 	public static final Logger log = Control.log;
-	private static DataLayer dataLayer;
+	private static DataLayer dataLayer = new DataLayer();
 	private UserTable userTable;
 	private ServerTable serverTable;
 	private ActivityTable activityTable;
@@ -40,13 +38,12 @@ public class DataLayer extends Thread implements IMessageConsumer {
 	private boolean term;
 
 	public static DataLayer getInstance() {
-		if (DataLayer.dataLayer != null) {
+//		if (DataLayer.dataLayer.isAlive()) {
 			return DataLayer.dataLayer;
-		} else {
-			DataLayer.dataLayer = new DataLayer();
-			DataLayer.dataLayer.start();
-			return DataLayer.dataLayer;
-		}
+//		} else {
+//			DataLayer.dataLayer.start();
+//			return DataLayer.dataLayer;
+//		}
 	}
 
 	private DataLayer() {
@@ -69,7 +66,7 @@ public class DataLayer extends Thread implements IMessageConsumer {
 		this.handlerMap.put(MessageType.ACTIVITY_UPDATE,new ActivityUpdateHandler());
 		this.handlerMap.put(MessageType.ACTIVITY_SYNC,new ActivitySyncHandler());
 
-		NetworkLayer.getNetworkLayer().registerConsumer(handlerMap.keySet(), this);
+		NetworkLayer.getInstance().registerConsumer(handlerMap.keySet(), this);
 	}
 
 	@Override
@@ -116,19 +113,19 @@ public class DataLayer extends Thread implements IMessageConsumer {
 	}
 	private void syncUserData(){
 		String syncString = MessageGenerator.userSyncCommand();
-		NetworkLayer.getNetworkLayer().broadcastToServers(syncString,null);
+		NetworkLayer.getInstance().broadcastToServers(syncString,null);
 	}
 
 	private void syncActivityData(){
 		String syncString = MessageGenerator.activitySyncCommand();
-		NetworkLayer.getNetworkLayer().broadcastToServers(syncString,null);
+		NetworkLayer.getInstance().broadcastToServers(syncString,null);
 	}
 
 	private void updateCurrentLoad() {
 		DataLayer.getInstance().updateServerTable(OperationType.UPDATE_OR_INSERT,
 				new ServerRow(
 						Settings.getServerId(),
-						NetworkLayer.getNetworkLayer().getClientLoads(),
+						NetworkLayer.getInstance().getClientLoads(),
 						Settings.getLocalHostname(),
 						Settings.getLocalPort()),
 				true
@@ -139,9 +136,9 @@ public class DataLayer extends Thread implements IMessageConsumer {
 	public synchronized ServerRow updateServerTable(OperationType operationType,ServerRow serverRow, boolean notify) {
 		ServerRow row = null;
 		switch (operationType) {
-			case DELETE:
-				row = deleteServer(serverRow.getId());
-				break;
+//			case DELETE:
+////				row = deleteServer(serverRow.getId());
+//				break;
 			case UPDATE_OR_INSERT:
 				row = updateOrInsert(serverRow);
 				break;
@@ -171,9 +168,9 @@ public class DataLayer extends Thread implements IMessageConsumer {
 		return serverTable.updateOrInsert(server);
 	}
 
-	private ServerRow deleteServer(String id) {
-		return serverTable.delete(id);
-	}
+//	private ServerRow deleteServer(String id) {
+//		return serverTable.delete(id);
+//	}
 
 	public ServerRow getServerById(String id){
 		return (ServerRow)Tools.deepClone(serverTable.selectById(id));
@@ -223,13 +220,13 @@ public class DataLayer extends Thread implements IMessageConsumer {
 		}
 
 		// 2.1.1 check if any remote servers exists
-		int serverLoads = NetworkLayer.getNetworkLayer().getServerLoads(null);
+		int serverLoads = NetworkLayer.getInstance().getServerLoads(null);
 		if (serverLoads > 0) {
 			BroadcastResult lockResult = new BroadcastResult(from, serverLoads, new UserRow(username, secret));
 			UserRegisterHandler.registerLockHashMap.put(username, lockResult);
 			// broadcastToAll lock request and then waiting for lock_allow & lock_denied, this register process will be handled by LockAllowedHandler & LockDeniedHandler
 			String lockRequest = MessageGenerator.lockRequest(username, secret);
-			NetworkLayer.getNetworkLayer().broadcastToServers(lockRequest, null);
+			NetworkLayer.getInstance().broadcastToServers(lockRequest, null);
 			return BroadcastResult.REGISTER_RESULT.PROCESSING;
 		}
 
@@ -273,7 +270,7 @@ public class DataLayer extends Thread implements IMessageConsumer {
 				if (notify) {
 					JsonObject actJson = activity.toJson();
 					actJson.addProperty("command", MessageType.ACTIVITY_BROADCAST.name());
-					NetworkLayer.getNetworkLayer().broadcastToServers(actJson.toString(),null);;
+					NetworkLayer.getInstance().broadcastToServers(actJson.toString(),null);;
 				}
 				break;
 			case MARK_AS_DELIVERED:

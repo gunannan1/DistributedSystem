@@ -1,17 +1,11 @@
 package activitystreamer.server.datalayer;
 
-import activitystreamer.message.MessageGenerator;
 import activitystreamer.message.MessageType;
-import activitystreamer.server.networklayer.Connection;
 import activitystreamer.server.networklayer.NetworkLayer;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.PriorityQueue;
 
 /**
  * UserRow
@@ -99,13 +93,13 @@ public class UserRow implements IRow, Serializable {
 
 	public void notifyChange(){
 		String resultBroadcastStr = userUpdateJsonString();
-		NetworkLayer.getNetworkLayer().broadcastToServers(resultBroadcastStr, null);;
+		NetworkLayer.getInstance().broadcastToServers(resultBroadcastStr, null);;
 	}
 
 //	@Override
 //	public void notifyChange(Connection connection) {
 //		String resultBroadcastStr = userUpdateJsonString();
-//		NetworkLayer.getNetworkLayer().broadcastToServers(resultBroadcastStr, connection);
+//		NetworkLayer.getInstance().broadcastToServers(resultBroadcastStr, connection);
 //	}
 
 	private String userUpdateJsonString(){

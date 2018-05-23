@@ -12,31 +12,40 @@ import java.util.Map;
  */
 
 public class ServerTable extends Table<ServerRow> implements Serializable {
-	private HashMap<String,ServerRow> serverList;
+	private HashMap<String, ServerRow> serverList;
 
 	public ServerTable() {
 		this.serverList = new HashMap<>();
 	}
 
-	public ServerRow getMinLoadServer(){
-		int minload=Integer.MAX_VALUE;
-		String minloadServerId=null;
-		for(Map.Entry entry:serverList.entrySet()){
-			ServerRow serverRow=(ServerRow) entry.getValue();
-			if(serverRow.getLoad()<minload){
-				minload=serverRow.getLoad();
-				minloadServerId=serverRow.getId();
+	public ServerRow getMinLoadServer() {
+		int minload = Integer.MAX_VALUE;
+		String minloadServerId = null;
+		for (Map.Entry entry : serverList.entrySet()) {
+			ServerRow serverRow = (ServerRow) entry.getValue();
+			if (serverRow.getLoad() < minload) {
+				minload = serverRow.getLoad();
+				minloadServerId = serverRow.getId();
 			}
 		}
 
-		return new ServerRow(serverList.get(minloadServerId).getServerId(), serverList.get(minloadServerId).getLoad(),
-				serverList.get(minloadServerId).getIp(), serverList.get(minloadServerId).getPort());
+		return new ServerRow(serverList.get(minloadServerId));
 	}
 
 	@Override
 	protected ServerRow updateOrInsert(ServerRow row) {
-		serverList.put(row.getId(), row.copy());
-		return row;
+		ServerRow old = serverList.get(row.getId());
+		if (old == null) {
+			serverList.put(row.getId(), row.copy());
+			return row;
+		}
+
+		if (old.getUpdateTime() < row.getUpdateTime()) {
+			serverList.put(row.getId(), row.copy());
+			return row;
+		}
+
+		return old;
 	}
 
 	@Override

@@ -56,15 +56,15 @@ public class LockRequestHandler extends MessageHandler {
 		
 		// Check remotely if server load > 0 exclude the sending server
 //		Control.log.info("User [{}] does not exist in this server", username);
-		if (NetworkLayer.getNetworkLayer().getServerLoads(connection) > 0) {
+		if (NetworkLayer.getInstance().getServerLoads(connection) > 0) {
 			Control.log.info("More server found, send lock request to other servers(exclude the sending server)");
 			// updateOrInsert this requst to local requst hashmap
 			BroadcastResult lockResult = new BroadcastResult(connection,
-					NetworkLayer.getNetworkLayer().getServerLoads(connection),
+					NetworkLayer.getInstance().getServerLoads(connection),
 					newUser);
 			UserRegisterHandler.registerLockHashMap.put(username, lockResult);
 			String lockMessage = MessageGenerator.lockRequest(newUser.getUsername(),newUser.getSecret());
-			NetworkLayer.getNetworkLayer().broadcastToServers(lockMessage, connection);
+			NetworkLayer.getInstance().broadcastToServers(lockMessage, connection);
 
 		} else {
 			Control.log.info("No other servers in this system(exclude the sending server), reply lockAllow message back");
@@ -79,6 +79,6 @@ public class LockRequestHandler extends MessageHandler {
 		Control.log.error(error);
 		connection.sendInvalidMsg(error);
 		connection.closeCon();
-		NetworkLayer.getNetworkLayer().connectionClosed(connection);
+		NetworkLayer.getInstance().connectionClosed(connection);
 	}
 }

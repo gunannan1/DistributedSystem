@@ -57,7 +57,12 @@ public class ServerAuthenSuccHandler extends MessageHandler {
 			DataLayer.log.info("Sync activities successfully");
 
 			Control.getInstance().setProvideService(true); // begin to provide services to clients/servers
-			NetworkLayer.getNetworkLayer().startListener();
+
+			/* start all main threads */
+			NetworkLayer.getInstance().startListener();
+			NetworkLayer.getInstance().start();
+			DataLayer.getInstance().start();
+			Control.getInstance().start();
 			Control.getInstance().startUI();
 			return true;
 		}catch (Exception e) {

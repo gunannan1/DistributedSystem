@@ -21,7 +21,7 @@ public class ServerAuthenFailedHandler extends MessageHandler {
 		Control.log.info(json.get("info").getAsString());
 		Control.log.info("Close connection to {}", connection.getSocket().getRemoteSocketAddress());
 		connection.closeCon();
-		NetworkLayer.getNetworkLayer().connectionClosed(connection);
+		NetworkLayer.getInstance().connectionClosed(connection);
 		// return false to close related connection and thread
 		return false;
 	}

@@ -45,19 +45,19 @@ public class ServerAuthenRequestHandler extends MessageHandler {
 			connection.sendInvalidMsg("Already authenticated");
 			Control.log.info("Already authenticated");
 			connection.closeCon();
-			NetworkLayer.getNetworkLayer().connectionClosed(connection);
+			NetworkLayer.getInstance().connectionClosed(connection);
 			return false;
 		} else if (connection.isAuthedClient()) {
 			connection.sendInvalidMsg("Authenticate message is for server, not client");
 			Control.log.info("Authenticate message is for server, not client");
 			connection.closeCon();
-			NetworkLayer.getNetworkLayer().connectionClosed(connection);
+			NetworkLayer.getInstance().connectionClosed(connection);
 			return false;
 		} else if (secret == null) {
 			connection.sendInvalidMsg("No secret present");
 			Control.log.info("No secret present");
 			connection.closeCon();
-			NetworkLayer.getNetworkLayer().connectionClosed(connection);
+			NetworkLayer.getInstance().connectionClosed(connection);
 			return false;
 		}
 
@@ -66,7 +66,7 @@ public class ServerAuthenRequestHandler extends MessageHandler {
 			connection.sendAuthFailedMsg(String.format("The supplied secret is incorrect: %s", secret));
 			Control.log.info(String.format("The supplied secret is incorrect: %s", secret));
 			connection.closeCon();
-			NetworkLayer.getNetworkLayer().connectionClosed(connection);
+			NetworkLayer.getInstance().connectionClosed(connection);
 			return false;
 		}
 

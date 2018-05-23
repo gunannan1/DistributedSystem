@@ -8,6 +8,7 @@ import com.google.gson.JsonObject;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * ServerRow
@@ -16,7 +17,7 @@ import java.util.Calendar;
  * Date 18/5/18
  */
 
-public class ServerRow implements IRow , Serializable {
+public class ServerRow implements IRow, Serializable {
 	private String serverId;
 	private int load;
 	private String ip;
@@ -32,29 +33,41 @@ public class ServerRow implements IRow , Serializable {
 		this.updateTime = Calendar.getInstance().getTimeInMillis();
 		this.online = true;
 	}
-	public ServerRow(String serverId, boolean online) {
-		this.serverId = serverId;
-		this.online = online;
-	}
 
-	public ServerRow(ServerRow serverRow){
+//	public ServerRow(String serverId, boolean online) {
+//		this.serverId = serverId;
+//		this.online = online;
+//	}
+
+	public ServerRow(ServerRow serverRow) {
 		this.serverId = serverRow.serverId;
 		this.load = serverRow.load;
 		this.ip = serverRow.ip;
 		this.port = serverRow.port;
-		this.online = true;
+		this.online = serverRow.online;
+		this.updateTime = serverRow.updateTime;
 	}
 
-	public ServerRow(JsonObject json){
+	public ServerRow(JsonObject json) {
 		this.serverId = json.get("serverId").getAsString();
 		this.load = json.get("load").getAsInt();
 		this.ip = json.get("ip").getAsString();
 		this.port = json.get("port").getAsInt();
-		this.online = true;
+		this.online = json.get("online").getAsBoolean();
+		this.updateTime = json.get("updateTime").getAsLong();
 	}
 
 	public String getServerId() {
 		return serverId;
+	}
+
+	public boolean isOnline() {
+		return online;
+	}
+
+	public void setOnline(boolean online) {
+		this.online = online;
+		this.updateTime = Calendar.getInstance().getTimeInMillis();
 	}
 
 	public int getLoad() {
@@ -72,9 +85,11 @@ public class ServerRow implements IRow , Serializable {
 	public long getUpdateTime() {
 		return updateTime;
 	}
+
 	public String getUpdateTimeString() {
+		Date currentDate = new Date(updateTime);
 		SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm:ss");
-		return timeFormat.format(updateTime);
+		return timeFormat.format(currentDate);
 	}
 
 	@Override
@@ -93,7 +108,7 @@ public class ServerRow implements IRow , Serializable {
 		return null;
 	}
 
-	public ServerRow copy(){
+	public ServerRow copy() {
 		return new ServerRow(this);
 	}
 
@@ -102,31 +117,33 @@ public class ServerRow implements IRow , Serializable {
 		return serverId;
 	}
 
-	public void notifyChange(){
+	public void notifyChange() {
 		String resultBroadcastStr = serverUpdateJsonString();
-		NetworkLayer.getNetworkLayer().broadcastToServers(resultBroadcastStr, null);
+		NetworkLayer.getInstance().broadcastToServers(resultBroadcastStr, null);
 	}
 
-	private String serverUpdateJsonString(){
+	private String serverUpdateJsonString() {
 		JsonObject json = this.toJson();
 		json.addProperty("command", MessageType.SERVER_ANNOUNCE.name());
 		return json.toString();
 	}
 
-	public JsonObject toJson(){
+	public JsonObject toJson() {
 		JsonObject json = new JsonObject();
-		json.addProperty("serverId",serverId);
-		if(online) {
-			json.addProperty("load", load);
-			json.addProperty("ip", ip);
-			json.addProperty("port", port);
-			json.addProperty("action",AnnounceType.UPDATE_OR_INSERT.name());
-		}else{
-			json.addProperty("load", 0);
-			json.addProperty("ip", "");
-			json.addProperty("port", 0);
-			json.addProperty("action",AnnounceType.DELETE.name());
-		}
+		json.addProperty("serverId", serverId);
+//		if(online) {
+		json.addProperty("load", load);
+		json.addProperty("ip", ip);
+		json.addProperty("port", port);
+		json.addProperty("online", online);
+		json.addProperty("updateTime", updateTime);
+		json.addProperty("action", AnnounceType.UPDATE_OR_INSERT.name());
+//		}else{
+//			json.addProperty("load", 0);
+//			json.addProperty("ip", "");
+//			json.addProperty("port", 0);
+//			json.addProperty("action",AnnounceType.DELETE.name());
+//		}
 		return json;
 	}
 }

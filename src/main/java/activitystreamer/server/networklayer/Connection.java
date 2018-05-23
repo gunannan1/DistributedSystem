@@ -93,7 +93,7 @@ public class Connection extends Thread {
 					JsonParser parser = new JsonParser();
 					JsonObject json = parser.parse(data).getAsJsonObject();
 					String m = json.get("command").getAsString();
-					IMessageConsumer h = NetworkLayer.getNetworkLayer().getConsumer(m);
+					IMessageConsumer h = NetworkLayer.getInstance().getConsumer(m);
 					if (h != null) {
 						h.process(this, json);
 					} else {
@@ -106,8 +106,6 @@ public class Connection extends Thread {
 			}
 
 			try {
-				ServerRow deleteRow = new ServerRow(remoteServerId,false);
-				DataLayer.getInstance().updateServerTable(DataLayer.OperationType.DELETE,deleteRow,false);
 				doReconnection();
 
 			} catch (InterruptedException e) {
@@ -116,15 +114,22 @@ public class Connection extends Thread {
 			}
 
 		}
-		NetworkLayer.getNetworkLayer().connectionClosed(this);
+		NetworkLayer.getInstance().connectionClosed(this);
 		open = false;
 	}
 
 	private void doReconnection() throws InterruptedException {
 		if (isAuthedServer() && !term) {
 			Control.log.info("Disconnection is from an authened server, " +
-					"reconnecting to backup server will be conducted in [{}] millsecond.",Settings.getTimeBeforeReconnect());
+					"reconnecting to backup server will be conducted in [{}] millsecond.", Settings.getTimeBeforeReconnect());
 			sleep(Settings.getTimeBeforeReconnect());
+
+			/* mark this server as offline */
+			ServerRow deleteRow = DataLayer.getInstance().getServerById(remoteServerId);
+			if (deleteRow != null) {
+				deleteRow.setOnline(false);
+				DataLayer.getInstance().updateServerTable(DataLayer.OperationType.UPDATE_OR_INSERT, deleteRow, true);
+			}
 
 			// Set this connect to false as the connection between servers is not authened
 			isAuthed = false;
@@ -135,34 +140,33 @@ public class Connection extends Thread {
 				Control.log.info(info);
 				sendAuthMsg(Settings.getSecret());
 			}
-		}
-		else if(isAuthedClient() && !term){
-			DataLayer.getInstance().markUserOnline(getUser().getUsername(),false);
+		} else if (isAuthedClient() && !term) {
+			DataLayer.getInstance().markUserOnline(getUser().getUsername(), false);
 			term = true;
-		}else{
+		} else {
 			term = true;
 		}
 	}
 
 	private boolean reConnectBackupServer() {
 		if (backupServers != null && backupServers.size() > 0) {
-			BackupServerInfo first = backupServers.get(0);
-			if (!first.getServerId().equals(Settings.getServerId())) {
-				for (BackupServerInfo sInfo : backupServers) {
+			for (BackupServerInfo sInfo : backupServers) {
+				if (!sInfo.getServerId().equals(Settings.getServerId())) {
 					if (tryOneBackupServer(sInfo.getHost(), sInfo.getProt())) {
 						Settings.setRemoteHostname(sInfo.getHost());
 						Settings.setRemotePort(sInfo.getProt());
 						return true;
 					}
+				} else {
+					Control.log.info("The first available backup server is this server itself, no need do reconnection.Wait for other servers.");
+					return false;
 				}
-				Control.log.error("All backup servers are out of service, server terminates");
-				this.closeCon();
-				NetworkLayer.getNetworkLayer().connectionClosed(this);
-				return false;
-			} else {
-				Control.log.info("This server is the primary backup server, no need do reconnection.Wait for other servers.");
-				return false;
+
 			}
+			Control.log.error("All backup servers are out of service, server terminates");
+			this.closeCon();
+			NetworkLayer.getInstance().connectionClosed(this);
+			return false;
 		}
 		Control.log.info("no backup servers exist, server terminates");
 		return false;

@@ -24,7 +24,7 @@ public class ActivityUpdateHandler extends MessageHandler {
 			Activity newActivity = Activity.createActivityFromServerJson(json);
 			String owner = json.get("owner").getAsString();
 			DataLayer.getInstance().updateActivityTable(DataLayer.OperationType.MARK_AS_DELIVERED, owner, newActivity, false);
-			NetworkLayer.getNetworkLayer().broadcastToServers(json.toString(), connection);
+			NetworkLayer.getInstance().broadcastToServers(json.toString(), connection);
 
 		} catch (Exception e) {
 			String error = "ACTIVITY_UPDATE message invalid:" + json.toString();

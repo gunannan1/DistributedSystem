@@ -62,7 +62,7 @@ public class UserLoginHandler extends MessageHandler {
 			Control.log.info(error);
 			connection.sendInvalidMsg(error);
 			connection.closeCon();
-			NetworkLayer.getNetworkLayer().connectionClosed(connection);
+			NetworkLayer.getInstance().connectionClosed(connection);
 			return false;
 		}
 
@@ -86,14 +86,14 @@ public class UserLoginHandler extends MessageHandler {
 				Control.log.info(info);
 				connection.sendLoginFailedMsg(info);
 				connection.closeCon();
-				NetworkLayer.getNetworkLayer().connectionClosed(connection);
+				NetworkLayer.getInstance().connectionClosed(connection);
 				return false;
 			}
 		}
 		connection.sendLoginFailedMsg(String.format("User [%s] does not exist.", username));
 		Control.log.info("User [{}] does not exist.", username);
 		connection.closeCon();
-		NetworkLayer.getNetworkLayer().connectionClosed(connection);
+		NetworkLayer.getInstance().connectionClosed(connection);
 		return false;
 	}
 

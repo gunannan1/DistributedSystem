@@ -4,7 +4,6 @@ import activitystreamer.UILogAppender;
 import activitystreamer.message.MessageGenerator;
 import activitystreamer.message.MessageHandler;
 import activitystreamer.message.MessageType;
-import activitystreamer.message.networklayerhandlers.ServerInvalidHandler;
 import activitystreamer.message.applicationhandlers.*;
 import activitystreamer.server.datalayer.*;
 import activitystreamer.server.networklayer.Connection;
@@ -37,20 +36,20 @@ public class Control extends Thread implements IMessageConsumer {
 
 	private boolean provideService;//TODO enhance: indicate whether the system is providing normal service
 
-	protected static Control control = null;
+	protected static Control control = new Control();
 
 
 	public static Control getInstance() {
-		if (control == null) {
-			control = new Control();
-		}
+//		if (control == null) {
+//			control = new Control();
+//		}
 		return control;
 	}
 
 	private Control() {
 		// Should not provide services
 		provideService = false;
-		networkLayer = NetworkLayer.getNetworkLayer();
+		networkLayer = NetworkLayer.getInstance();
 		dataLayer = DataLayer.getInstance();
 
 		// initialize the request list for register and login
@@ -69,9 +68,12 @@ public class Control extends Thread implements IMessageConsumer {
 		} else {
 			setProvideService(true);
 			networkLayer.startListener();
+			networkLayer.start();
+			dataLayer.start();
 			startUI();
+			start();
 		}
-		start();
+
 	}
 
 

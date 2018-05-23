@@ -39,7 +39,7 @@ public class ActivitySyncHandler extends MessageHandler {
 					);
 				}
 			}
-			NetworkLayer.getNetworkLayer().broadcastToServers(json.toString(), connection);
+			NetworkLayer.getInstance().broadcastToServers(json.toString(), connection);
 
 		} catch (Exception e) {
 			String error = "Activity sync message invalid:" + json.toString();

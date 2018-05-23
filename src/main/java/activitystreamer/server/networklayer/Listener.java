@@ -28,7 +28,7 @@ public class Listener extends Thread{
 			Socket clientSocket;
 			try {
 				clientSocket = serverSocket.accept();
-				NetworkLayer.getNetworkLayer().incomingConnection(clientSocket);
+				NetworkLayer.getInstance().incomingConnection(clientSocket);
 			} catch (IOException e) {
 				log.info("received exception, shutting down");
 				term=true;

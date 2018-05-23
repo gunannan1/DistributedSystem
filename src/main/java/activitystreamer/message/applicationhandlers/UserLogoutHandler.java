@@ -22,7 +22,7 @@ public class UserLogoutHandler extends MessageHandler {
 		Control.log.info("User {} logout, close connection.",connection.getUser().getUsername());
 		DataLayer.getInstance().markUserOnline(connection.getUser().getUsername(),false);
 		connection.closeCon();
-		NetworkLayer.getNetworkLayer().connectionClosed(connection);
+		NetworkLayer.getInstance().connectionClosed(connection);
 		return true;
 	}
 }

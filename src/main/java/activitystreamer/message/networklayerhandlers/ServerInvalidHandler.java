@@ -21,7 +21,7 @@ public class ServerInvalidHandler extends MessageHandler {
 		Control.log.info(json.get("info"));
 		Control.log.info("Close connection with {}",connection.getSocket().getRemoteSocketAddress());
 		connection.closeCon();
-		NetworkLayer.getNetworkLayer().connectionClosed(connection);
+		NetworkLayer.getInstance().connectionClosed(connection);
 		// return false to close related connection and thread
 		return false;
 	}

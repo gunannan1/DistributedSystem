@@ -62,11 +62,11 @@ public class Server {
 			Settings.setLocalPort(port);
 		}
 
-		try {
-			Settings.setLocalHostname(InetAddress.getLocalHost().getHostAddress());
-		} catch (UnknownHostException e) {
-			log.warn("failed to get localhost IP address");
-		}
+//		try {
+//			Settings.setLocalHostname(InetAddress.getLocalHost().getHostAddress());
+//		} catch (UnknownHostException e) {
+//			log.warn("failed to get localhost IP address");
+//		}
 
 
 		/*======================================= remote information =======================================*/
@@ -144,7 +144,7 @@ public class Server {
 //				c.setTerm(true);
 //				c.interrupt();
 //				DataLayer.getInstance().setTerm(true);
-//				NetworkLayer.getNetworkLayer().setTerm(true);
+//				NetworkLayer.getInstance().setTerm(true);
 			}
 		});
 	}

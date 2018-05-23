@@ -39,7 +39,7 @@ public class ServerTextFrame extends JFrame implements ActionListener {
 		registeredUserArea = UIPanelCreator.addTablePanel(upPanel, "Users Registered at this server", new String[]{"Username", "Secret"});
 		loginUserArea = UIPanelCreator.addTablePanel(upPanel, "Users Logged in this server", new String[]{"Username", "Secret"});
 		serverArea = UIPanelCreator.addTablePanel(upPanel, "Servers directly connected to this server", new String[]{"Host", "Port"});
-		loadArea = UIPanelCreator.addTablePanel(upPanel, "Server Loads", new String[]{"IP", "Port", "Load", "Update Time"});
+		loadArea = UIPanelCreator.addTablePanel(upPanel, "Online Server Status", new String[]{"IP", "Port", "Load", "Update Time"});
 
 		logText = UIPanelCreator.addTextPanel(mainPanel, "Log");
 
@@ -64,7 +64,8 @@ public class ServerTextFrame extends JFrame implements ActionListener {
 				loginUserArea.addRow(new String[]{u.getUsername(), u.getSecret()});
 			} catch (Exception e) {
 				Control.log.error("Error login area username:[{}], secret:[{}]", u.getUsername(), u.getSecret());
-				System.exit(-1);
+//				System.exit(-1);
+				e.printStackTrace();
 			}
 		}
 	}
@@ -72,11 +73,12 @@ public class ServerTextFrame extends JFrame implements ActionListener {
 	public void setRegisteredArea(Collection<UserRow> registerUsers) {
 		registeredUserArea.setRowCount(0);
 		for (UserRow u : registerUsers) {
-			try{
-			registeredUserArea.addRow(new String[]{u.getUsername(), u.getSecret()});
+			try {
+				registeredUserArea.addRow(new String[]{u.getUsername(), u.getSecret()});
 			} catch (Exception e) {
 				Control.log.error("Error regisetr area username:[{}], secret:[{}]", u.getUsername(), u.getSecret());
-				System.exit(-1);
+//				System.exit(-1);
+				e.printStackTrace();
 			}
 		}
 	}
@@ -85,13 +87,14 @@ public class ServerTextFrame extends JFrame implements ActionListener {
 		this.serverArea.setRowCount(0);
 		for (Connection c : connections) {
 			if (c.isAuthedServer()) {
-				String host = c.getRemoteServerHost();
+				String host = c.getRemoteServerHost().replaceAll(".","-");
 				String port = Integer.toString(c.getRemoteServerPort());
 				try {
 					this.serverArea.addRow(new String[]{host, port});
 				} catch (Exception e) {
+					e.printStackTrace();
 					Control.log.error("Error connection area host:[{}], port:[{}]", host, port);
-					System.exit(-1);
+//					System.exit(-1);
 				}
 			}
 		}
@@ -100,15 +103,19 @@ public class ServerTextFrame extends JFrame implements ActionListener {
 	public void setLoadArea(Collection<ServerRow> serverStates) {
 		loadArea.setRowCount(0);
 		for (ServerRow ss : serverStates) {
-			String host = ss.getIp();
-			String port = Integer.toString(ss.getPort());
-			String load = Integer.toString(ss.getLoad());
-			String time = ss.getUpdateTimeString();
-			try {
-				loadArea.addRow(new String[]{host, port, load, time});
-			}catch (Exception e) {
-				Control.log.error("Error server load area host:[{}], port:[{}]", host, port);
-				System.exit(-1);
+			if (ss.isOnline()) {
+				String host = ss.getIp();
+				String port = Integer.toString(ss.getPort());
+				String load = Integer.toString(ss.getLoad());
+				String time = ss.getUpdateTimeString();
+				try {
+					loadArea.addRow(new String[]{host, port, load, time});
+				} catch (Exception e) {
+					Control.log.error("Error server load area host:[{}], port:[{}]", host, port);
+//					System.exit(-1);
+					e.printStackTrace();
+				}
+
 			}
 		}
 	}

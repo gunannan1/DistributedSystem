@@ -33,7 +33,7 @@ public class UserSyncHandler extends MessageHandler {
 						false
 				);
 			}
-			NetworkLayer.getNetworkLayer().broadcastToServers(json.toString(), connection);
+			NetworkLayer.getInstance().broadcastToServers(json.toString(), connection);
 
 		} catch (Exception e) {
 			String error = "User sync message invalid:" + json.toString();

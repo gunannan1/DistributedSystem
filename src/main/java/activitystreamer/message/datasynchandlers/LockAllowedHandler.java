@@ -85,6 +85,6 @@ public class LockAllowedHandler extends MessageHandler {
 		Control.log.error(error);
 		connection.sendInvalidMsg(error);
 		connection.closeCon();
-		NetworkLayer.getNetworkLayer().connectionClosed(connection);
+		NetworkLayer.getInstance().connectionClosed(connection);
 	}
 }

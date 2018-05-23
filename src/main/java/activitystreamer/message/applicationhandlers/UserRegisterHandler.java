@@ -100,6 +100,6 @@ public class UserRegisterHandler extends MessageHandler {
 	private void failHandler(String error, Connection connection) {
 		Control.log.info(error);
 		connection.closeCon();
-		NetworkLayer.getNetworkLayer().connectionClosed(connection);
+		NetworkLayer.getInstance().connectionClosed(connection);
 	}
 }

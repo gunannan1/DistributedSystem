@@ -42,25 +42,25 @@ public class ActivityRequestHandler extends MessageHandler {
 			connection.sendAuthFailedMsg("The user has not logged in");
 			Control.log.info("The user has not logged in");
 			connection.closeCon();
-			NetworkLayer.getNetworkLayer().connectionClosed(connection);
+			NetworkLayer.getInstance().connectionClosed(connection);
 			return false;
 		} else if (username == null) {
 			connection.sendInvalidMsg("The message don't have username");
 			Control.log.info("The message don't have username");
 			connection.closeCon();
-			NetworkLayer.getNetworkLayer().connectionClosed(connection);
+			NetworkLayer.getInstance().connectionClosed(connection);
 			return false;
 		} else if (!username.equals("anonymous") && secret == null) {
 			connection.sendInvalidMsg("The message don't have secret and the user is not anonymous");
 			Control.log.info("The message don't have secret and the user is not anonymous");
 			connection.closeCon();
-			NetworkLayer.getNetworkLayer().connectionClosed(connection);
+			NetworkLayer.getInstance().connectionClosed(connection);
 			return false;
 		} else if (json.get("activity") == null) {
 			connection.sendInvalidMsg("The message does not have activity");
 			Control.log.info("The message does not have activity");
 			connection.closeCon();
-			NetworkLayer.getNetworkLayer().connectionClosed(connection);
+			NetworkLayer.getInstance().connectionClosed(connection);
 			return false;
 		} else if (!username.equals("anonymous") &&
 				(conUser == null || !conUser.getUsername().equals(username) || !conUser.getSecret().equals(secret))
@@ -68,7 +68,7 @@ public class ActivityRequestHandler extends MessageHandler {
 			connection.sendAuthFailedMsg("The username and secret do not match the logged in the user");
 			Control.log.info("The username and secret do not match the logged in the user");
 			connection.closeCon();
-			NetworkLayer.getNetworkLayer().connectionClosed(connection);
+			NetworkLayer.getInstance().connectionClosed(connection);
 			return false;
 		}
 

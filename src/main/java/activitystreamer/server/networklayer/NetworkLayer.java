@@ -25,7 +25,7 @@ import java.util.Set;
 
 public class NetworkLayer extends Thread implements IMessageConsumer {
 	public static final Logger log = LogManager.getLogger("serverLogger");
-	private static NetworkLayer networkLayer;
+	private static NetworkLayer networkLayer = new NetworkLayer();
 	private Listener listener;
 	private ArrayList<Connection> connectionList;
 	private boolean term;
@@ -41,14 +41,9 @@ public class NetworkLayer extends Thread implements IMessageConsumer {
 
 	}
 
-	public static NetworkLayer getNetworkLayer() {
-		if (NetworkLayer.networkLayer == null) {
-			NetworkLayer.networkLayer = new NetworkLayer();
-			NetworkLayer.networkLayer.start();
+	public static NetworkLayer getInstance() {
 			return networkLayer;
-		} else {
-			return networkLayer;
-		}
+
 	}
 
 	public Connection connectToServer(String remoteServer, int remotePort) {

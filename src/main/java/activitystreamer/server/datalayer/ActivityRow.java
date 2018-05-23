@@ -1,8 +1,6 @@
 package activitystreamer.server.datalayer;
 
-import activitystreamer.message.MessageGenerator;
 import activitystreamer.message.MessageType;
-import activitystreamer.server.networklayer.Connection;
 import activitystreamer.server.networklayer.NetworkLayer;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -114,20 +112,20 @@ public class ActivityRow implements IRow, Serializable {
 
 	public void notifyChange(){
 //		String notifytStr = notifyJsonString();
-//		NetworkLayer.getNetworkLayer().broadcastToServers(notifytStr, null);
+//		NetworkLayer.getInstance().broadcastToServers(notifytStr, null);
 	}
 
 	public void notifyActivityChange(Activity activity){
 		JsonObject json = activity.toJson();
 		json.addProperty("owner",owner);
 		json.addProperty("command",MessageType.ACTIVITY_UPDATE.name());
-		NetworkLayer.getNetworkLayer().broadcastToServers(json.toString(), null);
+		NetworkLayer.getInstance().broadcastToServers(json.toString(), null);
 	}
 
 //	@Override
 //	public void notifyChange(Connection connection) {
 //		String notifytStr = notifyJsonString();
-//		NetworkLayer.getNetworkLayer().broadcastToServers(notifytStr, connection);
+//		NetworkLayer.getInstance().broadcastToServers(notifytStr, connection);
 //	}
 
 //	private String notifyJsonString(){

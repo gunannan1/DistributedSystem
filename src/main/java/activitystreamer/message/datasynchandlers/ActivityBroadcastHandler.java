@@ -25,7 +25,7 @@ public class ActivityBroadcastHandler extends MessageHandler {
 			connection.sendInvalidMsg("Received from an unauthenticated server");
 			Control.log.info("Received from an unauthenticated server");
 			connection.closeCon();
-			NetworkLayer.getNetworkLayer().connectionClosed(connection);
+			NetworkLayer.getInstance().connectionClosed(connection);
 			return false;
 		}
 
@@ -33,14 +33,14 @@ public class ActivityBroadcastHandler extends MessageHandler {
 			connection.sendInvalidMsg("The message does not have activity");
 			Control.log.error("The message does not have activity");
 			connection.closeCon();
-			NetworkLayer.getNetworkLayer().connectionClosed(connection);
+			NetworkLayer.getInstance().connectionClosed(connection);
 			return false;
 		}
 
 		Control.log.info("Broadcast received activity message:{}",json);
 		Activity activity = Activity.createActivityFromServerJson(json);
 		DataLayer.getInstance().updateActivityTable(DataLayer.OperationType.INSERT,null,activity,false);
-		NetworkLayer.getNetworkLayer().broadcastToServers(json.toString(),connection);
+		NetworkLayer.getInstance().broadcastToServers(json.toString(),connection);
 
 		return true;
 	}

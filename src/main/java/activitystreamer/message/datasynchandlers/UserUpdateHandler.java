@@ -23,7 +23,7 @@ public class UserUpdateHandler extends MessageHandler {
 		try {
 			UserRow userRow = new UserRow(json);
 			DataLayer.getInstance().updateUserTable(DataLayer.OperationType.UPDATE_OR_INSERT,userRow,false);
-			NetworkLayer.getNetworkLayer().broadcastToServers(json.toString(),connection);
+			NetworkLayer.getInstance().broadcastToServers(json.toString(),connection);
 
 		} catch (Exception e) {
 			String error = "USER_UPDATE message invalid:" + json.toString();

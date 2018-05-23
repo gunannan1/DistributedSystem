@@ -64,6 +64,7 @@ public class ServerTextFrame extends JFrame implements ActionListener {
 				loginUserArea.addRow(new String[]{u.getUsername(), u.getSecret()});
 			} catch (Exception e) {
 				Control.log.error("Error login area username:[{}], secret:[{}]", u.getUsername(), u.getSecret());
+				System.exit(-1);
 			}
 		}
 	}
@@ -75,6 +76,7 @@ public class ServerTextFrame extends JFrame implements ActionListener {
 			registeredUserArea.addRow(new String[]{u.getUsername(), u.getSecret()});
 			} catch (Exception e) {
 				Control.log.error("Error regisetr area username:[{}], secret:[{}]", u.getUsername(), u.getSecret());
+				System.exit(-1);
 			}
 		}
 	}
@@ -88,7 +90,8 @@ public class ServerTextFrame extends JFrame implements ActionListener {
 				try {
 					this.serverArea.addRow(new String[]{host, port});
 				} catch (Exception e) {
-					Control.log.error("Error server area host:[{}], port:[{}]", host, port);
+					Control.log.error("Error connection area host:[{}], port:[{}]", host, port);
+					System.exit(-1);
 				}
 			}
 		}
@@ -101,7 +104,12 @@ public class ServerTextFrame extends JFrame implements ActionListener {
 			String port = Integer.toString(ss.getPort());
 			String load = Integer.toString(ss.getLoad());
 			String time = ss.getUpdateTimeString();
-			loadArea.addRow(new String[]{host, port, load, time});
+			try {
+				loadArea.addRow(new String[]{host, port, load, time});
+			}catch (Exception e) {
+				Control.log.error("Error server load area host:[{}], port:[{}]", host, port);
+				System.exit(-1);
+			}
 		}
 	}
 

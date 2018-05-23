@@ -82,7 +82,7 @@ After that you will see server 8002, 8003, 8006 will automatically connected. Th
 
 ![hight_level_design](Project2-Document/pictures/test_case_ha.png)
 
-![image-20180523111014339](/Users/eric/Documents/projects/DistributedSystem/Project2-Document/pictures/reconnect_ui_result.png)
+![image-20180523111014339](Project2-Document/pictures/reconnect_ui_result.png)
 
 #### Message ensure
 
@@ -113,7 +113,9 @@ java -jar ActivityStreamerClient.jar -u user2 -rp 8002 -rh localhost
 java -jar ActivityStreamerClient.jar -u user3 -rp 8003 -rh localhost
 ```
 
-3. Terminate server 8001 and send a message from user2 within 10 seconds
+
+
+1. Terminate server 8001 and send a message from user2 within 10 seconds
 
 - Click ***Close*** icon in *<u>server UI</u>* or press ***CTRL+C*** in *<u>command line</u>* (user 1 will lose connection)
 - Send message `{"a":1}` from user2.
@@ -127,7 +129,7 @@ Replace `$secret` of below script with the secret from step 2.
 java -jar ActivityStreamerClient.jar -u user1 -s $secret -rp 8006 -rh localhost
 ```
 
-java -jar ActivityStreamerClient.jar -u user1 -s 6gte017ngmi9dmsbv4pgjsiidj -rp 8006 -rh localhost
+java -jar ActivityStreamerClient.jar -u user1 -s boo02tadp6a1nfq3cc3flk1n3v -rp 8006 -rh localhost
 
 ##### Expected Result
 
@@ -144,7 +146,7 @@ java -jar ActivityStreamerClient.jar -u user1 -s 6gte017ngmi9dmsbv4pgjsiidj -rp 
 
 In order to simulate message disorder case, let us use a ***telnet session*** to simulate a ***server***  and make the order checking period a littler longer with `activity_check_interval=5000 `.
 
-#####Operations
+##### Operations
 
 1. Start 4 servers with `activity_check_interval=10000 (10 seconds)` 
 
@@ -196,7 +198,7 @@ Message 2: a "fake" message that send 5 second ago, which is early than preious 
 
 
 
-####Unique Register
+#### Unique Register
 
 ##### Operations
 
@@ -228,9 +230,9 @@ java -jar ActivityStreamerClient.jar -u user1 -rp 8002 -rh localhost
 
 Just try...
 
-####Server can join at any time
+#### Server can join at any time
 
-#####Operations
+##### Operations
 
 1. start the very first server
 
@@ -267,9 +269,9 @@ java -jar ActivityStreamerClient.jar -u user1 -s $secret -rp 8002 -rh localhost
   >
   > When user A reconnects to any server of this system, it can also receive this lost message.
 
-####Load balancing
+#### Load balancing
 
-#####Operations
+##### Operations
 
 1. start 2 servers 
 

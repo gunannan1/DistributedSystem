@@ -33,10 +33,8 @@ public class ServerAnnounceHandler extends MessageHandler {
 				int load = json.get("load").getAsInt();
 				String host = json.get("ip").getAsString();
 				int port = json.get("port").getAsInt();
-
 				ServerRow receivedInfo = new ServerRow(serverId, load, host, port);
 				DataLayer.getInstance().updateServerTable(DataLayer.OperationType.UPDATE_OR_INSERT,receivedInfo,false);
-				return true;
 			}else{
 				String serverId = json.get("serverId").getAsString();
 				ServerRow deleteRwo = new ServerRow(serverId,false);
@@ -44,6 +42,7 @@ public class ServerAnnounceHandler extends MessageHandler {
 			}
 
 			NetworkLayer.getNetworkLayer().broadcastToServers(json.toString(),connection);
+
 		}catch (Exception e){
 			DataLayer.log.error("Invalid ServerAnnounce message:[{}]",json.getAsString());
 			e.printStackTrace();

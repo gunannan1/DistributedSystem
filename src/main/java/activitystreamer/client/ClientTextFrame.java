@@ -18,7 +18,7 @@ import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
 
-@SuppressWarnings("serial")
+
 public class ClientTextFrame extends JFrame implements ActionListener {
 	private static final Logger log = LogManager.getLogger("clientLogger");
 	private JTextArea inputText;

@@ -101,27 +101,31 @@ public class Connection extends Thread {
 					}
 				}
 				Control.log.debug("connection closed to " + Settings.socketAddress(socket));
-				ServerRow deleteRow = new ServerRow(remoteServerId,false);
-				DataLayer.getInstance().updateServerTable(DataLayer.OperationType.DELETE,deleteRow,true);
-				sleep(Settings.getTimeBeforeReconnect());
 			} catch (IOException e) {
 				Control.log.error("connection " + Settings.socketAddress(socket) + " closed with exception: " + e);
+			}
+
+			try {
+				ServerRow deleteRow = new ServerRow(remoteServerId,false);
+				DataLayer.getInstance().updateServerTable(DataLayer.OperationType.DELETE,deleteRow,false);
+				doReconnection();
+
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 				System.exit(-1);
 			}
-
-			doReconnection();
 
 		}
 		NetworkLayer.getNetworkLayer().connectionClosed(this);
 		open = false;
 	}
 
-	private void doReconnection() {
+	private void doReconnection() throws InterruptedException {
 		if (isAuthedServer() && !term) {
 			Control.log.info("Disconnection is from an authened server, " +
-					"need to connect to backup servers if there is any.");
+					"reconnecting to backup server will be conducted in [{}] millsecond.",Settings.getTimeBeforeReconnect());
+			sleep(Settings.getTimeBeforeReconnect());
+
 			// Set this connect to false as the connection between servers is not authened
 			isAuthed = false;
 			remoteServerId = null;
@@ -131,7 +135,7 @@ public class Connection extends Thread {
 				Control.log.info(info);
 				sendAuthMsg(Settings.getSecret());
 			}
-		}//TODO what if a client crash
+		}
 		else if(isAuthedClient() && !term){
 			DataLayer.getInstance().markUserOnline(getUser().getUsername(),false);
 			term = true;

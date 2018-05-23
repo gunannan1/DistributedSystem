@@ -1,5 +1,6 @@
 package activitystreamer.server.datalayer;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -47,9 +48,25 @@ public class Activity implements Comparable<Activity>, Serializable {
 	private Activity(JsonObject json) {
 		JsonObject activityJson = json.get("activity").getAsJsonObject();
 		this.originalJsonString = activityJson.toString();
-//		this.authenticated_user = activityJson.get("authenticated_user").getAsString();
-		this.sendTime = json.get("sendTime").getAsLong();
-		this.updateTime = json.get("updateTime").getAsLong();
+
+		JsonElement sendTimeJson = json.get("sendTime");
+		if(sendTimeJson != null) {
+			this.sendTime = json.get("sendTime").getAsLong();
+		}else{
+			this.sendTime = Calendar.getInstance().getTimeInMillis();
+		}
+		JsonElement updateTimeJson = json.get("updateTime");
+		if(updateTimeJson != null){
+			this.updateTime = json.get("updateTime").getAsLong();
+		}else{
+			this.updateTime = this.sendTime;
+		}
+		/* a back door for message order testing */
+		JsonElement timeBack = json.get("timeBack");
+		if(timeBack != null){
+			this.sendTime = this.sendTime - timeBack.getAsLong();
+		}
+
 		this.isDelivered = json.get("isDelivered").getAsBoolean();
 	}
 
@@ -72,15 +89,6 @@ public class Activity implements Comparable<Activity>, Serializable {
 	}
 
 
-//	public void setAuthenticated_user(String authenticated_user) {
-//		this.authenticated_user = authenticated_user;
-//	}
-
-//	public JsonObject innerJson() {
-//		originalJsonString.remove("authenticated_user");
-//		originalJsonString.addProperty("authenticated_user", this.authenticated_user);
-//		return originalJsonString;
-//	}
 
 	public JsonObject toJson() {
 		JsonObject json = new JsonObject();
@@ -135,6 +143,13 @@ public class Activity implements Comparable<Activity>, Serializable {
 
 	@Override
 	public int compareTo(Activity o) {
+
+		if(sendTime > o.sendTime){
+			return 1;
+		}
+		if(sendTime < o.sendTime){
+			return -1;
+		}
 		return 0;
 	}
 

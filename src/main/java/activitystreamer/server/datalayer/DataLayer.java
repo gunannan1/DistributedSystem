@@ -17,6 +17,8 @@ import com.google.gson.JsonObject;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 
 public class DataLayer extends Thread implements IMessageConsumer {
@@ -94,14 +96,14 @@ public class DataLayer extends Thread implements IMessageConsumer {
 	/*======================================= data sync  =======================================*/
 	@Override
 	public void run() {
-		log.info("using announce interval period of " + Settings.getAnnounceInterval() + " milliseconds");
+		log.info("using sync interval period of " + Settings.getSyncInterval() + " milliseconds");
 		while (!term) {
 			// do something with 5 second intervals in between
 			try {
 				updateCurrentLoad();
 				syncUserData();
 				syncActivityData();
-				Thread.sleep(Settings.getAnnounceInterval());
+				Thread.sleep(Settings.getSyncInterval());
 			} catch (InterruptedException e) {
 				log.info("received an interrupt, system is shutting down");
 				break;
@@ -292,6 +294,7 @@ public class DataLayer extends Thread implements IMessageConsumer {
 
 	private void updateOrInsert(Activity activity) {
 		activityTable.updateOrInsert(activity);
+
 	}
 
 	public ActivityRow pendingActivity(String name) {

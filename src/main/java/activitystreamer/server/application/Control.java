@@ -17,6 +17,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 
 public class Control extends Thread implements IMessageConsumer {
@@ -166,11 +167,13 @@ public class Control extends Thread implements IMessageConsumer {
 						if (!activity.isDelivered()) {
 							JsonObject json = activity.toClientJson();
 							json.addProperty("command", MessageType.ACTIVITY_BROADCAST.name());
-							conn.sendActivityBroadcastMsg(json.toString());
-							/* Set this activity delivered in data layer, data layer will sync this with other servers*/
-							activity.setDelivered(true);
-							DataLayer.getInstance().updateActivityTable(DataLayer.OperationType.MARK_AS_DELIVERED,user.getUsername(),activity,true);
-							isChange += 1;
+							if(Calendar.getInstance().getTimeInMillis() - activity.getSendTime() >= Settings.getActivityCheckInterval()) {
+								conn.sendActivityBroadcastMsg(json.toString());
+								/* Set this activity delivered in data layer, data layer will sync this with other servers*/
+								activity.setDelivered(true);
+								DataLayer.getInstance().updateActivityTable(DataLayer.OperationType.MARK_AS_DELIVERED, user.getUsername(), activity, true);
+								isChange += 1;
+							}
 						}
 					}
 				}
@@ -265,7 +268,7 @@ public class Control extends Thread implements IMessageConsumer {
 			while (isRun) {
 				refreshUI();
 				try {
-					sleep(3000);
+					sleep(4000);
 				} catch (InterruptedException e) {
 					log.info("refresh ui thread ends");
 				}

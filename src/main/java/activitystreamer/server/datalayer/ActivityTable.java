@@ -2,6 +2,7 @@ package activitystreamer.server.datalayer;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 
 /**

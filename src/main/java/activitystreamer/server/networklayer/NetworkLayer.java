@@ -179,7 +179,7 @@ public class NetworkLayer extends Thread implements IMessageConsumer {
 
 	@Override
 	public void run() {
-		log.info("using activity interval of " + Settings.getAnnounceInterval() + " milliseconds");
+		log.info("using announce interval of " + Settings.getAnnounceInterval() + " milliseconds");
 		while (!term) {
 			try {
 				sendBackupList();

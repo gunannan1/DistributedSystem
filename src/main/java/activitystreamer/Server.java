@@ -91,20 +91,20 @@ public class Server {
 
 		if (cmd.hasOption("time_before_reconnect")) {
 			int reconnectInterval = praseInt(cmd.getOptionValue("time_before_reconnect"),"-time_before_reconnect requires a number in milliseconds");
-			Settings.setTimeBeforeReconnect(reconnectInterval * 1000);
-			log.info("TimeBeforeReconnect for the system: " + reconnectInterval);
+			Settings.setTimeBeforeReconnect(reconnectInterval);
+			log.info("TimeBeforeReconnect for the system: " + Settings.getTimeBeforeReconnect());
 		}
 
 		if (cmd.hasOption("activity_check_interval")) {
 			int activityInterval = praseInt(cmd.getOptionValue("activity_check_interval"),"-activity_check_interval requires a number in milliseconds");
-			Settings.setTimeBeforeReconnect(Integer.parseInt(cmd.getOptionValue("activity_check_interval")));
-			log.info("activity_check_interval for the system: " + Settings.getSecret());
+			Settings.setActivityCheckInterval(activityInterval);
+			log.info("activity_check_interval for the system: " + Settings.getActivityCheckInterval());
 		}
 
 		if (cmd.hasOption("sync_interval")) {
 			int activityInterval = praseInt(cmd.getOptionValue("sync_interval"),"-sync_interval requires a number in milliseconds");
-			Settings.setTimeBeforeReconnect(Integer.parseInt(cmd.getOptionValue("sync_interval")));
-			log.info("sync_interval for the system: " + Settings.getSecret());
+			Settings.setSyncInterval(activityInterval);
+			log.info("sync_interval for the system: " + Settings.getSyncInterval());
 		}
 
 

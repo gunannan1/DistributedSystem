@@ -12,7 +12,7 @@ This is a multi-server communication network which allows
 
 ## How to start this system
 
-Check [here](HowToStart.md) for detail.
+Check [here](src/test/readme_shortcut_lanuch.md) for detail.
 
 
 

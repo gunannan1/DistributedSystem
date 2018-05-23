@@ -18,16 +18,28 @@ sh auto_test.sh
 ### Server Setup
 
 ```bash
-usage: ActivityStreamer.Server [-a <arg>] [-lh <arg>] [-lp <arg>] [-rh
-       <arg>] [-rp <arg>] [-s <arg>]
+usage: ActivityStreamer.Server [-a <arg>] [-activity_check_interval <arg>]
+       [-lh <arg>] [-lp <arg>] [-rh <arg>] [-rp <arg>] [-s <arg>]
+       [-sync_interval <arg>] [-time_before_reconnect <arg>]
 An ActivityStream Server for Unimelb COMP90015
 
- -a  <arg>   activity interval in milliseconds;Optional, default value = "5000"
- -lh <arg>   local hostname; Optional, default value="localhost"
- -lp <arg>   local port number; Optional, default value="3780"
- -rh <arg>   remote hostname; Optional for the very first server and Mandantory for new coming servers.
- -rp <arg>   remote port number;OPtional, default value="3780"
- -s  <arg>    secret for the server to use; Optional, program will generate one if is not provided.
+ -a <arg>                         announce interval in milliseconds
+
+ -lh <arg>                        local hostname
+ -lp <arg>                        local port number
+ -rh <arg>                        remote hostname
+ -rp <arg>                        remote port number
+ -s <arg>                         secret for the server to use
+ -sync_interval <arg>             Provide the interval (in milliseconds,
+                                  5000 by default) to sync data amoung
+                                  servers.
+ -time_before_reconnect <arg>     Provide the time (in milliseconds, 0 by
+                                  default) to wait before reconnect if a
+                                  server crashes, mainly for testing
+                                  eventually consistancy
+ -activity_check_interval <arg>   Provide the interval (in milliseconds,
+                                  1000 by default) to check whether there
+                                  is new activity coming in.
 ```
 
 Assume the secret is provided as `abc` and `8001` as the very first server port.

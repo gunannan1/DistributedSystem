@@ -21,7 +21,7 @@ git checkout layered
 
 #### How to start this system
 
-Check [here](../HowToStart.md) for detail.
+Check [here](../src/test/readme_shortcut_lanuch.md) for detail.
 
 
 
@@ -39,7 +39,7 @@ This is the communication layer for the whole system and is responsible for main
 
 The reconnection will be conducted in this layer and will not impact the other layers.
 
-![high_available](/Users/eric/Documents/projects/DistributedSystem/Project2-Document/high_available.png)
+![high_available](pictures/high_available.png)
 
 #### Data Layer - Eventually Consistency
 

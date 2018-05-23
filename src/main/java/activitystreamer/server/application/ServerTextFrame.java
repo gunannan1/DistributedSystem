@@ -60,14 +60,22 @@ public class ServerTextFrame extends JFrame implements ActionListener {
 	public void setLoginUserArea(ArrayList<UserRow> userList) {
 		loginUserArea.setRowCount(0);
 		for (UserRow u : userList) {
-			loginUserArea.addRow(new String[]{u.getUsername(), u.getSecret()});
+			try {
+				loginUserArea.addRow(new String[]{u.getUsername(), u.getSecret()});
+			} catch (Exception e) {
+				Control.log.error("Error login area username:[{}], secret:[{}]", u.getUsername(), u.getSecret());
+			}
 		}
 	}
 
 	public void setRegisteredArea(Collection<UserRow> registerUsers) {
 		registeredUserArea.setRowCount(0);
 		for (UserRow u : registerUsers) {
+			try{
 			registeredUserArea.addRow(new String[]{u.getUsername(), u.getSecret()});
+			} catch (Exception e) {
+				Control.log.error("Error regisetr area username:[{}], secret:[{}]", u.getUsername(), u.getSecret());
+			}
 		}
 	}
 
@@ -77,7 +85,11 @@ public class ServerTextFrame extends JFrame implements ActionListener {
 			if (c.isAuthedServer()) {
 				String host = c.getRemoteServerHost();
 				String port = Integer.toString(c.getRemoteServerPort());
-				this.serverArea.addRow(new String[]{host, port});
+				try {
+					this.serverArea.addRow(new String[]{host, port});
+				} catch (Exception e) {
+					Control.log.error("Error server area host:[{}], port:[{}]", host, port);
+				}
 			}
 		}
 	}

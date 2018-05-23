@@ -196,6 +196,34 @@ Message 2: a "fake" message that send 5 second ago, which is early than preious 
 
 
 
+####Unique Register
+
+##### Operations
+
+1. start several servers, say 3
+
+```bash
+java -jar ActivityStreamerServer.jar -lh localhost -lp 8001 -s abc
+java -jar ActivityStreamerServer.jar -lh localhost -lp 8002 -s abc -rh localhost -rp 8001
+java -jar ActivityStreamerServer.jar -lh localhost -lp 8003 -s abc -rh localhost -rp 8001
+```
+
+2. register user1 at server 8001
+
+```bash
+java -jar ActivityStreamerClient.jar -u user1 -rp 8001 -rh localhost
+```
+
+3. try to register user1 at another server, say 8002
+
+```bash
+java -jar ActivityStreamerClient.jar -u user1 -rp 8002 -rh localhost
+```
+
+##### Expected Result
+
+- the registration of step 3 will fail with error like "user already exists".
+
 #### Client can join and leave any time
 
 Just try...

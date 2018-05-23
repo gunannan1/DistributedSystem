@@ -38,8 +38,6 @@ public class Server {
 		options.addOption("a", true, "announce interval in milliseconds");
 		options.addOption("s", true, "secret for the server to use");
 
-		options.addOption("ui", false, "Provide this argv to show UI");
-
 		options.addOption("time_before_reconnect", true, "Provide the time (in milliseconds, 0 by default) to wait before reconnect if a server crashes, mainly for testing eventually consistancy");
 		options.addOption("activity_check_interval", true, "Provide the interval (in milliseconds, 1000 by default) to check whether there is new activity coming in.");
 		options.addOption("sync_interval", true, "Provide the interval (in milliseconds, 5000 by default) to sync data amoung servers.");

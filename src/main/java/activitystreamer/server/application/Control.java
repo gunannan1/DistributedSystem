@@ -266,11 +266,6 @@ public class Control extends Thread implements IMessageConsumer {
 				refreshUI();
 				try {
 					sleep(3000);
-					ActivityRow row = DataLayer.getInstance().getAllActivities().get("u_a");
-					if(row != null){
-						Control.log.debug("Activity count:{}",row.getActivityList().size());
-					}
-
 				} catch (InterruptedException e) {
 					log.info("refresh ui thread ends");
 				}

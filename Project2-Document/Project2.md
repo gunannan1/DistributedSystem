@@ -31,7 +31,7 @@ In this project, two parts (High Available & Eventually Consistency) of privious
 
 
 
-![hight_level_design](hight_level_design.png)
+![hight_level_design](pictures/hight_level_design.png)
 
 #### Network layer - High Available
 

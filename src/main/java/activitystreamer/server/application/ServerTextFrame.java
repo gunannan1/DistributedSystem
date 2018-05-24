@@ -87,7 +87,7 @@ public class ServerTextFrame extends JFrame implements ActionListener {
 		this.serverArea.setRowCount(0);
 		for (Connection c : connections) {
 			if (c.isAuthedServer()) {
-				String host = c.getRemoteServerHost().replaceAll(".","-");
+				String host = c.getRemoteServerHost();
 				String port = Integer.toString(c.getRemoteServerPort());
 				try {
 					this.serverArea.addRow(new String[]{host, port});

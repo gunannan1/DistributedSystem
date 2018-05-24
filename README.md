@@ -2,9 +2,19 @@
 
 [Introduction](#Introduction)
 
+[How to start this system](#How to start this system)
 
+[Test cases](#Test cases)
 
-[TOC]
+- [High Available](#High Available)
+- [Message ensure](#Message ensure)
+- [Message order](#Message order)
+- [Unique Register](#Unique Register)
+- [Client can join and leave any time](#Client can join and leave any time)
+- [Server can join at any time](#Server can join at any time)
+- [Load Balancing](#Load balancing)
+
+[Contributors](#Contributors)
 
 
 
@@ -148,7 +158,9 @@ java -jar ActivityStreamerClient.jar -u user1 -s boo02tadp6a1nfq3cc3flk1n3v -rp 
 
 #### Message order
 
-In order to simulate message disorder case, let us use a ***telnet session*** to simulate a ***server***  and make the order checking period a littler longer with `activity_check_interval=5000 `.
+In order to simulate message disorder case, let us use a ***telnet session*** to simulate a ***server***  and make the order checking period a littler longer with `activity_check_interval=10000 `. Fake messages will be broadcasted by the telnet server with a hooker ***"backTime"*** to set the send time of fake messages to be a time in the past.
+
+>  'timeBack' field is a back door used for this kind of testing. If that field exists in an ActivityBroadcast message, then set the `sendTime` of this activity to `currentTimeInMillis() - timeBack`
 
 ##### Operations
 
@@ -178,19 +190,19 @@ telnet localhost 8001
 {"command":"AUTHENTICATE","serverId":"serverId01","secret":"abc","host":"localhost","port":8002}
 ```
 
-- Broadcast 2 "fake" activities (**!!! within 5 seconds !!!**) by pasting below 2 string **separately(one by one)** into telnet session to simulate disordered message.
+- Broadcast 2 "fake" activities (**<u>!!! within 10 seconds !!!</u>**) by pasting below 2 string **separately(one by one)** into telnet session to simulate disordered message.
 
-*You can ignore the message telnet receive. All of them are used by real server to sync data.*
+*You can ignore the message telnet session receives. All of them are used by real server to sync data.*
 
-> timeBack field is a back door used for this kind of testing. If that field exists in an ActivityBroadcast message, then set the `sendTime` of this activity to `currentTimeInMillis() - timeBack`
+> 
 
-Message 1: a "fake" message that send 1 second ago
+Message 1: a "fake" message that was sent 0 second ago
 
 ```json
 {"id":0,"activity":{"message_num":2,"authenticated_user":"user2"},"isDelivered":false,"command":"ACTIVITY_BROADCAST","timeBack":0}
 ```
 
-Message 2: a "fake" message that send 5 second ago, which is early than preious one.
+Message 2: a "fake" message that was sent 10 seconds ago, which is early than preious one.
 
 ```json
 {"id":0,"activity":{"message_num":1,"authenticated_user":"user2"},"isDelivered":false,"command":"ACTIVITY_BROADCAST","timeBack":10000}
@@ -198,8 +210,10 @@ Message 2: a "fake" message that send 5 second ago, which is early than preious 
 
 ##### Expected Result
 
-- After waiting 5 seconds,  user1 (normal client with GUI) will receive 2 activities in order (message_num=1 first and then message_num=2)
+- After waiting 10-20 seconds,  user1 (normal client with GUI) will receive 2 activities in order (message_num=1 first and then message_num=2)
 
+
+In real server, this order checking period can be relately shorter, like 0.5 or 1 second.
 
 
 #### Unique Register

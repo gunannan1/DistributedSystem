@@ -62,11 +62,11 @@ public class Server {
 			Settings.setLocalPort(port);
 		}
 
-//		try {
-//			Settings.setLocalHostname(InetAddress.getLocalHost().getHostAddress());
-//		} catch (UnknownHostException e) {
-//			log.warn("failed to get localhost IP address");
-//		}
+		try {
+			Settings.setLocalHostname(InetAddress.getLocalHost().getHostAddress());
+		} catch (UnknownHostException e) {
+			log.warn("failed to get localhost IP address");
+		}
 
 
 		/*======================================= remote information =======================================*/

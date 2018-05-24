@@ -55,6 +55,11 @@ public class Server {
 		/*======================================= local information =======================================*/
 		if (cmd.hasOption("lh")) {
 			Settings.setLocalHostname(cmd.getOptionValue("lh"));
+			try {
+				Settings.setLocalHostname(InetAddress.getLocalHost().getHostAddress());
+			} catch (UnknownHostException e) {
+				log.warn("failed to get localhost IP address");
+			}
 		}
 
 		if (cmd.hasOption("lp")) {
@@ -62,21 +67,23 @@ public class Server {
 			Settings.setLocalPort(port);
 		}
 
-		try {
-			Settings.setLocalHostname(InetAddress.getLocalHost().getHostAddress());
-		} catch (UnknownHostException e) {
-			log.warn("failed to get localhost IP address");
-		}
 
 
 		/*======================================= remote information =======================================*/
 		if (cmd.hasOption("rp")) {
 			int port = praseInt(cmd.getOptionValue("rp"), "-rp requires a port number");
 			Settings.setRemotePort(port);
+
 		}
 
 		if (cmd.hasOption("rh")) {
-			Settings.setRemoteHostname(cmd.getOptionValue("rh"));
+			String remoteHostName = cmd.getOptionValue("rh");
+			Settings.setRemoteHostname(remoteHostName);
+			try {
+				Settings.setRemoteHostname(InetAddress.getByName(remoteHostName).getHostAddress());
+			} catch (UnknownHostException e) {
+				log.warn("failed to get remote IP address");
+			}
 		} else if (!cmd.hasOption("s")) {
 			Settings.setSecret(Settings.nextSecret());
 			log.info("Secret for the system: " + Settings.getSecret());

@@ -92,6 +92,9 @@ public class ClientSkeleton extends Thread {
 			this.s = new Socket(host, port);
 			this.inreader = new BufferedReader(new InputStreamReader(new DataInputStream(this.s.getInputStream())));
 			this.outwriter = new BufferedWriter(new OutputStreamWriter(new DataOutputStream(this.s.getOutputStream())));
+			Settings.setRemoteHostname(host);
+			Settings.setRemotePort(port);
+			sendLoginMsg();
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

@@ -38,8 +38,6 @@ public class RedirectHandler extends MessageHandler {
 
 			clientSkeleton.redirectToServer(newRemoteHost, newRemotePort);
 
-			clientSkeleton.sendLoginMsg();
-
 			return true;
 		}catch (NullPointerException e){
 			ClientSkeleton.log.info("Invalid redirection message received:{}",json.toString());

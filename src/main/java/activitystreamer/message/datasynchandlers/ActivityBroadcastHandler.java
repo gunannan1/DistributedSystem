@@ -7,6 +7,9 @@ import activitystreamer.server.networklayer.Connection;
 import activitystreamer.server.application.Control;
 import activitystreamer.server.networklayer.NetworkLayer;
 import com.google.gson.JsonObject;
+import sun.nio.ch.Net;
+
+import java.util.ArrayList;
 
 /**
  * RegisterMessage
@@ -48,4 +51,6 @@ public class ActivityBroadcastHandler extends MessageHandler {
 
 		return true;
 	}
+
+
 }

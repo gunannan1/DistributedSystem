@@ -272,10 +272,13 @@ public class DataLayer extends Thread implements IMessageConsumer {
 				break;
 			case INSERT:
 				updateOrInsert(activity);
+				JsonObject clientJson = activity.toClientJson();
+				clientJson.addProperty("command",MessageType.ACTIVITY_BROADCAST.name());
+				NetworkLayer.getInstance().sendMsgToAnonymous(clientJson.toString());
 				if (notify) {
-					JsonObject actJson = activity.toJson();
-					actJson.addProperty("command", MessageType.ACTIVITY_BROADCAST.name());
-					NetworkLayer.getInstance().broadcastToServers(actJson.toString(),null);;
+					JsonObject serverJson = activity.toJson();
+					serverJson.addProperty("command", MessageType.ACTIVITY_BROADCAST.name());
+					NetworkLayer.getInstance().broadcastToServers(serverJson.toString(),null);;
 				}
 				break;
 			case MARK_AS_DELIVERED:

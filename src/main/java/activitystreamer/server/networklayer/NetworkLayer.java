@@ -172,6 +172,15 @@ public class NetworkLayer extends Thread implements IMessageConsumer {
 		}
 	}
 
+	public void sendMsgToAnonymous(String activity){
+		ArrayList<Connection> connections = NetworkLayer.getInstance().getConnectionList();
+		for(Connection c:connections){
+			if(c.isAuthedClient() && c.getUser().getUsername().toLowerCase().equals("anonymous")){
+				c.sendActivityBroadcastMsg(activity);
+			}
+		}
+	}
+
 	@Override
 	public void run() {
 		log.info("using announce interval of " + Settings.getAnnounceInterval() + " milliseconds");

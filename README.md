@@ -1,4 +1,4 @@
-# Project 2 - Improved Multi-server Network
+# Project 2 - Usage & Test cases
 
 [Introduction](#Introduction)
 
@@ -7,12 +7,12 @@
 [Test cases](#Test cases)
 
 - [High Available](#High Available)
+- [Server can join at any time](#Server can join at any time)
+- [Unique Register](#Unique Register)
 - [Message ensure](#Message ensure)
 - [Message order](#Message order)
-- [Unique Register](#Unique Register)
-- [Client can join and leave any time](#Client can join and leave any time)
-- [Server can join at any time](#Server can join at any time)
 - [Load Balancing](#Load balancing)
+- [Client can join and leave any time](#Client can join and leave any time)
 
 [Contributors](#Contributors)
 
@@ -71,11 +71,28 @@ An ActivityStream Client for Unimelb COMP90015
  -u  <arg>   username, if not provided, login as "anonymous".
 ```
 
-## Test cases 
+## Test **Scenario** 
+
+Per projectspecification, this system is supposed to achieve following functions:
+
+- High Availability: system can reconnect automaticallyafter network partition
+- Clients can join (register/login) and leave (logout)the network at any time, Servers can join the network at any time 
+- Unique Register: a given username can only beregistered once over the server network
+
+-  Message ensure: a message sent by a client can reachall clients that are connected to the network at the time
+
+- Message order: all activity messages sent by a clientare delivered in the same order at each receiving client
+- Load balancing: clients are evenly distributed overthe servers
+
+Our implementationfor delivering activity to clients is synchronous, so you may need to wait aperiod of time before you can actual receive an activity, default period is 1second.
+
+Six scenarios havebeen designed for test case.
+
+
 
 #### High Available
 
-##### Operations
+##### Test Case
 
 1. Start 4 servers
 
@@ -96,11 +113,124 @@ After that you will see server 8002, 8003, 8006 will automatically connected. Th
 
 ![hight_level_design](Project2-Document/pictures/test_case_ha.png)
 
+##### Screentshot:
+
+After 4 servers were started:
+
+![](/Users/eric/Documents/projects/DistributedSystem/Project2-Document/pictures/test-screenshot/ha-1.png)
+
+After force quit server 8001:
+
 ![image-20180523111014339](Project2-Document/pictures/reconnect_ui_result.png)
+
+##### Testing Result:
+
+As expected.
+
+
+
+#### Server can join at any time
+
+##### Test case
+
+1. start the very first server
+
+```bash
+java -jar ActivityStreamerServer.jar -lh localhost -lp 8001 -s abc
+```
+
+2. register a user at this server and remember its secret.
+
+```bash
+java -jar ActivityStreamerClient.jar -u user1 -rp 8001 -rh localhost
+```
+
+3. Quit client of step 2
+4. start a new server connecting to server 8001
+
+```bash
+java -jar ActivityStreamerServer.jar -lh localhost -lp 8002 -s abc -rh localhost -rp 8001
+```
+
+5. Login user1 at the new server (8002) by replace `$secret` of below script
+
+```bash
+java -jar ActivityStreamerClient.jar -u user1 -s $secret -rp 8002 -rh localhost
+```
+
+##### Expected Result
+
+- user1 should login successfully at new server (8002) and all data of 8002 should be synced with 8001
+
+- From test case [Message ensure](#Message ensure) we can also see that: 
+
+  > user A is online at the time T, when a activity is sent by some other user B and A loses its connection it can receive this message.
+  >
+  > When user A reconnects to any server of this system, it can also receive this lost message.
+
+##### Screentshot:
+
+Snapshot of register success and auto login with given secret
+
+![new-server-join-1](/Users/eric/Documents/projects/DistributedSystem/Project2-Document/pictures/test-screenshot/new-server-join-1.png)
+
+Snapshot of user1 relogin on 8002 (user1 login successfully, 8001 and 8002 is consistent)
+
+![new-server-join-2](/Users/eric/Documents/projects/DistributedSystem/Project2-Document/pictures/test-screenshot/new-server-join-2.png)
+
+##### Testing Result
+
+Result as expected.
+
+
+
+#### Unique Register
+
+##### Test case
+
+1. start several servers, say 3
+
+```bash
+java -jar ActivityStreamerServer.jar -lh localhost -lp 8001 -s abc
+java -jar ActivityStreamerServer.jar -lh localhost -lp 8002 -s abc -rh localhost -rp 8001
+java -jar ActivityStreamerServer.jar -lh localhost -lp 8003 -s abc -rh localhost -rp 8001
+```
+
+1. register user1 at server 8001
+
+```bash
+java -jar ActivityStreamerClient.jar -u user1 -rp 8001 -rh localhost
+```
+
+1. try to register user1 at another server, say 8002
+
+```bash
+java -jar ActivityStreamerClient.jar -u user1 -rp 8002 -rh localhost
+```
+
+##### Expected Result
+
+- the registration of step 3 (server 8002) will fail with error like "user already exists".
+
+##### Screentshot
+
+Snapshot of 3 servers’ GUI
+
+![unique-register-1](/Users/eric/Documents/projects/DistributedSystem/Project2-Document/pictures/test-screenshot/unique-register-1.png)
+
+Snapshot of error message (user1 already exists in server)
+
+![unique-register-2](/Users/eric/Documents/projects/DistributedSystem/Project2-Document/pictures/test-screenshot/unique-register-2.png)
+
+##### Testing Result
+
+Result as excepted.
+
+
 
 #### Message ensure
 
-##### Operations
+##### Test case
 
 In order to simulate message loss case, let us start servers with a parameter to ***delay*** the reconnection function.
 
@@ -127,8 +257,6 @@ java -jar ActivityStreamerClient.jar -u user2 -rp 8002 -rh localhost
 java -jar ActivityStreamerClient.jar -u user3 -rp 8003 -rh localhost
 ```
 
-
-
 1. Terminate server 8001 and send a message from user2 within 10 seconds
 
 - Click ***Close*** icon in *<u>server UI</u>* or press ***CTRL+C*** in *<u>command line</u>* (user 1 will lose connection)
@@ -153,6 +281,22 @@ java -jar ActivityStreamerClient.jar -u user1 -s boo02tadp6a1nfq3cc3flk1n3v -rp 
 > user A is online at the time T, when a activity is sent by some other user B and A loses its connection it can receive this message.
 >
 > When user A reconnects to any server of this system, it can also receive this lost message.
+
+##### Screentshot
+
+clients login on 8001,8002, 8003 respectively
+
+![message-ensure-0](/Users/eric/Documents/projects/DistributedSystem/Project2-Document/pictures/test-screenshot/message-ensure-0.png)
+
+clients after reconnection(user1, user2, user3 all received activity from user2)
+
+![message-ensure-1](/Users/eric/Documents/projects/DistributedSystem/Project2-Document/pictures/test-screenshot/message-ensure-1.png)
+
+![message-ensure-2](/Users/eric/Documents/projects/DistributedSystem/Project2-Document/pictures/test-screenshot/message-ensure-2.png)
+
+##### Testing Result
+
+Result as excepted.
 
 
 
@@ -210,82 +354,30 @@ Message 2: a "fake" message that was sent 10 seconds ago, which is early than pr
 
 ##### Expected Result
 
-- After waiting 10-20 seconds,  user1 (normal client with GUI) will receive 2 activities in order (message_num=1 first and then message_num=2)
+- After waiting ***10-20*** seconds,  user1 (normal client with GUI) will receive 2 activities in order (message_num=1 first and then message_num=2)
 
 
 In real server, this order checking period can be relately shorter, like 0.5 or 1 second.
 
+##### Screentshot
 
-#### Unique Register
+Telnet session input (in white, you can ignore other information, they are sync message from server)
 
-##### Operations
+The 3rd white block shows the ordered message list, in which the first is the one with message_num=1
 
-1. start several servers, say 3
+![image-20180526104432677](/Users/eric/Documents/projects/DistributedSystem/Project2-Document/pictures/test-screenshot/message-order-0.png)
 
-```bash
-java -jar ActivityStreamerServer.jar -lh localhost -lp 8001 -s abc
-java -jar ActivityStreamerServer.jar -lh localhost -lp 8002 -s abc -rh localhost -rp 8001
-java -jar ActivityStreamerServer.jar -lh localhost -lp 8003 -s abc -rh localhost -rp 8001
-```
 
-2. register user1 at server 8001
 
-```bash
-java -jar ActivityStreamerClient.jar -u user1 -rp 8001 -rh localhost
-```
+Messages user1 received  (message_num1 is before message_num 2)
 
-3. try to register user1 at another server, say 8002
+![message-order-2](/Users/eric/Documents/projects/DistributedSystem/Project2-Document/pictures/test-screenshot/message-order-2.png)
 
-```bash
-java -jar ActivityStreamerClient.jar -u user1 -rp 8002 -rh localhost
-```
+##### Testing Result
 
-##### Expected Result
+Result as excepted.
 
-- the registration of step 3 will fail with error like "user already exists".
 
-#### Client can join and leave any time
-
-Just try...
-
-#### Server can join at any time
-
-##### Operations
-
-1. start the very first server
-
-```bash
-java -jar ActivityStreamerServer.jar -lh localhost -lp 8001 -s abc
-```
-
-2. register a user at this server and remember its secret.
-
-```bash
-java -jar ActivityStreamerClient.jar -u user1 -rp 8001 -rh localhost
-```
-
-3. Quit client of step 2
-4. start a new server connecting to server 8001
-
-```bash
-java -jar ActivityStreamerServer.jar -lh localhost -lp 8002 -s abc -rh localhost -rp 8001
-```
-
-5. Login user1 at the new server (8002) by replace `$secret` of below script
-
-```bash
-java -jar ActivityStreamerClient.jar -u user1 -s $secret -rp 8002 -rh localhost
-```
-
-##### Expected Result
-
-- user1 should login successfully at new server (8002) and all data of 8002 should be synced with 8001
-
-- From test case [Message ensure](#Message ensure) we can also see that: 
-
-  > user A is online at the time T, when a activity is sent by some other user B and A loses its connection it can receive this message.
-  >
-  > When user A reconnects to any server of this system, it can also receive this lost message.
 
 #### Load balancing
 
@@ -308,6 +400,22 @@ java -jar ActivityStreamerClient.jar -u user2 -rp 8001 -rh localhost
 ##### Expected Result
 
 - user2 will be redirected to server 8002
+
+
+##### Screentshot
+
+starting 2 servers
+
+![load-balancing-1](/Users/eric/Documents/projects/DistributedSystem/Project2-Document/pictures/test-screenshot/load-balancing-1.png)
+
+after two clients login(load of each server has been changed to 1)
+
+![load-balancing-2](/Users/eric/Documents/projects/DistributedSystem/Project2-Document/pictures/test-screenshot/load-balancing-2.png)
+
+#### Client can join and leave any time
+
+Just try...
+
 
 
 
